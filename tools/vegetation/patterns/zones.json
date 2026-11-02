@@ -1,0 +1,11 @@
+{
+  "description": "By zone: forereef and crest dense, backreef sparse, lagoon and pass bare",
+  "classes": {
+    "sparse": {"density": 1, "diameter": 0.5, "height": 0.4},
+    "dense":  {"density": 4, "diameter": 0.5, "height": 0.4}
+  },
+  "layers": [
+    {"where": ["forereef", "crest"], "class": "dense"},
+    {"where": "backreef", "class": "sparse"}
+  ]
+}

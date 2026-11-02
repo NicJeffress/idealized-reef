@@ -1,0 +1,11 @@
+{
+  "description": "Patchy reef: 30 % dense, 30 % sparse, 40 % bare in ~150 m patches over backreef, crest and forereef; lagoon and pass bare",
+  "classes": {
+    "sparse": {"density": 1, "diameter": 0.5, "height": 0.4},
+    "dense":  {"density": 4, "diameter": 0.5, "height": 0.4}
+  },
+  "layers": [
+    {"where": "reef",
+     "patches": {"size_m": 150, "seed": 1, "cover": {"dense": 0.3, "sparse": 0.3}}}
+  ]
+}

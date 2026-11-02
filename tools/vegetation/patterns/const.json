@@ -1,0 +1,9 @@
+{
+  "description": "Constant canopy everywhere (as cases/Reef_Ideal_A15_veg/init_reef.nc)",
+  "classes": {
+    "dense": {"density": 4, "diameter": 0.5, "height": 0.4}
+  },
+  "layers": [
+    {"where": "all", "class": "dense"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Dense canopy on the whole reef (backreef, crest, forereef); lagoon, pass and deep water bare",
+  "classes": {
+    "dense": {"density": 4, "diameter": 0.5, "height": 0.4}
+  },
+  "layers": [
+    {"where": "reef", "class": "dense"}
+  ]
+}

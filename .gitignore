@@ -1,0 +1,5 @@
+output/
+__pycache__/
+*.pyc
+cases/Reef_Ideal_A15_veg_10m/
+cases/Reef_Ideal_A15_thin/
