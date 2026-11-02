@@ -80,7 +80,7 @@ repository.
   `CPP_OPTIONS="+VEG_DRAG_IMPLICIT"`). See [Reef_Ideal_A15_veg](docs/Reef_Ideal_A15_veg.md).
 - **`VISC2 = 0`.** The third-order upstream advection supplies the lateral
   viscosity; `UV_VIS2` stays compiled so a sponge can still be switched on.
-  (Circle_Island keeps 0.001 m²/s, its setting when it was tested.)
+  Circle_Island too since 2026-11-02 (its tests ran with 0.001 m²/s).
 - **North open boundary of the stratified and thermal cases: nudged radiation
   (`RadNud`) plus an interior nudging band**; the viscous sponge stays off.
 - **Thermal case: constant non-solar heat flux**, chosen so the daily net heat

@@ -33,8 +33,8 @@ an idealized island counterpart to the straight A15 reef.
 
 - Physics as Reef_Ideal_A15 (vortex-force WEC with spectral Stokes drift, GLS
   k-epsilon, SSW bottom boundary layer with the same bed properties, T and S
-  fixed at 27 C and 36), plus `CURVGRID`. `VISC2` 0.001 m²/s (its setting when
-  tested; the A15 cases now use 0).
+  fixed at 27 C and 36), plus `CURVGRID`. `VISC2` 0, as the A15
+  cases (since 2026-11-02; the tests below ran with 0.001 m²/s).
 - ROMS `DT` 4 s, `NDTFAST` 10 (barotropic Courant number 0.18); `NTIMES` 900
   (1 h); output every 10 min. SWAN: 36 directions (so 6 columns = one direction
   bin), time step 60 s. Coupling every 600 s; as shipped ROMS 6 x 1 tiles + 2
