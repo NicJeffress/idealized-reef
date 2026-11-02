@@ -1,0 +1,49 @@
+PROJECT '' ' '
+ 'Island_A15'
+ 'Reef_Ideal_A15 round an island, 2 passes'
+ 'tools/island/make_island_a15.py --passes 2'
+MODE NONSTATIONARY TWODIMENSIONAL
+SET DEPMIN 0.10 INRHOG 1 NAUTICAL
+$ The grid goes round the island and closes on itself (the coordinate file's
+$ last column is column 1 again): REPEATING with a zero period, which needs
+$ coawst-cloud's swan-periodic-curvilinear and swan-closed-ring patches.
+COORDINATES CARTESIAN REPEATING
+NSGRIDS 1
+$ SWAN column k = ROMS column k (k = 1..360), rows = ROMS rows 0..131
+CGRID CURVILINEAR 360 131 EXC 9.999000e+003 &
+        CIRCLE 72 0.04 1.0 20
+READGRID COORDINATES 1 'swan_coord.grd' 4 0 0 FREE
+INPGRID BOTTOM CURVILINEAR 0 0 360 131 EXC 9.999000e+003
+READINP BOTTOM  1 'swan_bathy.bot' 4 0 FREE
+INPGRID CURRENT CURVILINEAR 0 0 360 131 EXC 9.999000e+003 &
+        NONSTAT  20000101.000000 25 DAY 20000126.000000
+INPGRID WLEV CURVILINEAR 0 0 360 131 EXC 9.999000e+003 &
+        NONSTAT  20000101.000000 25 DAY 20000126.000000
+INPGRID FRIC CURVILINEAR 0 0 360 131 EXC 9.999000e+003 &
+        NONSTAT  20000101.000000 25 DAY 20000126.000000
+$ Waves on the whole outer ring (row 131); SWAN uses only the part of the
+$ spectrum that travels into the domain. Hs (m), Tp (s), direction (deg,
+$ nautical: coming from), directional spreading (deg).
+BOUND SHAPESPEC JONSWAP 3.3 PEAK DSPR DEGREES
+BOUNDSPEC SEGMENT IJ 0 131 359 131 CONSTANT FILE 'wavebc_ring.txt' 1
+BLOCK 'COMPGRID' NOHEADER 'output/xp.nc'  LAY 4 XP 1.
+BLOCK 'COMPGRID' NOHEADER 'output/yp.nc'  LAY 4 YP 1.
+BLOCK 'COMPGRID' NOHEADER 'output/depth.nc'  LAY 4 DEPTH 1.
+BLOCK 'COMPGRID' NOHEADER 'output/vel.nc'  LAY 4 VEL 1.
+BLOCK 'COMPGRID' NOHEADER 'output/watlev.nc'  LAY 4 WATLEV 1.
+BLOCK 'COMPGRID' NOHEADER 'output/hsign.nc'  LAY 4 HSIGN 1.
+BLOCK 'COMPGRID' NOHEADER 'output/dir.nc'  LAY 4 DIR 1.
+BLOCK 'COMPGRID' NOHEADER 'output/tm01.nc'  LAY 4 TM01 1.
+BLOCK 'COMPGRID' NOHEADER 'output/wlen.nc'  LAY 4 WLEN 1.
+BLOCK 'COMPGRID' NOHEADER 'output/ubot.nc'  LAY 4 UBOT 1.
+BLOCK 'COMPGRID' NOHEADER 'output/dissip.nc'  LAY 4 DISSIP 1.
+$ Physics and numerics as Reef_Ideal_A15
+GEN3
+FRICTION MADSEN 0.3
+OFF QUAD
+BREAKING CON 1.0 0.73
+PROP BSBT
+TRIAD
+COMPUTE NONSTATIONARY 20000101.000000 120 SEC 20000102.000000
+RESTART 'output/swan_rst.dat' FREE 1 HR
+STOP

@@ -292,9 +292,44 @@ def fig_refined(tmp):
     save(fig, "a15_refined_10m.png")
 
 
+def fig_island():
+    fig, axs = plt.subplots(1, 3, figsize=(14, 4.4), gridspec_kw={"width_ratios": [1, 1, 1.25]})
+    norm = LogNorm(0.5, 400)
+    for a, n in zip(axs[:2], (2, 4)):
+        g = grid(CASES / f"Island_A15_{n}pass" / "island_grid.nc")
+        pc = depth_map(a, g, norm, shading="gouraud")
+        x, y = g["x_rho"] / 1000, g["y_rho"] / 1000
+        a.contour(x, y, np.where(g["mask_rho"] == 1, g["h"], 99), [1.0], colors=C2, linewidths=0.9)
+        a.set_xlim(-2.6, 2.6)
+        a.set_ylim(-2.6, 2.6)
+        a.set_title(f"Island_A15_{n}pass: inner 2.6 km (orange: h = 1 m)")
+        a.set_xlabel("x (km)")
+    axs[0].set_ylabel("y (km)")
+    cb = fig.colorbar(pc, ax=axs[1], shrink=0.85, pad=0.02)
+    cb.set_label("depth h (m)")
+    b = axs[2]
+    a15 = grid(A15 / "roms_grid_default_1.nc")
+    ya = a15["y_rho"][:, 0]
+    b.plot(ya, a15["h"][:, 112], color=INK, lw=3, label="A15, reef")
+    b.plot(ya, a15["h"][:, 101], color=INK, lw=3, ls=(0, (2, 1.5)), label="A15, pass centre")
+    g = grid(CASES / "Island_A15_2pass" / "island_grid.nc")
+    r = np.hypot(g["x_rho"][:, 91], g["y_rho"][:, 91]) - 600
+    rp = np.hypot(g["x_rho"][:, 1], g["y_rho"][:, 1]) - 600
+    b.plot(r, g["h"][:, 91], color=C2, lw=1.4, label="island, between passes")
+    b.plot(rp, g["h"][:, 1], color=C1, lw=1.4, ls=(0, (2, 1.5)), label="island, pass centre")
+    b.set_xlim(0, 2000)
+    b.set_ylim(60, -1)
+    b.set_xlabel("distance from the shore (m)")
+    b.set_ylabel("depth (m)")
+    b.set_title("Cross-reef profiles: A15 and the island")
+    b.legend(fontsize=8)
+    fig.tight_layout()
+    save(fig, "island_a15_grid.png")
+
+
 FIGS = {"a15_bathymetry": fig_a15_bathymetry, "a15_profile": fig_a15_profile,
         "circle": fig_circle, "canopy": fig_canopy, "thin_crest": fig_thin_crest,
-        "strat_therm": fig_strat_therm, "refined": fig_refined}
+        "strat_therm": fig_strat_therm, "refined": fig_refined, "island": fig_island}
 NEEDS_TMP = {"canopy", "thin_crest", "refined"}
 
 

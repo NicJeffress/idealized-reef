@@ -26,6 +26,7 @@ into a container image and runs it on Google Cloud Batch (see
 | [Reef_Ideal_A15_veg_10m](docs/Reef_Ideal_A15_veg_10m.md) | 404 x 220, 10 | half of A15's | as A15 | grid-convergence twin of `_veg` (generated, not stored) | as A15 | about 8x A15 |
 | [A15 thin-crest variants](docs/Reef_Ideal_A15_thin_crest.md) | as A15 | as A15 | as A15 | shallower and steeper crests (0.30 m, steep flanks), for bottom-stress tests (generated) | as A15 | as A15 |
 | [Swan_Periodic_Test](docs/Swan_Periodic_Test.md) | 100-200 x 121 (SWAN only), and A15's grid | 20 m, or A15's | 2-4 km periodic x 2.4 km; A15's cross-shore profile with a pass | standalone SWAN test of periodic lateral boundaries on regular and curvilinear grids | Hs 1 m, Tp 10 s from 20 degrees | about 15 min on 4 cores for the whole set |
+| [Island_A15](docs/Island_A15.md) (2 or 4 passes) | 362 x 132, 10 | 10.5 m at the shore, 28 m on the crest, 101 m offshore | round island, radius 0.6 km, domain radius 5.8 km | A15's reef and pass wrapped round an island: 2 passes (north, south) or 4 (every 90 degrees) | as A15, waves from the north on the outer ring | about 3x A15 (not yet measured) |
 | [Circle_Island](docs/Circle_Island.md) | 218 x 82, 10 | 17.5 m at the shore to 169 m offshore | round island, radius 0.6 km, domain radius 5.8 km | a closed O-grid round an island (SWAN and ROMS periodic round the island) | Hs 1 m, Tp 10 s from the north (or inward all round); 0.15 m, 12 h tide | 139 s wall per simulated hour on 8 vCPUs (6 + 2) |
 
 Wall times are from Google Cloud `c2d` machines (AMD EPYC). On Spot
@@ -53,7 +54,8 @@ is at north.*
 More figures: [canopy patterns](figures/canopy_patterns.png),
 [thin-crest profiles](figures/a15_thin_crest_profiles.png),
 [stratification and heating](figures/a15_strat_therm.png),
-[20 m vs 10 m grid](figures/a15_refined_10m.png). All are made by
+[20 m vs 10 m grid](figures/a15_refined_10m.png),
+[Island_A15](figures/island_a15_grid.png). All are made by
 [`figures/make_figures.py`](figures/make_figures.py) from the files in this
 repository.
 
