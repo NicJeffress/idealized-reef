@@ -140,7 +140,9 @@ COAWST v3.9. The `OMEGA_IMPLICIT` diagnostic has
 
 ## Decision / outcome
 
-Proposed to the author (nothing in the case folders changed yet):
+**Superseded in part by the [triads-on entry](2026-11-02_options-triads-on.md)**
+(triads fixed, noise floor on the bare reef, breaking rerun). Proposed to the
+author (nothing in the case folders changed yet):
 
 1. **Triads first.** Phase 0's largest effect and the phase 1 breaking
    results are both shaped by triads that never ran. Fix that (patch or more

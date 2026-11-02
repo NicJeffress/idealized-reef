@@ -1,7 +1,7 @@
 # SWAN skips triads in the first iteration whenever currents are present: `TRIAD` was off in every coupled A15 run
 
 - **Date:** 2026-11-02 (evening)
-- **Status:** found; fix not decided (see Decision)
+- **Status:** fixed (coawst-cloud `swan-triads-nonstationary`, `2d5672c`; author's choice: patch SWAN); results with triads on in [the triads-on entry](2026-11-02_options-triads-on.md)
 - **Found by:** options campaign phase 0 (p0-swanit2) and phase 1 (p1-notriad)
 
 ## Question / why
@@ -57,12 +57,19 @@ much?
   higher frequencies before breaking, so less surface-breaking dissipation and
   a weaker breaking-driven set-up and crest flow), plus the second iteration
   itself.
+  **Correction (same evening):** with the fix, triads in every iteration do
+  the opposite on this case (breaking dissipation 8x, set-up 5.6x higher) and
+  1, 2 and 5 iterations agree. The unpatched two-iteration run, with triads
+  in the second iteration only, was an inconsistent mix of the two operators,
+  not "triads switching on"; see the [triads-on entry](2026-11-02_options-triads-on.md).
 - The breaking comparisons of phase 1 (gamma 0.80, `BKD`, `TG`) were made
   without triads; their spread may change once triads act.
 
 ## Decision / outcome
 
-Open, for the author:
+The author chose option 1 (patch SWAN). With the patch, 1, 2 and 5 iterations
+agree within 0.6 %, and triads raise the canopy case's set-up 5.6x
+([triads-on entry](2026-11-02_options-triads-on.md)). The options were:
 1. **Patch SWAN** so that nonstationary runs compute triads from the first
    iteration (the guard becomes `ICUR.EQ.0 .OR. ITER.GT.1 .OR. NSTATC.EQ.1`),
    as a coawst-cloud patch with a before/after test; then rerun the baseline,

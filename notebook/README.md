@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-02 | [Options campaign with triads on](2026-11-02_options-triads-on.md) | A15_veg (constant canopy, bare) | Triads multiply the canopy set-up by 5.6 (bare reef +46 %); 1/2/5 SWAN iterations agree within 0.6 %; explicit canopy drag blows up with triads (implicit runs); bare-reef noise floor <= 1.6 %; AB3-AM4 within it, 19 % faster; breaking CON/BKD/gamma 0.80 within ~8 %, TG the outlier |
 | 2026-11-02 | [Island_A15: first runs](2026-11-02_island-a15-first-runs.md) | Island_A15_2pass, _4pass | Both stable 6 h (Courant <= 0.37), 194 s per simulated hour; inflow over the windward reef ~1150 m³/s, outflow through every pass, the leeward one most (704 of 1294 m³/s with 2 passes) |
 | 2026-11-02 | [Options campaign, phases 0-2: results](2026-11-02_options-campaign-results-p0-p2.md) | A15_veg, _strat, bare and patchy | Constant canopy damps the reef 95 % (noise floor ~1e-5); breaking spreads set-up -24 to +108 %; AB3-AM4 identical and 18 % faster; implicit canopy drag within 2.5 % and 37 % faster; 36 directions -10 %; roller blew up; rest diffusivity = GLS floor, not VEG_TURB |
 | 2026-11-02 | [SWAN skips triads in the first iteration](2026-11-02_swan-triads-skipped-first-iteration.md) | A15_veg | With currents and one iteration per step, `TRIAD` is never computed (p1-notriad bit-identical); two iterations: breaking dissipation -73 %, set-up -41 % |
