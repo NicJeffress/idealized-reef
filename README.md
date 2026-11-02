@@ -172,7 +172,7 @@ it in October-November 2026.
 Many thanks to Walter Torres, whose COAWST single-channel idealized reef
 test case, [wingtorres/reef](https://github.com/wingtorres/reef), was the
 inspiration and a guide for these cases. They have grown in their own
-direction since, so anyone starting a reef model in COAWST will find his
+direction since, so anyone starting a reef model in COAWST will find that
 compact set-up well worth a look too.
 
 COAWST: Warner, J.C., Armstrong, B., He, R., and Zambon, J.B. (2010),
