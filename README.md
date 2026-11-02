@@ -174,8 +174,20 @@ Development of a Coupled Ocean-Atmosphere-Wave-Sediment Transport (COAWST)
 modeling system, Ocean Modelling 35, 230-244. ROMS, SWAN, MCT and SCRIP keep
 their own licences.
 
-Citation for this repository: to be added.
+To cite this repository, use GitHub's "Cite this repository" button (from
+[`CITATION.cff`](CITATION.cff)). A DOI per release can be added later through
+Zenodo's GitHub integration; papers that use the cases will be listed here.
 
 ## License
 
-To be decided (placeholder).
+- **Code and case files** (`tools/`, `figures/make_figures.py`, the case
+  headers, `.in` files and analytical routines in `cases/`, the scripts in
+  `reference/`): [MIT](LICENSE).
+- **Documentation, figures, the notebook and the data files** (`docs/`,
+  `notebook/`, `results/`, the PNG figures, the NetCDF grid and initial files
+  and SWAN grid/bathymetry files): [CC BY 4.0](LICENSE-CC-BY-4.0.txt). Reuse
+  them freely, with credit to this repository.
+- The `ana_*.h` files in `cases/` are modified ROMS source and keep ROMS's own
+  MIT licence and copyright notice ([License_ROMS.md](License_ROMS.md)).
+  COAWST, SWAN (GPL), MCT and SCRIP are not included here; they keep their own
+  licences.

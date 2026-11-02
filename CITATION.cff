@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use these cases, please cite this repository as below."
+title: "Idealized reef cases for COAWST (ROMS + SWAN)"
+type: software
+authors:
+  - family-names: Jeffress
+    given-names: Nicolas
+repository-code: "https://github.com/NicJeffress/idealized-reef"
+license:
+  - MIT
+  - CC-BY-4.0
+keywords:
+  - coral reef
+  - COAWST
+  - ROMS
+  - SWAN
+  - wave-current interaction
+  - canopy flow
+references:
+  - type: article
+    authors:
+      - family-names: Warner
+        given-names: John C.
+      - family-names: Armstrong
+        given-names: Brandy
+      - family-names: He
+        given-names: Ruoying
+      - family-names: Zambon
+        given-names: Joseph B.
+    title: "Development of a Coupled Ocean-Atmosphere-Wave-Sediment Transport (COAWST) modeling system"
+    journal: "Ocean Modelling"
+    volume: 35
+    start: 230
+    end: 244
+    year: 2010
