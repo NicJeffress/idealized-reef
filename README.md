@@ -169,10 +169,11 @@ in October 2026: the same grid and initial file bit for bit, `ocean.in` and
 SWAN output written as NetCDF. The variants and Circle_Island were built from
 it in October-November 2026.
 
-The idealized reef set-up took inspiration and guidance from Walter Torres's
-COAWST single-channel idealized reef test case,
-[wingtorres/reef](https://github.com/wingtorres/reef). The cases here were
-developed separately since then and share no files with it.
+Many thanks to Walter Torres, whose COAWST single-channel idealized reef
+test case, [wingtorres/reef](https://github.com/wingtorres/reef), was the
+inspiration and a guide for these cases. They have grown in their own
+direction since, so anyone starting a reef model in COAWST will find his
+compact set-up well worth a look too.
 
 COAWST: Warner, J.C., Armstrong, B., He, R., and Zambon, J.B. (2010),
 Development of a Coupled Ocean-Atmosphere-Wave-Sediment Transport (COAWST)
