@@ -25,7 +25,7 @@ case folder and replaces:
 | `init_reef.nc` | rewritten at rest on the new grid with the same constant temperature, salinity, bed and plant fields (A15's initial file is uniform in every field) |
 | `swan_coord_default_1.grd`, `swan_bathy_default_1.bot` | on the new grid, same layout |
 | `swan.in` | `CGRID` / `INPGRID` dimensions and the boundary segments |
-| `ocean.in` | `Lm`, `Mm`; `DT` 3 s (halved), `NDTFAST` 12 (halved, so the barotropic step stays 0.25 s; see the caveat), `NTIMES` 28800 (same 24 h); output intervals scaled to stay hourly |
+| `ocean.in` | `Lm`, `Mm`; `DT` 3 s (halved), `NDTFAST` 24 (kept, so the barotropic step halves to 0.125 s and the barotropic Courant number stays about 0.8; see the caveat), `NTIMES` 28800 (same 24 h); output intervals scaled to stay hourly |
 
 The SWAN time step, the coupling interval and the wave boundary files are
 unchanged. Any other factor: `--factor N`.
@@ -39,13 +39,13 @@ time step). Results: to be added in [`results/`](../results).
 
 ## Caveats
 
-- **Barotropic Courant number.** The script halves `NDTFAST` together with
-  `DT`, so the fast step stays 0.25 s while the cells halve:
-  `tools/cfl_check.py` gives a barotropic Courant number of 1.61 (deepest
-  water at the north boundary, 10 m pass columns), against 0.81 at 20 m and a
-  limit of about 0.9 for LF-AM3. Keeping `NDTFAST` at 24 (fast step 0.125 s)
-  brings it back to about 0.8. (The script's docstring says `NDTFAST` is kept;
-  the code halves it.) Not yet checked against a run.
+- **Barotropic Courant number: keep `NDTFAST`.** Halving `DT` alone
+  halves the barotropic step with it, so the barotropic Courant number stays
+  about 0.8 (limit about 0.9 for LF-AM3). Halving `NDTFAST` as well keeps the
+  fast step at 0.25 s on cells half the size: Courant number about 1.6. The
+  first phase 0 submission did exactly that (its hand-written `ocean.in`
+  had `NDTFAST` 12) and blew up within a minute; the rerun keeps
+  `NDTFAST` 24 ([phase 0 entry](../notebook/2026-11-02_options-campaign-phase0.md)).
 - The SWAN seam period of the refined grid is the interpolated ghost-column
   distance, 20 m shorter than the original file's period (which is itself
   40 m longer than ROMS's); the seam effect is below 1e-3 m either way.

@@ -71,10 +71,21 @@ the A15 default.
 
 - p0-ndt20 may fail (barotropic Courant about 0.97): a failure is a result.
 - p0-grid10 is about 8x the baseline cost per simulated day (4x cells, DT
-  halved). Its `NDTFAST` 12 gives a fast step of 0.25 s on 10 m cells:
-  `tools/cfl_check.py` gives a barotropic Courant number of 1.61 (limit about
-  0.9), so this member may fail for that reason (found while writing this
-  repository; see [docs/Reef_Ideal_A15_veg_10m.md](../docs/Reef_Ideal_A15_veg_10m.md)).
+  halved).
+
+## Update, 2026-11-02 20:10: p0-grid10 rerun
+
+The first p0-grid10 run blew up within its first minute of wall time
+(`Blowing-up`, ROMS main3d). Its hand-written `ocean.in` had `NDTFAST` 12
+at DT 3 s: a 0.25 s fast step on 10 m cells, barotropic Courant number about
+1.6 against a limit of about 0.9. The refinement script itself keeps
+`NDTFAST` (fast step halves with DT, Courant number stays about 0.8); only
+the member's template was wrong. Rerun as `options-p0-grid10b` with
+`NDTFAST` 24. The failure is not a grid-convergence result.
+
+Also: the single-member jobs were moved out of the first region (its disk
+quota, 500 GB, held five 100 GB boot disks) to other regions with 50 GB
+disks, so the 15 members run side by side.
 
 ## Details and links
 

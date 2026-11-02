@@ -14,10 +14,11 @@ Copies CASE_SRC (e.g. cases/Reef_Ideal_A15_veg) to CASE_DST and replaces:
                            (the A15 initial file is uniform in every field)
   swan_coord_default_1.grd, swan_bathy_default_1.bot   on the new grid, same layout
   swan.in                  CGRID / INPGRID dimensions and the boundary segments
-  ocean.in                 Lm, Mm; DT divided by the factor and NTIMES, NDTFAST
-                           kept so that the barotropic step and the run length
-                           are unchanged; N(RST|HIS|AVG|DIA) scaled to keep the
-                           output interval
+  ocean.in                 Lm, Mm; DT divided by the factor (NDTFAST unchanged,
+                           so the barotropic step is divided too: the barotropic
+                           Courant number stays what it was), NTIMES and
+                           N(RST|HIS|AVG|DIA) multiplied by it (same run length
+                           and output interval)
 The SWAN time step, coupling interval and wave boundary files are unchanged.
 Prints the new dimensions and the smallest cells.
 """
@@ -162,7 +163,6 @@ def main():
     dt0 = float(re.sub("[dD].*", "", re.search(r"^ *DT *== *([0-9.dD+-]+)", oc, re.M).group(1)))
     oc = setkey(oc, "DT", lambda v: f"{dt0 / r:g}d0")
     oc = setkey(oc, "NTIMES", lambda v: str(r * int(v)))
-    oc = setkey(oc, "NDTFAST", lambda v: str(max(1, int(round(int(v) / r)))))
     for key in ("NRST", "NHIS", "NAVG", "NDIA"):
         oc = setkey(oc, key, lambda v: str(r * int(v)))
     (o.dst / "ocean.in").write_text(oc)
