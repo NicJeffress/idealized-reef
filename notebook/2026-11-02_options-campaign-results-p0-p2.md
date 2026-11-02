@@ -1,8 +1,8 @@
 # Options campaign, phases 0-2: results (A15)
 
 - **Date:** 2026-11-02 (evening)
-- **Status:** phases 0, 1 (vegetated and stratified) and 2 analysed; the three
-  72 h thermal members and the 10 m grid member still running (added when done)
+- **Status:** phases 0, 1 (vegetated, stratified, heated) and 2 analysed; the
+  10 m grid member still running (added when done)
 - **Setup:** [phase 0](2026-11-02_options-campaign-phase0.md),
   [phases 1-2](2026-11-02_options-campaign-phases1-2.md)
 
@@ -102,6 +102,23 @@ to 1e-8 (p1s-kmin, forced) cuts the offshore diffusivity tenfold (4.7e-5 ->
 5.1e-6 m²/s) and leaves the forced shallow mixing unchanged (1.3e-3); a rest
 run with the lower floor would close the question.
 
+### Phase 1c: heated case, 72 h (reference p1t-base, hours 48-72)
+
+| Member | set-up | crest transport | crest jet max | surface/mean forereef | reef-flat SST mean | reef-flat SST daily range |
+|---|---|---|---|---|---|---|
+| p1t-base (values) | 0.93 mm | 60.1 m³/s | 0.040 m/s | 0.80 | 27.74 C | 2.64 C |
+| p1t-tkew | -4.0 % | -8.0 % | -19.6 % | +23.4 % | 0.0 % | +2.8 % |
+| p1t-nleos (`NONLIN_EOS`) | -0.4 % | 0.0 % | -0.3 % | -0.1 % | 0.0 % | +0.2 % |
+
+**`NONLIN_EOS` rest check:** 24 h at rest (no tide, waves or heat flux), the
+largest spurious currents are the same with the nonlinear and the linear
+equation of state (3.6 mm/s in u, 4.4-4.5 mm/s in v, w 1.4e-4 vs 0.97e-4 m/s,
+sea-level range 2e-5 m): no new pressure-gradient error. The heated run then
+differs from the linear one by less than 0.5 % everywhere, including the
+reef-flat temperature: the nonlinear equation of state is harmless and not
+needed for A15 at these temperatures (the brief's expectation of up to 20 % in
+the buoyancy flux is not borne out on this strongly damped flow).
+
 ### Phase 2: bottom stress and canopy drag
 
 | Comparison | set-up | crest transport | crest jet max | pass jet max | surface/mean forereef | wall s per sim h |
@@ -156,8 +173,7 @@ Proposed to the author (nothing in the case folders changed yet):
 
 - p0-cpl300 to be rerun at 240 s.
 - The roller blow-up on the reef flat: a result, not retuned.
-- Thermal members (base, `TKE_WAVEDISS`, `NONLIN_EOS` and its rest check) and
-  the 10 m grid: to be added.
+- The 10 m grid: to be added.
 
 ## Details and links
 

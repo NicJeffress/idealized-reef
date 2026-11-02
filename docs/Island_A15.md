@@ -57,9 +57,12 @@ output.
 `build.sh --case cases/Island_A15_2pass --app CIRCLE_ISLAND` (coawst-cloud),
 10 ROMS processes (10 x 1 tiles round the island) + 6 SWAN on a 16-vCPU
 machine. About twice A15's cells (360 x 130 against 203 x 111) and a smaller
-time step, so roughly 3x A15's cost per simulated day.
+time step: 2.4x A15's wall time per simulated hour (measured).
 
 ## Status
 
-New (2026-11-02). Not yet run; a 2 h check on Cloud Batch comes next and
-will be recorded in the notebook.
+New (2026-11-02). First 6 h runs of both islands: stable (Courant numbers at
+most 0.03 / 0.17 / 0.37), 194 s of wall time per simulated hour on a 16-vCPU
+machine (about 78 min per simulated day), wave-driven inflow over the windward
+reef and outflow through the passes
+([notebook](../notebook/2026-11-02_island-a15-first-runs.md)).
