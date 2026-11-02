@@ -1,7 +1,8 @@
 # Options test campaign, phases 1 and 2: setup and submission
 
 - **Date:** 2026-11-02 (evening)
-- **Status:** submitted; **results pending**
+- **Status:** done except the thermal members; results in
+  [the phases 0-2 results entry](2026-11-02_options-campaign-results-p0-p2.md)
 - **Builds:** coawst-cloud `9d93a75`; one image per cpp option
 
 ## Question / why

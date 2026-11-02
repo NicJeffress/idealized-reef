@@ -1,8 +1,8 @@
 # Options test campaign, phase 0: setup and submission
 
 - **Date:** 2026-11-02 (evening)
-- **Status:** submitted; **results pending** (to be added to this entry and
-  to [`results/`](../results/README.md))
+- **Status:** done except p0-grid10; results in
+  [the phases 0-2 results entry](2026-11-02_options-campaign-results-p0-p2.md)
 
 ## Question / why
 

@@ -21,6 +21,8 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-02 | [Options campaign, phases 0-2: results](2026-11-02_options-campaign-results-p0-p2.md) | A15_veg, _strat, bare and patchy | Constant canopy damps the reef 95 % (noise floor ~1e-5); breaking spreads set-up -24 to +108 %; AB3-AM4 identical and 18 % faster; implicit canopy drag within 2.5 % and 37 % faster; 36 directions -10 %; roller blew up; rest diffusivity = GLS floor, not VEG_TURB |
+| 2026-11-02 | [SWAN skips triads in the first iteration](2026-11-02_swan-triads-skipped-first-iteration.md) | A15_veg | With currents and one iteration per step, `TRIAD` is never computed (p1-notriad bit-identical); two iterations: breaking dissipation -73 %, set-up -41 % |
 | 2026-11-02 | [OMEGA_IMPLICIT on the pass-jet runaway](2026-11-02_options-p2-omega-diag.md) | A15 thin-crest (thin_steep) | 2 m sea from t = 0: blow-up at 37.2 min, 35.3 min with `OMEGA_IMPLICIT`; the runaway is horizontal (cross-shore Courant ~0.75 at onset); DT 3 s clean with or without it (identical): option stays off; ~$0.06 |
 | 2026-11-02 | [Options campaign, phases 1-2: setup](2026-11-02_options-campaign-phases1-2.md) | A15_veg, _strat, _therm | 26 members (breaking, triads, whitecapping, TKE_WAVEDISS, roller, Canuto, GLS_Kmin, NONLIN_EOS, bottom stress, implicit canopy drag) submitted; `VEG_HMIXING` and `UV_BANIHASHEMI` do not compile in v3.9 |
 | 2026-11-02 | [Options campaign, phase 0: setup](2026-11-02_options-campaign-phase0.md) | A15_veg, A15_veg_10m | 15 members of 24 h (DT, NDTFAST, SWAN step and iterations, coupling, spectral resolution, tiling, 10 m grid, AB3-AM4, splines, VISC2) submitted; results pending |

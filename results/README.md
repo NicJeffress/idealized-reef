@@ -1,8 +1,12 @@
 # Results
 
-Results of the **options test campaign** on the A15 cases will be added here:
-which physics and numerics choices matter, measured against the baseline's own
-convergence noise.
+Results of the **options test campaign** on the A15 cases: which physics and
+numerics choices matter, measured against the baseline's own convergence noise.
+
+**Phases 0-2 (2026-11-02):** [results entry](../notebook/2026-11-02_options-campaign-results-p0-p2.md)
+(tables, figures, proposed decisions) and the finding that
+[SWAN skips triads in coupled runs with one iteration per step](../notebook/2026-11-02_swan-triads-skipped-first-iteration.md).
+The thermal members and the 10 m grid are still to be added.
 
 - **Phase 0**, the baseline's own noise (`Reef_Ideal_A15_veg`, constant canopy,
   24 h): DT 3 s, NDTFAST, SWAN time step and iterations, coupling interval,
