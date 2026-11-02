@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-02 | [OMEGA_IMPLICIT on the pass-jet runaway](2026-11-02_options-p2-omega-diag.md) | A15 thin-crest (thin_steep) | 2 m sea from t = 0: blow-up at 37.2 min, 35.3 min with `OMEGA_IMPLICIT`; the runaway is horizontal (cross-shore Courant ~0.75 at onset); DT 3 s clean with or without it (identical): option stays off; ~$0.06 |
 | 2026-11-02 | [Options campaign, phases 1-2: setup](2026-11-02_options-campaign-phases1-2.md) | A15_veg, _strat, _therm | 26 members (breaking, triads, whitecapping, TKE_WAVEDISS, roller, Canuto, GLS_Kmin, NONLIN_EOS, bottom stress, implicit canopy drag) submitted; `VEG_HMIXING` and `UV_BANIHASHEMI` do not compile in v3.9 |
 | 2026-11-02 | [Options campaign, phase 0: setup](2026-11-02_options-campaign-phase0.md) | A15_veg, A15_veg_10m | 15 members of 24 h (DT, NDTFAST, SWAN step and iterations, coupling, spectral resolution, tiling, 10 m grid, AB3-AM4, splines, VISC2) submitted; results pending |
 | 2026-11-02 | [Bottom-stress schemes on thin crests](2026-11-02_a15-thin-crest-bottom-stress.md) | A15 thin-crest variants | Implicit stress = uncapped explicit (1 %), converged in DT; the `LIMIT_BSTRESS` cap gives 40-75 % faster crest flow and a DT-dependent set-up; no blow-up on any crest; ~$0.60 |
