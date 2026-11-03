@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 05:50 UTC.
+**Last updated:** 2026-11-03 06:20 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -88,7 +88,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Explicit canopy drag at DT 6 s | fails once triads act on the dense canopy (fore-reef bed, 2 alpha \|U\| DT ~ 6); fine on the density-1 canopy (within 3 % of implicit) | dense: 6 of 8 runs blew up | triads-on, density-1 |
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
-| 10 m grid instead of 20 m | **not converged at 20 m**, the same in two regimes: the breaking zone (1010-1060 m from shore, 2-3 cells at 20 m) is under-resolved; dissipation is the same, the momentum transfer is not. Proposed: refine across the shore over that zone only (~+20 % cost instead of 8x) | set-up -16 % (both regimes), crest transport -11 % (density 1, triads) / -18 % (dense, no triads), dissipation +0.2 % | grid-10m |
+| 10 m grid instead of 20 m | **not converged at 20 m**: the breaking zone (2-3 cells at 20 m) is under-resolved. **Refining only that zone across the shore** (10 m rows from 850 to 1150 m) recovers the uniform 10 m answer at +16 % cost (instead of 8x) | 20 m vs 10 m: set-up -16 %, crest transport -11 %; band grid = 10 m for set-up, pass transport and jets | grid-10m |
 
 ## Changes adopted on 2026-11-03 (author's decisions)
 
@@ -131,7 +131,6 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Still open
 
-- A grid refined across the shore over the breaking zone only (proposed).
 - `TKE_WAVEDISS`, the roller and the breaking
   formulations on the stratified and heated cases with triads on; a 72 h
   heated run with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
