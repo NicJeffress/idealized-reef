@@ -7,8 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 00:10 UTC. Pending: the 10 m grid run, and the
-check runs of the defaults adopted on 2026-11-02 (see the end).
+**Last updated:** 2026-11-03 00:30 UTC. Pending: the 10 m grid run.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -58,7 +57,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Stability functions (`CANUTO_A` instead of Kantha-Clayson) | small on the flow, noticeable on the temperature | SST range +29 %, flow within 4 % | results p0-p2 |
 | Nonlinear equation of state (`NONLIN_EOS`), heated reef, 72 h | no new pressure-gradient error at rest; no effect when heated | < 0.5 % everywhere, reef-flat temperature included | results p0-p2 |
 | Heated reef (1000 W/m² peak, balanced over the day) | the reef-flat surface temperature swings 2.6 C a day | - | results p0-p2 |
-| Bottom stress: implicit (`BSTRESS_IMPLICIT`) vs explicit | the same on the bare reef | 0-3 % (forereef shear -17 %, being rechecked with triads) | results p0-p2 |
+| Bottom stress: implicit (`BSTRESS_IMPLICIT`) vs explicit | the same on the bare reef; **now the default** | 0-3 % (forereef shear ratio -6 % with triads, -17 % without) | results p0-p2, new-defaults check |
 | Bottom-stress cap (`LIMIT_BSTRESS`) | changes the answer and depends on DT; do not use without a DT check | set-up +15 %, crest jet +13 % (bare reef) | results p0-p2, thin crests |
 | Round island with passes (Island_A15) | wave-driven island-lagoon circulation: inflow over the windward reef, outflow through every pass, the leeward one most; the windward pass drains too | ~1150 m³/s in over the reef; 2 passes: 590 (windward) and 704 m³/s (leeward) out | island first runs |
 
@@ -84,13 +83,21 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m | **pending** | - | - |
 
-## Defaults adopted on 2026-11-02 (author's decision)
+## Defaults adopted on 2026-11-02 (author's decision), checked
 
 In every A15 case: the AB3-AM4 barotropic kernel, the implicit bottom
 stress, `SPLINES_VVISC` off; in the canopy cases also the implicit canopy
 drag. Images must be built with coawst-cloud `2d5672c` or later so that
-`TRIAD` acts. Check runs of the new defaults (bare, constant and patchy
-canopy, stratified; 24 h) are running and will be added here.
+`TRIAD` acts.
+
+Check runs, 24 h with triads
+([entry](../notebook/2026-11-03_a15-new-defaults-check.md)): on the bare reef
+the new defaults agree with the old settings within 0-3 % (set-up +1.3 %,
+crest transport +0.4 %, jets up to +3.3 %; the set-up's tidal range and the
+forereef shear ratio -6 %); on the constant canopy within 2.3 % except the
+mean set-up (-6.7 %, from the implicit bottom stress). The patchy canopy and
+the stratified case run stably at DT 6 s. **Every A15 run is about 20 %
+cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Still open
 
