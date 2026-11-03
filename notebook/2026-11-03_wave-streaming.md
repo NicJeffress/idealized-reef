@@ -1,0 +1,77 @@
+# Wave streaming: the wave momentum lost to bottom friction and the canopy
+
+- **Date:** 2026-11-03
+- **Status:** bottom streaming done (first-order: set-up +57 %); bottom + canopy streaming being rerun after a fix
+- **Builds:** coawst-cloud `ae2da7f` (`roms-veg-streaming-fixes`), `+BOTTOM_STREAMING`
+  (and `+VEG_STREAMING`); `Reef_Ideal_A15_veg`, breaking-zone grid, roller, density-1
+  canopy, 10 levels, `GLS_Kmin` 7.6e-6, `BREAKING CON 1.0 0.73` (as the baseline member
+  of the vertical-resolution test, which is the comparison), 24 h
+
+## Question / why
+
+In the vortex-force formulation (`WEC_VF`), the momentum the waves lose reaches the
+mean flow only through explicit force terms, one per way of losing it: breaking
+(always on), bottom friction (`BOTTOM_STREAMING`) and plants (`VEG_STREAMING`). The
+options note had both streaming options off as "second-order". On the density-1
+canopy reef SWAN's dissipation over the reef is 37 % breaking, 36 % bottom friction
+and 27 % canopy (8 h run), so without them 63 % of the wave momentum lost on the
+reef (all of it on the fore reef) pushed no water. The author's view was that they
+should be on.
+
+## Code fixes first
+
+The canopy force was broken in COAWST v3.9 (coawst-cloud `roms-veg-streaming-fixes`):
+it replaced the bottom force instead of adding to it, its depth integral scaled with
+the canopy height in metres, it used the previous step's canopy fraction, it had no
+ghost points (`Dissip_veg` was never exchanged), and under `PERFECT_RESTART` its
+restart variable was defined without the record dimension (a run stopped at the
+fourth restart record). After the fix the depth-integrated force equals
+(Dissip_fric + Dissip_veg) k/sigma to 3.5e-4 (0.29 of it before). The bottom force
+itself was right.
+
+## Results: bottom streaming
+
+| Metric | none | bottom, DT 6 s | bottom, DT 3 s |
+|---|---|---|---|
+| set-up | 14.18 mm | **+57 %** | +57 % |
+| set-up range | 13.48 mm | +32 % | +32 % |
+| crest transport | 521 m³/s | **+22 %** | +22 % |
+| pass transport | 618 m³/s | +19 % | +20 % |
+| crest jet p99 / max | 0.195 / 0.264 m/s | +17 / +13 % | +17 / +13 % |
+| pass jet p99 / max | 0.337 / 0.404 m/s | +22 / +21 % | +22 / +21 % |
+| surface / mean speed, crest / fore reef | 1.13 / 1.07 | -2 / -5 % | -2 / -4 % |
+| Hs crest / reef flat | 0.199 / 0.192 m | +3.7 / +3.4 % | same |
+| breaking dissipation across the reef | 1706 W/m | -1.4 % | -1.4 % |
+| lagoon flushing time | 64 h | -4.6 % | -4.5 % |
+| wall s per simulated hour | 115 | 116 | 184 |
+
+- **First-order.** Giving the water the momentum the waves lose to bottom friction
+  raises the lagoon set-up by more than half and the flow over the crest and
+  through the pass by a fifth. It acts near the bed on the fore reef and the crest,
+  where breaking adds nothing below the top layers: the near-surface share of the
+  flow falls slightly (surface/mean speed -2 to -5 %).
+- **Numerically clean**: DT 6 s and DT 3 s agree to 0.1 %; stable on the A15
+  defaults (implicit bottom stress and canopy drag), where the explicit-drag test
+  case of the coawst-cloud fix blew up; cost +1.5 %.
+- The waves themselves change little (Hs +3.7 % from the deeper water over the crest).
+
+## What it means
+
+Without `BOTTOM_STREAMING`, the model leaves out a forcing as large as a third of the
+breaking forcing on this reef; on a rough reef the set-up and the cross-reef transport
+are underestimated by tens of percent. The force is proportional to SWAN's
+bottom-friction dissipation, so the bed roughness (`grain_diameter` 0.12 m, SWAN KN
+0.3 m) now sets the flow directly as well as the wave height: it moves up the list of
+ensemble axes.
+
+## Decision / outcome
+
+Open (the author's decision): `BOTTOM_STREAMING` on in the A15 defaults; `VEG_STREAMING`
+pending its rerun.
+
+## Details and links
+
+- coawst-cloud: `roms-veg-streaming-fixes` (patch, document, test)
+- [Vertical resolution](2026-11-03_vertical-resolution.md) (the baseline member),
+  [results summary](../results/README.md)
+- Cost: bottom-streaming pair about $0.35.
