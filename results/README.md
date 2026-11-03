@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 01:20 UTC.
+**Last updated:** 2026-11-03 01:40 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -32,7 +32,10 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
    The likely mechanism on the canopy: triads move wave energy to higher
    frequencies, whose orbital motion reaches the bed less, so the canopy
    dissipates less of it and more reaches the crest and breaks there.
-2. **The canopy controls the reef's circulation.** A dense canopy (4 plants
+2. **The canopy controls the reef's circulation.** A realistic canopy
+   (density 1 per m², frontal area 0.2) gives a set-up of 18 mm and a crest
+   jet of 0.29 m/s, between the bare reef (62 mm, 0.83 m/s) and the dense
+   test canopy. A dense canopy (4 plants
    per m², 0.5 m diameter, 0.4 m tall) everywhere cuts the lagoon set-up by
    94 % and the crest transport by 85 % against the bare reef (3.9 against
    62 mm, 203 against 1396 m³/s; crest jet 0.10 against 0.83 m/s; all with
@@ -47,10 +50,10 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Question | Answer | Size of the effect | Entry |
 |---|---|---|---|
-| Triads (`TRIAD`) | first-order; must be on, with the SWAN fix | set-up x5.6 (canopy), +46 % (bare) | triads-on |
-| Wave breaking formulation, with triads | `BREAKING CON 1.0 0.73`, `CON 1.0 0.80` and `BKD` agree; `TG` (Thornton-Guza) is the outlier | CON 0.80 / BKD: set-up -4 / +6 %, crest transport -5 / +8 %; TG: set-up +12 %, forereef shear +145 %, breaking dissipation +45 % | triads-on |
+| Triads (`TRIAD`) | first-order; must be on, with the SWAN fix | without them: set-up -82 % (dense canopy), -61 % (density-1 canopy), -32 % (bare) | triads-on, density-1 |
+| Wave breaking formulation, with triads | CON 0.73 and CON 0.80 agree within 1 % on the realistic canopy; `BKD` gives 7-11 % more set-up, crest transport and crest jet; `TG` (Thornton-Guza) leaves the flow within 3 % but changes the fore-reef shear, crest Hs and flushing | density-1 canopy: BKD set-up +8 %, crest jet +11 %; TG forereef shear +62 %, Hs crest -18 %, flushing +33 % (dense canopy: similar spread) | density-1, triads-on |
 | ... without triads (for the record) | the spread looked huge | set-up -24 % to +108 %: an artefact of the missing triads | results p0-p2 |
-| Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | stable; small on the reef, but it increases the forereef shear, the opposite of what was expected; not adopted (tested with triads off) | crest transport -8 %, crest jet -17 to -20 %, forereef surface/mean speed +23 to +42 % | results p0-p2 |
+| Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | **with triads it behaves as expected**: less surface-intensified fore-reef flow and a slower crest jet; proposed for adoption. (With triads off it had increased the fore-reef shear: an artefact of the missing triads) | density-1 canopy: forereef surface/mean speed -32 %, crest jet -17 %, set-up -9 %, crest transport -5 % | density-1 |
 | Whitecapping on opposing currents (`WCAP AB ... CURRENT`) | no effect on A15 | < 1 % | results p0-p2 |
 | Wave roller (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5) | blew up at 23 min on the reef flat (0.3 -> 27 m/s in two steps); not usable as is | - | results p0-p2 |
 | Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`) | compiles as `-UV_KIRBY +UV_BANIHASHEMI` (the two are alternatives; our build had both); not yet run | - | VEG_HMIXING entry |
@@ -81,7 +84,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | `VISC2` 0.001 vs 0 | invisible; 0 is the default | ~1e-5 | results p0-p2 |
 | Vertical viscous operator (`SPLINES_VVISC` off) | small; needs to be off for the implicit schemes | crest surface/mean speed +11 % (canopy) | results p0-p2 |
 | Vertical diffusive operator (`SPLINES_VDIFF` off) | untestable on a case with T and S fixed (bit-identical); to test on the stratified case | - | results p0-p2 |
-| Explicit canopy drag at DT 6 s | fails once triads act, even on the uniform canopy (fore-reef bed, 2 alpha \|U\| DT ~ 6) | 6 of 8 runs blew up | triads-on |
+| Explicit canopy drag at DT 6 s | fails once triads act on the dense canopy (fore-reef bed, 2 alpha \|U\| DT ~ 6); fine on the density-1 canopy (within 3 % of implicit) | dense: 6 of 8 runs blew up | triads-on, density-1 |
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m (dense canopy, triads off, old defaults) | **not converged at 20 m**: the largest numerical effect found; to be repeated on the density-1 canopy with triads and the new defaults | set-up -15 %, crest transport -18 %, pass transport -10 %, crest jet p99 +15 %, forereef shear ratio +22 %, Hs crest +4 %; 8x the cost | results p0-p2 |
@@ -112,13 +115,11 @@ mean set-up (-6.7 %, from the implicit bottom stress). The patchy canopy and
 the stratified case run stably at DT 6 s. **Every A15 run is about 20 %
 cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
-## Running now (submitted 2026-11-03 00:27 UTC)
+## Running now
 
-- **A realistic canopy for the tests** (author's suggestion): density 1 per m²
-  everywhere (frontal area 0.2, 20 % of the bed covered, against 0.8 and 79 %
-  for the dense canopy), new defaults, triads on: baseline, DT 3 s, no
-  triads, gamma 0.80, `BKD`, `TG`, `TKE_WAVEDISS`, explicit canopy drag.
-- **The `GLS_Kmin` floor at rest**: stratified case, 7.6e-6 against 1e-8.
+- SWAN spectral resolution with triads (36 and 144 directions, 34 and 48
+  frequencies, density-1 canopy); the roller (`WEC_ALPHA` 0.5 at DT 6 and 3 s,
+  0.2); the 10 m grid with the current physics (density-1 canopy).
 
 ## Still open
 

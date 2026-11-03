@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-03 | [Density-1 canopy tests](2026-11-03_density1-canopy-tests.md) | A15_veg, density 1 | Realistic canopy (set-up 18 mm, crest jet 0.29 m/s); triads -61 % set-up when off; TKE_WAVEDISS now as expected (forereef shear -32 %); BKD +8 %; explicit drag fine at this density |
 | 2026-11-03 | [The GLS_Kmin floor at rest](2026-11-03_gls-kmin-at-rest.md) | A15_veg_strat | Lagoon diffusivity at rest 7.4e-4 m²/s is the TKE floor; Kmin 1e-8 gives 5.1e-6 (background) and keeps the lagoon stratified |
 | 2026-11-03 | [VEG_HMIXING and UV_BANIHASHEMI build failures](2026-11-03_veg-hmixing-and-banihashemi.md) | A15_veg | Banihashemi: UV_KIRBY was on too (alternatives), compiles as -UV_KIRBY; canopy-edge viscosity: COAWST dropped its routine in v3.6, everything else left in place, nothing replaces it |
 | 2026-11-03 | [A15 new defaults: check runs](2026-11-03_a15-new-defaults-check.md) | A15_veg (bare, constant, patchy), _strat | AB3-AM4 + implicit stress + implicit canopy drag: within 0-3 % of the old settings on the bare reef (shear ratio -6 %), all stable at DT 6 s, 20 % faster |
