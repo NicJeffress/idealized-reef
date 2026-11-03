@@ -99,6 +99,14 @@ mean set-up (-6.7 %, from the implicit bottom stress). The patchy canopy and
 the stratified case run stably at DT 6 s. **Every A15 run is about 20 %
 cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
+## Running now (submitted 2026-11-03 00:27 UTC)
+
+- **A realistic canopy for the tests** (author's suggestion): density 1 per m²
+  everywhere (frontal area 0.2, 20 % of the bed covered, against 0.8 and 79 %
+  for the dense canopy), new defaults, triads on: baseline, DT 3 s, no
+  triads, gamma 0.80, `BKD`, `TG`, `TKE_WAVEDISS`, explicit canopy drag.
+- **The `GLS_Kmin` floor at rest**: stratified case, 7.6e-6 against 1e-8.
+
 ## Still open
 
 - The 10 m grid (grid convergence of the set-up and the crest jet).
