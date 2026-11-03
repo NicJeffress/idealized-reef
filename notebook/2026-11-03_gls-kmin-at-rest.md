@@ -39,10 +39,47 @@ sqrt(Kmin) times the turbulent length scale; offshore, stratification limits
 the length scale (Galperin), in the unstratified shallow lagoon nothing does,
 so the same floor gives 15x more mixing there.
 
+## What the ROMS forum says (read 2026-11-03)
+
+- **The mechanism is known** (M. Scully, 2011, thread "Changing AKT_BAK values
+  has no effect on model results",
+  [myroms.org/forum/viewtopic.php?p=8458](https://m.myroms.org/forum/viewtopic.php?p=8458)):
+  with the Galperin limit on the length scale, which is active most of the
+  time in stratified water, k-epsilon's diffusivity tends to
+  AKt ~ AKv ~ 0.05 Kmin / N, so `GLS_Kmin`, not `AKT_BAK`, sets the background
+  mixing, and it rises with stratification. Our numbers fit: offshore
+  4.7e-5 m²/s at N about 8e-3 s^-1 (N² 1e-4) gives 0.05 x 7.6e-6 / 8e-3 =
+  4.8e-5 m²/s; in the nearly unstratified lagoon the same floor gives
+  7.4e-4 m²/s.
+- **The default is a 2005 suggestion, not a calibration:** 7.6e-6 comes from
+  the coefficient table of Warner et al. (2005, Ocean Modelling 8, 81-113),
+  matched to GOTM at the time; J. Warner (2011): "i provided sets of
+  coefficients that seemed to represent values in the literature at that
+  time". The suggestion block in `ocean.in` lists 5e-6 (k-kl), 7.6e-6
+  (k-epsilon, k-omega) and 1e-8 (gen).
+- **Others use far smaller values:** GOTM's default has since dropped to
+  1e-10 (J. Pringle, 2018, thread "excess mixing in k-epsilon GLS mixing;
+  bug or misconfigured?",
+  [myroms.org/forum/viewtopic.php?p=18566](https://myroms.org/forum/viewtopic.php?p=18566));
+  Umlauf and Burchard's GLS used 1e-9 (quoted by H. Arango, 2011). Scully ran
+  ROMS at 1e-10 "fine" and reached the specified background viscosity;
+  Pringle showed a stratification that should stay intact for 40 days being
+  erased in about 30 days at 7.6e-6 and kept at 1e-10. R. Harcourt (2023)
+  asked for the default to be lowered or flagged ("for N~1e-3/s you get AKt,
+  AKs, Akv ~ 1e-3 m^2/s"). The concern raised against low values is
+  numerical (1/k in the closure); no one in these threads reports a failure.
+- **Two related code issues are already handled in COAWST v3.9's
+  `gls_corstep.F`:** the smoothed Gh limiter (Harcourt 2018; COAWST has the
+  corrected `MAX(0, Gh-Ghcri)` form, upstream ROMS still the original), and
+  the floors applied to layer-thickness-weighted TKE during advection
+  (Harcourt 2023; COAWST applies the floors only after the vertical solve, to
+  TKE itself).
+
 ## Decision / outcome
 
-Proposed: `GLS_Kmin` 1e-8 for the stratified and heated A15 cases, once a
-72 h heated run with it is stable (ROMS users report k-epsilon being less
+Proposed: `GLS_Kmin` 1e-8 (or 1e-10, GOTM's current default) for the
+stratified and heated A15 cases, once a 72 h heated run with it is stable
+(running 2026-11-03 with 7.6e-6, 1e-8 and 1e-10) (ROMS users report k-epsilon being less
 forgiving at low floors; the 24 h forced stratified run with 1e-8 was stable,
 reef-flat temperature range -66 %). The floor is a modelling choice that
 decides how much a calm lagoon can stratify; record it in any methods
