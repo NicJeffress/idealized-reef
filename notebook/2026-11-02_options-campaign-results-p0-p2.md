@@ -1,8 +1,7 @@
 # Options campaign, phases 0-2: results (A15)
 
 - **Date:** 2026-11-02 (evening)
-- **Status:** phases 0, 1 (vegetated, stratified, heated) and 2 analysed; the
-  10 m grid member still running (added when done)
+- **Status:** done (the 10 m grid member added 2026-11-03)
 - **Setup:** [phase 0](2026-11-02_options-campaign-phase0.md),
   [phases 1-2](2026-11-02_options-campaign-phases1-2.md)
 
@@ -50,7 +49,7 @@ jet.
 | **p0-ab3am4** | 0.0 % | 0.0 % | 0.0 % | 0.0 % | 0.0 % | 0.0 % | 0.0 % | **67 (-18 %)** |
 | p0-splvv (`-SPLINES_VVISC`) | -6.3 % | +1.2 % | +0.5 % | +1.7 % | **+10.9 %** | -1.6 % | -0.1 % | 81 |
 | p0-splvd (`-SPLINES_VDIFF`) | bit-identical (T and S fixed in this case: nothing to diffuse) | | | | | | | 83 |
-| p0-grid10 (10 m) | running | | | | | | | |
+| **p0-grid10 (10 m)** | **-15.5 %** | **-17.6 %** | -3.9 % | -5.1 % | -4.8 % | +22.1 % | -8.3 % | 657 (8x) |
 
 "0.0 %" means below 0.01 % (typically 1e-5 relative). All members stable;
 largest Courant numbers 0.016 / 0.045 / 0.13 (Cu / Cv / Cw) at DT 6 s.
@@ -175,7 +174,11 @@ author (nothing in the case folders changed yet):
 
 - p0-cpl300 to be rerun at 240 s.
 - The roller blow-up on the reef flat: a result, not retuned.
-- The 10 m grid: to be added.
+- The 10 m grid (added 2026-11-03): the 20 m grid is not converged for the
+  transports and the set-up (crest transport -18 %, set-up -15 % at 10 m;
+  regions mapped to the 10 m rows: lagoon 10-50, offshore 189-209, crest
+  v-row 65, forereef 71-89). Being repeated with triads and the new defaults
+  on the density-1 canopy.
 
 ## Details and links
 
