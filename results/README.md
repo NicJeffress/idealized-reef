@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 21:00 UTC.
+**Last updated:** 2026-11-03 22:10 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -51,6 +51,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Question | Answer | Size of the effect | Entry |
 |---|---|---|---|
+| Turbulence closure on the heated reef (k-epsilon KC / Canuto-A, gen, k-omega) | **k-epsilon is fine**: Canuto-A within 1-3 %; gen within 5 % (crest shear 10 %); k-omega odd in the lagoon (AKt at the background, weaker mean stratification), needs a look; `VEG_TURB` itself 2-8 % | 5-10 % | closure entry; keep k-epsilon proposed |
 | Wave streaming: the wave momentum lost to bottom friction (`BOTTOM_STREAMING`) | **first-order**: set-up +57 %, crest transport +22 %, pass +19 %, jets +13-22 %; stable at DT 6 s (= DT 3 s); the canopy part (`VEG_STREAMING`) pending | without it a third of the reef's wave forcing is missing | wave-streaming entry; the author's decision open |
 | Triads (`TRIAD`) | first-order; must be on, with the SWAN fix | without them: set-up -82 % (dense canopy), -61 % (density-1 canopy), -32 % (bare) | triads-on, density-1 |
 | Wave breaking formulation, with triads | CON 0.73 and CON 0.80 agree within 1 % on the realistic canopy; `BKD` gives 7-11 % more set-up, crest transport and crest jet; `TG` (Thornton-Guza) leaves the flow within 3 % but changes the fore-reef shear, crest Hs and flushing | density-1 canopy: BKD set-up +8 %, crest jet +11 %; TG forereef shear +62 %, Hs crest -18 %, flushing +33 % (dense canopy: similar spread) | density-1, triads-on |
@@ -73,8 +74,10 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Question | Answer | Size | Entry |
 |---|---|---|---|
+| Bare reef on the breaking-zone grid at DT 6 s | **blows up** (58 min, top of the fore reef: cross-shore Courant 1 on the 10 m rows; the flow is 3-4x faster without the canopy) | runs at DT 3 s | limiters entry (bare update) |
+| `SPLINES_VDIFF` | **inert with MPDATA tracers** (bit-identical): the spline vertical diffusion is used only for non-MPDATA tracers | - | closure entry |
 | Vertical resolution (N 10 / 15 / 20) | **N 10 not converged**: set-up -7 % at N 15, -10 to -12 % at N 20; crest and pass flow +2 to +3 %, pass jet +9 %; N 20 needs DT 3 s; N 15 at DT 6 s clean | 10 % in set-up; cost +7 % (N 15), 2.7x (N 20, DT 3 s) | vertical-resolution entry; **N 15 adopted** |
-| SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 %; `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
+| SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 % (bare reef: 0.8 %); `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
 | Time step DT 6 vs 3 s (bare reef, triads on: a flow that moves) | converged | <= 1.6 % (forereef shear 3.4 %) | triads-on |
 | ... on the dense canopy | converged, but only because the canopy damps the flow | ~1e-5 | results p0-p2 |
 | NDTFAST 20 or 30 instead of 24 | no effect | ~1e-5 | results p0-p2 |
@@ -149,12 +152,12 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 - Later, once the physics and numerics are settled: the list of ensemble axes
   (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,
   `ZOS_HSIG_ALPHA`, ...) and lagoon residence time with ROMSPath.
-- `VEG_TURB` is written for k-epsilon only (its canopy source is an epsilon source):
-  if the closure test favours k-omega or gen, patch it first; otherwise none needed.
+- `VEG_TURB` is written for k-epsilon only: the closure test favours keeping
+  k-epsilon, so no patch is needed (to revisit only if gen or k-omega is chosen).
 - Wave streaming: bottom streaming is first-order (set-up +57 %); adopting it is the
   author's decision; canopy streaming being rerun after a restart-file fix.
 - `TKE_WAVEDISS`, the roller and the breaking
-  formulations on the stratified and heated cases with triads on; `SPLINES_VDIFF` on the stratified case.
+  formulations on the stratified and heated cases with triads on; (`SPLINES_VDIFF`: inert with MPDATA.)
 - `UV_BANIHASHEMI` instead of `UV_KIRBY`: no difference on A15 (within 0.5 %); to
   reconsider, and check on every new domain with sheared currents (a pass jet,
   a wind-driven surface current) and waves spanning kD ~ 1.

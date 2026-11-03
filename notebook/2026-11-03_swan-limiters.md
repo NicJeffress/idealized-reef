@@ -58,9 +58,23 @@ much stronger (a pass with a 1-2 m/s ebb jet against swell) the frequency
 shift and the refraction by currents grow, so the result does not carry over
 to such a site without its own check.
 
+## Update: the bare reef (same day)
+
+The author asked whether a smoother bed, with no canopy, would change this. Same
+pair (current settings, `NUM CTHETA 0.9`) on the bare reef (canopy density 0; bed
+roughness unchanged, 0.12 m grain), the defaults of the evening (`GLS_Kmin` 1e-8):
+
+- **At DT 6 s both members blew up** after 58 min, at the top of the fore reef
+  inside the 10 m band: without the canopy's drag the flow is much faster (lagoon
+  set-up 55 mm against 14 mm, pass jet 0.97 m/s, currents up to 1.36 m/s), and the
+  cross-shore Courant number on the 10 m rows reached 1. **The bare cases need
+  DT 3 s on the breaking-zone grid.**
+- At DT 3 s: `CTHETA 0.9` again changes nothing (every metric within 0.8 %;
+  direction noise p99 3.0 against 3.9 deg alongshore). CSV next to this entry.
+
 ## Decision / outcome
 
-Keep the defaults (no limiter, `DIRIMPL` 0.5) for A15.
+Keep the defaults (no limiter, `DIRIMPL` 0.5) for A15, canopy and bare.
 
 ## Details and links
 
