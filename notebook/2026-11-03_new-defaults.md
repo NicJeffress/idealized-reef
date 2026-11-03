@@ -57,7 +57,8 @@ modelling choices and made these defaults.
 
 ## Decision / outcome
 
-Adopted: roller, band grid, roughness as a suggestion, `GLS_Kmin` 1e-8, 15 vertical
+Adopted: roller, band grid, roughness as a suggestion, `GLS_Kmin` 1e-8, wave streaming
+(bottom and canopy, [entry](2026-11-03_wave-streaming.md)), 15 vertical
 levels ([vertical resolution](2026-11-03_vertical-resolution.md)),
 and `BREAKING BKD 1.0 0.54 7.59 -8.06 8.09` (SWAN's defaults; 7-11 % more set-up and
 crest transport than `CON 0.73` with triads, [breaking test](2026-11-03_density1-canopy-tests.md))

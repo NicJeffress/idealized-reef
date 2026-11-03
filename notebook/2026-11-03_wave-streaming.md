@@ -1,7 +1,7 @@
 # Wave streaming: the wave momentum lost to bottom friction and the canopy
 
 - **Date:** 2026-11-03
-- **Status:** done: bottom streaming set-up +57 %, bottom + canopy +95 %; adopting them is the author's decision
+- **Status:** done; **both adopted in the A15 defaults** (the author, 2026-11-03)
 - **Builds:** coawst-cloud `ae2da7f` (`roms-veg-streaming-fixes`), `+BOTTOM_STREAMING`
   (and `+VEG_STREAMING`); `Reef_Ideal_A15_veg`, breaking-zone grid, roller, density-1
   canopy, 10 levels, `GLS_Kmin` 7.6e-6, `BREAKING CON 1.0 0.73` (as the baseline member
@@ -109,8 +109,8 @@ wave dissipation, so the canopy parameters set the flow through it too.
 
 ## Decision / outcome
 
-Open (the author's decision): `BOTTOM_STREAMING` and `VEG_STREAMING` on in the A15
-defaults (they need images from coawst-cloud `4abff12` on).
+**Adopted** (the author, 2026-11-03): `BOTTOM_STREAMING` in every A15 case and
+`VEG_STREAMING` in the canopy cases; images from coawst-cloud `4abff12` on.
 
 ## Details and links
 

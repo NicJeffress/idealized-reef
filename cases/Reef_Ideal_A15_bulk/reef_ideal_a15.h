@@ -51,7 +51,8 @@
                          (-32 %), as the physics expects (notebook 2026-11-03_density1-canopy-tests) */
 #define ZOS_HSIG      /* surface roughness from the wave height (ZOS_HSIG_ALPHA), with TKE_WAVEDISS */
 #define UV_KIRBY
-#undef BOTTOM_STREAMING
+#define BOTTOM_STREAMING  /* wave momentum lost to bottom friction -> mean flow (WEC_VF); A15 default
+                           since 2026-11-03 (author): set-up +57 %; notebook 2026-11-03_wave-streaming */
 
 #undef ANA_INITIAL
 #define ANA_SMFLUX

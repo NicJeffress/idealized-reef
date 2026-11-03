@@ -67,7 +67,8 @@
                          (-32 %), as the physics expects (notebook 2026-11-03_density1-canopy-tests) */
 #define ZOS_HSIG      /* surface roughness from the wave height (ZOS_HSIG_ALPHA), with TKE_WAVEDISS */
 #define UV_KIRBY
-#undef BOTTOM_STREAMING
+#define BOTTOM_STREAMING  /* wave momentum lost to bottom friction -> mean flow (WEC_VF); A15 default
+                           since 2026-11-03 (author): set-up +57 %; notebook 2026-11-03_wave-streaming */
 
 #undef ANA_INITIAL
 #define ANA_SMFLUX
@@ -110,7 +111,9 @@
 #   define VEG_TURB
 #  endif
 #  define VEG_SWAN_COUPLING  /* ROMS sends plant density/height/diameter to SWAN */
-#  undef VEG_STREAMING
+#  define VEG_STREAMING  /* wave momentum lost to the canopy -> mean flow in the canopy layers; A15 default
+                           since 2026-11-03 (author), with BOTTOM_STREAMING set-up +95 %; needs
+                           coawst-cloud roms-veg-streaming-fixes (4abff12 on) */
 # endif
 
 #ifdef SOLVE3D

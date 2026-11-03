@@ -9,7 +9,8 @@
 > uniform 10 m answer at +16 % cost (notebook 2026-11-03_grid-10m). Row numbers
 > quoted below refer to the 20 m grid. The Reniers roller is on
 > (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5; notebook 2026-11-03_roller-checks). Also since
-> 2026-11-03: 15 vertical levels (was 10), `GLS_Kmin` 1e-8 and SWAN `BKD` breaking.
+> 2026-11-03: 15 vertical levels (was 10), `GLS_Kmin` 1e-8, SWAN `BKD` breaking and wave
+> streaming (`BOTTOM_STREAMING`; `VEG_STREAMING` with the canopy).
 
 
 Same as `cases/Reef_Ideal_A15_veg` (constant canopy, periodic ROMS and
