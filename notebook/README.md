@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-03 | [GLS_Kmin and background mixing, heated 72 h](2026-11-03_kmin-heated-72h.md) | A15_veg_therm | 1e-8 and 1e-10 stable, same answer; on the forced reef a few percent; offshore AKt tenfold lower. Recommend 1e-8 |
 | 2026-11-03 | [The wave roller: strength, refined grid, restarts](2026-11-03_roller-checks.md) | A15_veg, density 1 | Linear in `WEC_ALPHA` (0.5: set-up +25 %); larger on the refined grid (+32 %), less grid-sensitive; restart fixed (`roms-restart-roller`). Recommended on at 0.5 |
 | 2026-11-03 | [Grid convergence: 10 m vs 20 m](2026-11-03_grid-10m.md) | A15_veg, dense and density 1 | 20 m not converged: set-up -16 %, crest transport -11 to -18 % at 10 m; the breaking zone is 2-3 cells wide at 20 m; same dissipation |
 | 2026-11-03 | [30-degree spread: new baseline, directions converged](2026-11-03_spread30-baseline-and-resolution.md) | A15_veg, density 1 | 72 directions within 1 % of 144 (36 within 3 %); 20 frequencies 3 % low; triads -58 %; new baseline set-up 12.5 mm (a third less than at 4 degrees) |

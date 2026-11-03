@@ -1,7 +1,7 @@
 # The GLS minimum TKE (`GLS_Kmin`): what it does and what value to use
 
 A reference note for the A15 cases (and any ROMS/COAWST run with the GLS
-k-epsilon closure). Last updated 2026-11-03.
+k-epsilon closure). Last updated 2026-11-03 (72 h heated runs added).
 
 ## In short
 
@@ -78,6 +78,28 @@ about 1.3e-3 m²/s, because the flow produces that turbulence). This floor is
 the "unexplained 1e-3 m²/s backreef diffusivity at rest" of earlier tests: it
 is identical with the canopy turbulence (`VEG_TURB`) switched off.
 
+### Heated, forced, 72 h
+
+Heated case (shortwave peak 1000 W/m², tide, waves, canopy), 72 h, third day
+([notebook](../notebook/2026-11-03_kmin-heated-72h.md)):
+
+| Zone | AKt, 7.6e-6 / 1e-8 / 1e-10 | top-bottom temperature, mean | surface daily range |
+|---|---|---|---|
+| lagoon and backreef | 5.3e-3 / 5.4e-3 / 5.4e-3 m²/s | 0.110 / 0.114 / 0.114 C | 1.92 / 1.94 / 1.93 C |
+| fore reef | 9.0e-4 / 9.4e-4 / 9.5e-4 m²/s | 0.391 / 0.410 / 0.409 C | 1.05 / 1.11 / 1.11 C |
+| offshore | 4.7e-5 / 5.1e-6 / 5.0e-6 m²/s | 4.81 C, all three | 0.47 C, all three |
+
+All three ran stably. Where the flow makes turbulence (the whole reef here),
+the floor changes the temperatures by a few percent at most; offshore below
+the mixed layer it sets the diffusivity tenfold higher, which a 72 h run cannot
+see (crossing a 20 m thermocline at 5e-5 m²/s takes about 90 days) but a run
+of weeks would. 1e-8 and 1e-10 agree to three digits. With the floor at 1e-8,
+`AKT_BAK` 1e-6 instead of 5e-6 sets the offshore diffusivity to 1.1e-6 m²/s and
+adds 3 % to the reef's stratification; `AKV_BAK` 5e-6 instead of 5e-5 raises
+the fore-reef diffusivity 16 % and moves the temperatures 1-4 %. (An earlier
+"-66 % reef-flat temperature range" with 1e-8 was on the unheated stratified
+case, where that range is only 0.045 C.)
+
 ## What the ROMS forum and the literature say
 
 - **Where 7.6e-6 comes from:** the coefficient table of Warner et al. (2005,
@@ -122,12 +144,16 @@ numerical (divisions by k).
 
 ## Recommendation for the A15 cases
 
-- Unforced or weakly forced stratified and heated runs: **1e-8 or 1e-10**,
-  once a 72 h heated run confirms stability (running 2026-11-03 with 7.6e-6,
-  1e-8 and 1e-10 side by side; results will be added here).
-- Wave- and tide-dominated runs on the reef: the choice matters little where
-  the flow makes its own turbulence (crest, surf zone), and a lot in the
-  lagoon at slack water and offshore below the mixed layer.
+- **`GLS_Kmin` 1e-8** in every A15 case (proposed 2026-11-03, the author's
+  decision): stable in 72 h heated runs, the same answer as 1e-10, and the
+  value ROMS's input file suggests for the generic closure. The default
+  7.6e-6 adds a hidden 1e-5 to 1e-3 m²/s wherever the water is quiet.
+- With the floor that low, **`AKT_BAK` (5e-6) and `AKV_BAK` (5e-5) are the
+  quiet-water mixing**: choose them deliberately and report them with the
+  floor.
+- On a forced reef the choice matters little (a few percent); it matters
+  in a calm lagoon at slack water and offshore below the mixed layer, and
+  more the longer the run.
 - Whatever the choice, keep it the same across an ensemble and report it.
 
 ## Sources

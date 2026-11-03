@@ -60,7 +60,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Wave-number-dependent current to SWAN (`UV_BANIHASHEMI` instead of `UV_KIRBY`) | **no practical difference**: keep `UV_KIRBY` (the two are alternatives; the first build had both, which does not compile) | within 0.5 % (forereef shear ratio +5 %), wall time +5 % | VEG_HMIXING entry; run 2026-11-03 |
 | Canopy-edge viscosity (`VEG_HMIXING`) | does not compile since COAWST v3.6, which dropped its routine (`vegetation_hmixing.F`) but kept everything else; nothing replaces it | - | VEG_HMIXING entry |
 | Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | **the GLS minimum-TKE floor** (`GLS_Kmin` 7.6e-6), not the canopy turbulence (identical with `VEG_TURB` off); `GLS_Kmin` 1e-8 removes it | lagoon diffusivity at rest 7.4e-4 -> 5.1e-6 m²/s (150x); the calm lagoon keeps its stratification | results p0-p2, Kmin at rest |
-| Lower TKE floor (`GLS_Kmin` 1e-8; see [docs/gls_kmin.md](../docs/gls_kmin.md)) | diffusivity falls to ROMS's background everywhere at rest; proposed for stratified and heated runs after a 72 h heated check | reef-flat SST range -66 % (stratified, forced, 24 h) | results p0-p2, Kmin at rest |
+| Lower TKE floor (`GLS_Kmin` 1e-8; see [docs/gls_kmin.md](../docs/gls_kmin.md)) | diffusivity falls to the background (`AKT_BAK`) wherever the water is quiet; **stable in 72 h heated runs** (1e-10 too, same answer). On the forced, heated reef it changes temperatures by a few percent at most; offshore below the mixed layer it cuts the diffusivity tenfold (matters over weeks). **Recommended for every A15 case** (author's decision), with `AKT_BAK` 5e-6 and `AKV_BAK` 5e-5 reported as the quiet-water mixing | heated 72 h: lagoon daily range 1.92 -> 1.94 C, fore-reef stratification +5 %, offshore AKt 4.7e-5 -> 5.1e-6 m²/s; AKV_BAK 5e-6: fore-reef AKt +16 % | Kmin at rest; Kmin heated 72 h |
 | Stability functions (`CANUTO_A` instead of Kantha-Clayson) | small on the flow, noticeable on the temperature | SST range +29 %, flow within 4 % | results p0-p2 |
 | Nonlinear equation of state (`NONLIN_EOS`), heated reef, 72 h | no new pressure-gradient error at rest; no effect when heated | < 0.5 % everywhere, reef-flat temperature included | results p0-p2 |
 | Heated reef (1000 W/m² peak, balanced over the day) | the reef-flat surface temperature swings 2.6 C a day | - | results p0-p2 |
@@ -133,7 +133,6 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 ## Still open
 
 - `TKE_WAVEDISS`, the roller and the breaking
-  formulations on the stratified and heated cases with triads on; a 72 h
-  heated run with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
+  formulations on the stratified and heated cases with triads on; `SPLINES_VDIFF` on the stratified case.
 - Infragravity waves: none of the runs has them; a standalone SWAN `SURFBEAT`
   estimate of their energy on the reef flat is the planned first step.
