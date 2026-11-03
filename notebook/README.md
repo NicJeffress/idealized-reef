@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-03 | [VEG_HMIXING and UV_BANIHASHEMI build failures](2026-11-03_veg-hmixing-and-banihashemi.md) | A15_veg | Banihashemi: UV_KIRBY was on too (alternatives), compiles as -UV_KIRBY; canopy-edge viscosity: COAWST dropped its routine in v3.6, everything else left in place, nothing replaces it |
 | 2026-11-03 | [A15 new defaults: check runs](2026-11-03_a15-new-defaults-check.md) | A15_veg (bare, constant, patchy), _strat | AB3-AM4 + implicit stress + implicit canopy drag: within 0-3 % of the old settings on the bare reef (shear ratio -6 %), all stable at DT 6 s, 20 % faster |
 | 2026-11-02 | [Options campaign with triads on](2026-11-02_options-triads-on.md) | A15_veg (constant canopy, bare) | Triads multiply the canopy set-up by 5.6 (bare reef +46 %); 1/2/5 SWAN iterations agree within 0.6 %; explicit canopy drag blows up with triads (implicit runs); bare-reef noise floor <= 1.6 %; AB3-AM4 within it, 19 % faster; breaking CON/BKD/gamma 0.80 within ~8 %, TG the outlier |
 | 2026-11-02 | [Island_A15: first runs](2026-11-02_island-a15-first-runs.md) | Island_A15_2pass, _4pass | Both stable 6 h (Courant <= 0.37), 194 s per simulated hour; inflow over the windward reef ~1150 m³/s, outflow through every pass, the leeward one most (704 of 1294 m³/s with 2 passes) |

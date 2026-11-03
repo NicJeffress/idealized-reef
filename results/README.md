@@ -53,7 +53,8 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | stable; small on the reef, but it increases the forereef shear, the opposite of what was expected; not adopted (tested with triads off) | crest transport -8 %, crest jet -17 to -20 %, forereef surface/mean speed +23 to +42 % | results p0-p2 |
 | Whitecapping on opposing currents (`WCAP AB ... CURRENT`) | no effect on A15 | < 1 % | results p0-p2 |
 | Wave roller (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5) | blew up at 23 min on the reef flat (0.3 -> 27 m/s in two steps); not usable as is | - | results p0-p2 |
-| Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`), canopy-edge viscosity (`VEG_HMIXING`) | do not compile in COAWST v3.9 | - | phases 1-2 setup |
+| Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`) | compiles as `-UV_KIRBY +UV_BANIHASHEMI` (the two are alternatives; our build had both); not yet run | - | VEG_HMIXING entry |
+| Canopy-edge viscosity (`VEG_HMIXING`) | does not compile since COAWST v3.6, which dropped its routine (`vegetation_hmixing.F`) but kept everything else; nothing replaces it | - | VEG_HMIXING entry |
 | Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | the GLS minimum-TKE floor (`GLS_Kmin` 7.6e-6), not the canopy turbulence: identical with `VEG_TURB` off | lagoon diffusivity 7.4e-4 m²/s, TKE at the floor everywhere | results p0-p2 |
 | Lower TKE floor (`GLS_Kmin` 1e-8) | offshore diffusivity 10x lower; the reef-flat temperature range drops | reef-flat SST range -66 % (stratified, 24 h) | results p0-p2 |
 | Stability functions (`CANUTO_A` instead of Kantha-Clayson) | small on the flow, noticeable on the temperature | SST range +29 %, flow within 4 % | results p0-p2 |
