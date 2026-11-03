@@ -32,6 +32,31 @@ effect"), and it varies with the stratification: weaker stratification, more
 mixing. In nearly unstratified water the length-scale limit hardly acts and
 the same floor gives much larger values.
 
+## And `AKT_BAK`?
+
+In the GLS closure the background coefficients are added to the turbulent
+part (`gls_corstep.F`):
+
+    Akv = Akv_bak + Sm*ql
+    Akt = Akt_bak + Sh*ql
+
+and they are kept out of the TKE budget (shear and buoyancy production use
+`Akv - Akv_bak` and `Akt - Akt_bak`); at the surface boundary
+`Akt = Akt_bak`. So the background is always present; whether it matters
+depends on the turbulent part next to it. With the floor at 7.6e-6 the
+turbulent part in quiet water is 1e-5 to 1e-3 m²/s and `AKT_BAK` (5e-6 in the
+A15 cases) is a percent of the total: changing it "has no effect". With the
+floor at 1e-8 or below, the turbulent part in quiet water drops to about
+1e-7 m²/s and **`AKT_BAK` and `AKV_BAK` become the background mixing** (the rest
+run measured 5.1e-6 m²/s, i.e. `AKT_BAK`). Lowering the floor therefore hands
+the quiet-water mixing to two explicit parameters, which then need choosing:
+
+| Parameter | A15 value | Notes |
+|---|---|---|
+| `AKT_BAK` | 5e-6 m²/s (T and S) | ROMS's usual default 1e-6; molecular heat diffusion 1.4e-7, salt 1e-9; the excess stands for unresolved mixing (internal waves) |
+| `AKV_BAK` | 5e-5 m²/s | 10x `AKT_BAK`; sets the vertical friction of a calm lagoon at slack water once the floor is low |
+| `AKK_BAK`, `AKP_BAK` | 5e-6 m²/s | background diffusion of TKE and of the length-scale variable; smooth the closure's own fields only |
+
 ## What the A15 tests measured
 
 24 h at rest (no tide, no waves), stratified case (N² 1e-4 initially), the
