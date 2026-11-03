@@ -1,7 +1,7 @@
 # Vertical resolution: N 10, 15 and 20 levels
 
 - **Date:** 2026-11-03
-- **Status:** done; N 10 is not converged; the choice of N is the author's decision
+- **Status:** done; **N 15 at DT 6 s adopted** for all A15 cases (the author, 2026-11-03)
 - **Builds:** coawst-cloud `3227cce`, image `v3.9-cc3227cce-reef_a15_veg-def1103b`:
   `Reef_Ideal_A15_veg` on the breaking-zone grid, Reniers roller (`WEC_ALPHA` 0.5),
   density-1 canopy, `GLS_Kmin` 7.6e-6 and `BREAKING CON 1.0 0.73` (as the other
@@ -61,8 +61,10 @@ DT 3 s (2.7x the cost of N 10) for the last 4 %.
 
 ## Decision / outcome
 
-Open (the author's decision): N 15 at DT 6 s as the new default, N 20 at DT 3 s,
-or N 10 with the difference stated.
+**N 15 at DT 6 s adopted** in every A15 case (the author, 2026-11-03): the initial
+files were rewritten with 15 levels (`tools/reef/set_nlevels.py`, exact Vstretching 4
+levels; the stratified and thermal temperatures with `make_strat_init.py`). The
+remaining 3-4 % in set-up to N 20 is noted as a resolution uncertainty.
 
 ## Details and links
 

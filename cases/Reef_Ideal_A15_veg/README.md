@@ -8,7 +8,8 @@
 > `tools/reef/refine_a15_grid.py --band 850 1150 --factor 2`; it recovers the
 > uniform 10 m answer at +16 % cost (notebook 2026-11-03_grid-10m). Row numbers
 > quoted below refer to the 20 m grid. The Reniers roller is on
-> (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5; notebook 2026-11-03_roller-checks).
+> (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5; notebook 2026-11-03_roller-checks). Also since
+> 2026-11-03: 15 vertical levels (was 10), `GLS_Kmin` 1e-8 and SWAN `BKD` breaking.
 
 
 > **Vegetation elements are cylinders: `plant_thickness = (pi/4) x
