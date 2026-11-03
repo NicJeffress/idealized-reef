@@ -81,8 +81,8 @@ the restart worse than no fix (1.3e-3 against 6.4e-4 m/s). The final fix
 also stores the roller dissipation `Dissip_roller` and skips the roller update
 in the first step after a restart: the test case then restarts to 5.8e-11 m/s
 (round-off), and builds without the roller are unchanged (bit-identical
-output). The 3.7e-7 m/s of the no-roller control is a separate restart
-residual of the current A15 defaults, being traced.
+output). The 3.7e-7 m/s of the no-roller control was a separate residual, since
+traced and fixed ([densities frozen at the start time](2026-11-03_restart-residual-density.md)).
 
 ## What the literature says
 

@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 20:30 UTC.
+**Last updated:** 2026-11-03 20:45 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -118,6 +118,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Problem | Status |
 |---|---|
+| With `TS_FIXED`, ROMS computed the depth-averaged densities of the barotropic pressure gradient once, at start-up: a restarted run used those of the restart time (3.7e-7 m/s off after 4 h) | fixed: coawst-cloud `roms-ts-fixed-density` (restarts bit-identical) |
 | SWAN never computed `TRIAD` in coupled runs (first-iteration guard with currents) | fixed: coawst-cloud `swan-triads-nonstationary` |
 | The Reniers roller took one explicit step per DT (`numits=1`; 30 commented out): unstable at DT 6 s on a reef crest | fixed: coawst-cloud `roms-roller-substeps` |
 | The Reniers roller area `rollA` was not in the restart file: each restarted segment began with no roller (1.4e-4 m/s off after 4 h) | fixed: coawst-cloud `roms-restart-roller` stores `rollA` and `Dissip_roller` and does not step the roller twice in the first restarted step (A15 test: 6.4e-4 m/s before, 5.8e-11 after, round-off) |
