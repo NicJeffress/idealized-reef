@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 04:40 UTC.
+**Last updated:** 2026-11-03 05:30 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -80,7 +80,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | SWAN time step 60 vs 120 s | no effect (tested with triads off) | ~1e-5 | results p0-p2 |
 | Directions (36 / 72 / 144) | **converged at 72 with the 30-degree spread** (within 1 % of 144; 36 within 3 %). With the old 4-degree swell they converged slowly (the bins did not resolve the spread) | 30 deg: 36 -3 %, 144 +1 % (set-up); 4 deg: 36 -16 %, 144 +5 % | spread-30, spectral resolution |
 | Frequencies (20 / 34 / 48) | converged by 34; 20 is about 3 % low; **34 adopted 2026-11-03** | 34 vs 20: set-up +3 %, crest transport +1.5 %; 48 = 34 within 0.4 % | spectral resolution |
-| Coupling interval | must be a multiple of both models' time steps: 300 s with SWAN at 120 s was silently ignored (COAWST kept 600 s); 240 s still to test | - | results p0-p2 |
+| Coupling interval | **600 s is converged**: 240 s (2 SWAN steps, 40 ROMS steps; checked in the coupler log) changes nothing beyond 0.1 % (set-up range 0.8 %). The interval must be a multiple of both models' time steps: 300 s with SWAN at 120 s was silently replaced by 600 s | 240 vs 600 s: <= 0.1 % | results p0-p2; 240 s run 2026-11-03 |
 | Tiling (2 x 5 vs 1 x 10) | rounding level | 1e-7 | results p0-p2 |
 | `VISC2` 0.001 vs 0 | invisible; 0 is the default | ~1e-5 | results p0-p2 |
 | Vertical viscous operator (`SPLINES_VVISC` off) | small; needs to be off for the implicit schemes | crest surface/mean speed +11 % (canopy) | results p0-p2 |
@@ -132,7 +132,7 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 ## Still open
 
 - A grid refined across the shore over the breaking zone only (proposed).
-- Coupling interval 240 s; `TKE_WAVEDISS`, the roller and the breaking
+- `TKE_WAVEDISS`, the roller and the breaking
   formulations on the stratified and heated cases with triads on; a 72 h
   heated run with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
 - Infragravity waves: none of the runs has them; a standalone SWAN `SURFBEAT`
