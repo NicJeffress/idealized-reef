@@ -16,7 +16,7 @@ one pass at x = 0. From the coast (south) to the open ocean (north):
 | land | southern grid row (y = 0) | masked |
 | lagoon | 0 to about 0.4 km | 10 m |
 | backreef (reef flat) | about 0.5 to 0.9 km | shoaling to about 2 m |
-| reef crest | rows 31-34, y = 940-1000 m | 0.50 m |
+| reef crest | y = 955-995 m (rows 37-41 of the breaking-zone grid; 0.6 m or shallower from 925 to 1005 m, rows 34-42) | 0.50 m |
 | forereef | from the crest seaward, slope 1:10 | 7.8 m at 1.1 km, 30 m at 1.35 km, ... |
 | open ocean | to the north boundary at y = 5.04 km | 400 m |
 
@@ -26,46 +26,78 @@ The pass is 10 m deep (the lagoon depth) through the crest and backreef, about
 
 ![Cross-reef profile and grid spacing](../figures/a15_profile.png)
 
+*The 20 m grid as ported; since 2026-11-03 the rows between 850 and 1150 m
+from the shore are split in two (10 m), see Grid.*
+
 The grid and initial file come from the author's COAWST v3.7 project
 (`reference/Reef_Ideal_A15_v3.7/Make_grid_Reef_Ideal_A14.m`,
-`Make_init_Reef_Ideal_A15.m`) and are unchanged.
+`Make_init_Reef_Ideal_A15.m`). The bathymetry is unchanged; the grid rows
+across the breaking zone and the number of levels were changed on
+2026-11-03 (below).
 
 ## Grid
 
-- ROMS: 203 x 111 rho points (`Lm` 201, `Mm` 109), 10 terrain-following levels
-  (`Vtransform` 2, `Vstretching` 4, `THETA_S` 3, `THETA_B` 2, `TCLINE` 20 m).
+- ROMS: **the breaking-zone grid**, 203 x 126 rho points (`Lm` 201, `Mm`
+  124), 15 terrain-following levels (`Vtransform` 2, `Vstretching` 4,
+  `THETA_S` 3, `THETA_B` 2, `TCLINE` 20 m). Until 2026-11-03: 203 x 111 and
+  10 levels (in the git history). The breaking-zone grid is the 20 m grid
+  with every row between 850 and 1150 m from the shore (the crest, the
+  breaking zone at the top of the fore reef and the upper slope) split in
+  two, made with `tools/reef/refine_a15_grid.py --band 850 1150 --factor 2`;
+  the 15-level initial files with `tools/reef/set_nlevels.py`. Why: the
+  breaking zone was only 2-3 cells wide at 20 m and the set-up was 16 % too
+  high; 10 levels gave 5 cm layers on the crest and a set-up 7-12 % too
+  high ([grid](../notebook/2026-11-03_grid-10m.md),
+  [vertical](../notebook/2026-11-03_vertical-resolution.md)).
 - Stretched in both directions: dx 20 m at the pass to 40 m at the periodic
-  seam (x = ±3 km); dy about 50 m at the coast, 20 m at the crest, 80 m
-  offshore. The grid is rectilinear (no `CURVGRID`); the Coriolis parameter in
-  the grid file is 0 (`UV_COR` is compiled but has no effect).
-- SWAN runs on the same points as ROMS (`CGRID CURVILINEAR 202 110` with A15's
+  seam (x = ±3 km); dy about 50 m at the coast, 20 m on the back reef, 10 m
+  from 850 to 1150 m from the shore, then 20 m growing to 80 m offshore. The
+  grid is rectilinear (no `CURVGRID`); the Coriolis parameter in the grid
+  file is 0 (`UV_COR` is compiled but has no effect).
+- SWAN runs on the same points as ROMS (`CGRID CURVILINEAR 202 125` with A15's
   coordinate file), so no interpolation between the models.
+- Analyses that pick regions by row number must map them by distance from
+  the shore (the crest is on rows 37-41 now, 31-34 before).
 
 ## Physics (header `reef_ideal_a15.h`)
 
+The defaults of 2026-11-03; the test behind each is in the
+[README's defaults table](../README.md#the-a15-defaults-since-2026-11-03-and-why)
+and the [results summary](../results/README.md).
+
 | Process | Option | Notes |
 |---|---|---|
-| waves on currents | `WEC_VF` (vortex force), `WDISS_WAVEMOD` (breaking dissipation from SWAN), `UV_KIRBY`; `TKE_WAVEDISS` + `ZOS_HSIG` since 2026-11-03 (surface TKE flux and roughness from breaking) | spectral Stokes drift (COAWST v3.9's default, summed over SWAN's frequencies); the variant `_bulk` uses bulk Stokes drift |
-| bottom stress | `SSW_BBL` with `SSW_CALC_ZNOT`, `SSW_LOGINT`, `SSW_LOGINT_WBL` | wave-current bottom boundary layer; grain diameter 0.12 m in the initial file, `Zob` 0.01 m; implicit since 2026-11-02 (`BSTRESS_IMPLICIT`, coawst-cloud `roms-bstress-implicit`; before: explicit and uncapped, which it equals within 0-3 %), no `LIMIT_BSTRESS` |
-| vertical mixing | `GLS_MIXING`, `KANTHA_CLAYSON`, `RI_SPLINES`, `N2S2_HORAVG` | k-epsilon parameters (`GLS_P` 3, `GLS_M` 1.5, `GLS_N` -1) |
-| vertical operators | `SPLINES_VDIFF`; `SPLINES_VVISC` off since 2026-11-02 | the implicit bottom stress and canopy drag need the tridiagonal viscous solve |
+| waves on currents | `WEC_VF` (vortex force), `WDISS_WAVEMOD` (breaking dissipation from SWAN), `UV_KIRBY` | spectral Stokes drift (COAWST v3.9's default, summed over SWAN's frequencies); the variant `_bulk` uses bulk Stokes drift; `UV_BANIHASHEMI` instead of `UV_KIRBY` changes nothing here (within 0.5 %) |
+| surface roller | `ROLLER_RENIERS`, `WEC_ALPHA` 0.5 (since 2026-11-03) | moves the breaking force shoreward onto the crest (set-up +25 % at 0.5, linear in `WEC_ALPHA`); needs coawst-cloud `roms-roller-substeps` (stable at DT 6 s) and `roms-restart-roller` |
+| wave streaming | `BOTTOM_STREAMING` (since 2026-11-03) | the wave momentum lost to bottom friction goes to the mean flow; set-up +57 %, crest transport +22 %. The canopy cases add `VEG_STREAMING` |
+| breaking turbulence | `TKE_WAVEDISS` + `ZOS_HSIG` (since 2026-11-03), `SZ_ALPHA` 0.25, `ZOS_HSIG_ALPHA` 0.5 | surface TKE flux and roughness from SWAN's breaking; the fore-reef flow less surface-intensified |
+| bottom stress | `SSW_BBL` with `SSW_CALC_ZNOT`, `SSW_LOGINT`, `SSW_LOGINT_WBL`; `BSTRESS_IMPLICIT` (since 2026-11-02) | wave-current bottom boundary layer; grain diameter 0.12 m in the initial file, `Zob` 0.01 m; the implicit stress equals the uncapped explicit one within 0-3 %; no `LIMIT_BSTRESS` (the cap halves the drag on a thin crest and depends on DT) |
+| vertical mixing | `GLS_MIXING`, `KANTHA_CLAYSON`, `RI_SPLINES`, `N2S2_HORAVG`; `GLS_Kmin` 1e-8 (since 2026-11-03), `AKT_BAK` 5e-6, `AKV_BAK` 5e-5 m²/s | k-epsilon (`GLS_P` 3, `GLS_M` 1.5, `GLS_N` -1); the low TKE floor hands the quiet-water mixing to the background coefficients ([gls_kmin.md](gls_kmin.md)) |
+| vertical operators | `SPLINES_VDIFF` (inert with MPDATA tracers); `SPLINES_VVISC` off since 2026-11-02 | the implicit bottom stress and canopy drag need the tridiagonal viscous solve |
 | momentum advection | `UV_ADV` (3rd-order upstream horizontal, 4th-order centred vertical) | |
 | horizontal viscosity | `UV_VIS2`, `VISC_GRID`, `MIX_S_UV`, `VISC2 = 0` | the upstream scheme supplies the lateral viscosity |
 | pressure gradient | `DJ_GRADPS` | |
-| tracers | `SALINITY`, `TS_FIXED` (T 18 C, S 35), MPDATA advection | the strat and thermal variants let T and S evolve |
+| tracers | `SALINITY`, `TS_FIXED` (T 18 C, S 35), MPDATA advection | the strat and thermal variants let T and S evolve; with `TS_FIXED` restarts need coawst-cloud `roms-ts-fixed-density` |
 | barotropic kernel | AB3-AM4 (`STEP2D_FB_AB3_AM4`, coawst-cloud `roms-step2d-fb`) since 2026-11-02 | within the noise floor of LF-AM3 (ROMS's default) and 19 % faster; before: LF-AM3 |
 | vegetation | `#undef VEGETATION` | vegetation input files are present but unused; see `_veg` |
 | restarts | `PERFECT_RESTART` | |
 | output | `AVERAGES`, `DIAGNOSTICS_UV` | |
 
 Time stepping: `DT` 6 s, `NDTFAST` 24 (barotropic Courant number 0.81; the
-AB3-AM4 limit is 0.890, LF-AM3's about 0.9). `NTIMES` 14400 = 24 h.
+AB3-AM4 limit is 0.890, LF-AM3's about 0.9). `NTIMES` 14400 = 24 h. DT 3 s
+changes nothing by more than 1.6 %.
 
-SWAN (`swan.in`): nonstationary, 72 directions, 21 frequencies 0.04-1.0 Hz,
-time step 120 s; `GEN3`, `FRICTION MADSEN 0.3`, `BREAKING CON 1.0 0.73`,
-`TRIAD`, `OFF QUAD`, `PROP BSBT`; `COORDINATES CARTESIAN REPEATING` (periodic
-in x, like ROMS). Coupling every 600 s through MCT (`coupling.in`), so 100
-ROMS steps and 5 SWAN steps per exchange.
+SWAN (`swan.in`): nonstationary, 72 directions, 34 frequencies 0.04-1.0 Hz
+(20 until 2026-11-03, about 3 % low), time step 120 s, one iteration per
+step; `GEN3`, `FRICTION MADSEN 0.3`, `BREAKING BKD 1.0 0.54 7.59 -8.06 8.09`
+(SWAN's defaults for Salmon et al. 2015; `CON 1.0 0.73` until 2026-11-03,
+which gives 7-11 % less set-up and crest transport), `TRIAD` (acts only
+with coawst-cloud `swan-triads-nonstationary`; without it the set-up is
+32 % lower on the bare reef), `OFF QUAD`, `PROP BSBT`; `COORDINATES
+CARTESIAN REPEATING` (periodic in x, like ROMS). Coupling every 600 s
+through MCT (`coupling.in`), so 100 ROMS steps and 5 SWAN steps per
+exchange (240 s changes nothing beyond 0.1 %; the interval must be a
+multiple of both models' steps or COAWST silently keeps the old one).
 
 ## Forcing and boundaries
 
@@ -81,7 +113,7 @@ ROMS steps and 5 SWAN steps per exchange.
   level), Shchepetkin (2-D momentum), zero gradient (3-D momentum, tracers,
   TKE). No wind, no surface heat or salt flux.
 - **SWAN boundaries:** periodic in x; waves enter along the north edge
-  (`BOUNDPAR2 SEGMENT IJ 0 110 201 110`).
+  (`BOUNDPAR2 SEGMENT IJ 0 125 201 125`).
 
 ## Outputs
 
@@ -89,10 +121,11 @@ ROMS writes history, averages, diagnostics and restart files hourly
 (`NHIS`, `NAVG`, `NDIA`, `NRST` = 600 steps) under `output/`; history includes
 the WEC stresses, Stokes drift and wave fields. SWAN writes `BLOCK 'COMPGRID'`
 NetCDF fields (Hs, direction, periods, dissipation terms, radiation stress,
-...) at the end of the run and a restart file hourly. As configured, a
-simulated day makes about 2.85 GB (restart 1.24 GB, diagnostics 0.82 GB,
-history 0.51 GB, averages 0.47 GB) in classic NetCDF; compressed NetCDF-4
-output is about 3x smaller.
+...) at the end of the run and a restart file hourly. On the 20 m grid with
+10 levels a simulated day made about 2.85 GB (restart 1.24 GB, diagnostics
+0.82 GB, history 0.51 GB, averages 0.47 GB) in classic NetCDF; the
+compressed NetCDF-4 output of coawst-cloud's builds is about 3x smaller,
+which more than pays for the 15 levels and the extra rows.
 
 ## Known results
 
@@ -129,9 +162,24 @@ output is about 3x smaller.
   stress, the implicit stress (`BSTRESS_IMPLICIT`) and DT 3 s agree; the
   `LIMIT_BSTRESS` cap changes the answer and depends on DT. See
   [thin-crest variants](Reef_Ideal_A15_thin_crest.md).
-- **Grid convergence and other numerics:** the options test campaign, phase 0
-  (DT, NDTFAST, SWAN step and iterations, coupling interval, spectral
-  resolution, tiling, the 10 m grid), results to come in [`results/`](../results).
+- **The bare reef with the current defaults** (triads, 20 m grid, 4-degree
+  swell; [notebook](../notebook/2026-11-02_options-triads-on.md)): lagoon
+  set-up 62 mm, cross-crest transport 1396 m³/s, crest jet 0.83 m/s, pass
+  jet 1.03 m/s, breaking dissipation 3044 W/m. DT 3 s, two SWAN iterations
+  and the AB3-AM4 kernel are all within 1.6 % (the noise floor of the case).
+  The bare reef is the stiffest member of the family: on the breaking-zone
+  grid it needs DT 3 s (cross-shore Courant number 1 on the 10 m rows at
+  the top of the fore reef at DT 6 s, where the flow is 3-4x faster than
+  with a canopy; [notebook](../notebook/2026-11-03_swan-limiters.md)).
+- **The options test campaign** (November 2026; summary in
+  [`results/`](../results/README.md), figures in the
+  [README](../README.md#what-we-have-learned-about-the-physics)): SWAN's
+  triads, the wave streaming, the roller, the breaking formulation, the
+  spectral resolution and the 30-degree spread, the grid across the shore
+  and in the vertical, the TKE floor. The numerics (DT, `NDTFAST`, SWAN's
+  step and iterations, the coupling interval, tiling, `VISC2`, SWAN's
+  limiters) are converged to a percent or so; the physics choices and the
+  grid are what move the answer.
 
 ## Caveats
 
@@ -148,5 +196,7 @@ output is about 3x smaller.
   ([Swan_Periodic_Test](Swan_Periodic_Test.md)).
 - `ocean.in` sets `NtileI 4 x NtileJ 2` and `coupling.in` 8 ROMS + 4 SWAN; set
   your own layout (both files) for your machine.
+- Build with coawst-cloud `4abff12` or later: the triad, roller, streaming
+  and restart fixes the defaults rely on are all in by then.
 - `VARNAME` in `ocean.in` points to `/opt/coawst/ROMS/External/varinfo.yaml`
   (the path inside coawst-cloud images); change it for other builds.

@@ -8,8 +8,12 @@ SWAN, `VEGETATION 3`), plus:
 - **Temperature and salinity evolve** (`TS_FIXED` off; A15 froze them at 18 C
   and 35). MPDATA tracer advection; no horizontal tracer diffusion outside an
   optional sponge band (`TS_DIF2`, `MIX_GEO_TS`, `TNU2` 0); vertical mixing from
-  GLS. Wind, surface heat and salt fluxes are zero, so temperature changes only
-  by advection, mixing and the open north boundary.
+  GLS k-epsilon with `GLS_Kmin` 1e-8 (since 2026-11-03; see below). Wind,
+  surface heat and salt fluxes are zero, so temperature changes only by
+  advection, mixing and the open north boundary. Grid, levels, roller,
+  streaming and the rest are A15's defaults of 2026-11-03; the initial
+  temperature was rewritten on the breaking-zone grid with 15 levels by
+  `make_strat_init.py`.
 - **Constant initial stratification**: `init_reef.nc` holds N² = 1e-4 s⁻²
   (28 C at the surface to 5.4 C at 400 m, salinity 35), written by
   [`tools/stratification/make_strat_init.py`](../tools/stratification/make_strat_init.py).
@@ -74,6 +78,21 @@ and a sponge (extra viscosity and diffusivity only) are different things.
   currents below 0.4 cm/s over 24 h.
 - **Restarts:** exact to 9e-5 m/s in averages but see the caveat below
   ([notebook](../notebook/2026-10-24_perfect-restart-spot.md)).
+- **The TKE floor sets the mixing at rest**
+  ([notebook](../notebook/2026-11-03_gls-kmin-at-rest.md), [gls_kmin.md](gls_kmin.md)).
+  With ROMS's suggested `GLS_Kmin` 7.6e-6 the lagoon's diffusivity at rest is
+  7.4e-4 m²/s (the floor's TKE with no stratification to limit the length
+  scale) and the 2 m back reef mixes out within hours; with 1e-8 it is the
+  background value 5.1e-6 m²/s (`AKT_BAK`) and the lagoon keeps part of its
+  stratification. 1e-8 is the default; `AKT_BAK` and `AKV_BAK` are then the
+  quiet-water mixing and should be reported with it.
+- **Closures and `SPLINES_VDIFF`**
+  ([notebook](../notebook/2026-11-03_turbulence-closure.md)): `SPLINES_VDIFF`
+  does nothing with MPDATA tracers (bit-identical with and without); the
+  closure comparison ran on the heated case (k-epsilon kept).
+- **`NONLIN_EOS`** adds no pressure-gradient error at rest and changes the
+  heated run by less than 0.5 %; the linear equation of state stays
+  ([notebook](../notebook/2026-11-02_options-campaign-results-p0-p2.md)).
 
 ## Caveats
 
@@ -84,9 +103,11 @@ and a sponge (extra viscosity and diffusivity only) are different things.
   `ana_tobc.h` / `ana_tclima.h`; after a restart that is the restart-time
   state, so a run in restart segments nudges toward a drifting state. Giving
   the reference as files would remove this (open).
-- Stratification on the shallow backreef erodes within hours even at rest
-  (vertical diffusivity about 1e-3 m²/s there); cause not traced.
 - The canopy drag is implicit since 2026-11-02 (see the vegetation case).
+- `TKE_WAVEDISS`, the roller and the breaking formulations have been tested
+  on the unstratified and heated cases, not yet with stratification alone.
 
-Vertical mixing in calm or weakly stratified water is set by the GLS
-minimum TKE, not by `AKT_BAK`: see [gls_kmin.md](gls_kmin.md).
+With `GLS_Kmin` 1e-8 the mixing of calm or weakly stratified water is
+`AKT_BAK` and `AKV_BAK`; with the suggested 7.6e-6 it was the floor itself
+(0.05 Kmin / N, more where the water is barely stratified): see
+[gls_kmin.md](gls_kmin.md).

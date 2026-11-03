@@ -14,6 +14,13 @@ point `GRDNAME` in `ocean.in` and the bottom `READINP` in `swan.in` at the pair
 you want. Only the reef columns (default depth < 0.6 m on row 32) change; the
 pass and everything else are untouched.
 
+**The variants and the row numbers below are on the 20 m grid** (203 x 111,
+the A15 grid until 2026-11-03). The script finds the reef columns on row 32,
+which on today's breaking-zone grid is 1.1 m deep back reef, so run it on the
+20 m case from the git history (before 2026-11-03), or adapt the rows (the
+crest is on rows 37-41 of the breaking-zone grid). The tests were run with
+10 levels and LF-AM3; their conclusions (below) do not depend on either.
+
 ![Thin-crest profiles](../figures/a15_thin_crest_profiles.png)
 
 | Grid | Crest | Flanks (slope factor rx0) | Isolates |
@@ -29,7 +36,8 @@ near low tide (0.15 m of water over the crest).
 ## The bottom-stress schemes compared
 
 ROMS (here with `SSW_BBL`) applies the bottom stress explicitly. Two
-alternatives exist as build options:
+alternatives exist as build options (the implicit one is the A15 default
+since 2026-11-02, on the strength of these tests):
 
 - `LIMIT_BSTRESS`: caps the stress at 0.75 Hz_1 |u_1| / DT (coawst-cloud's
   `roms-limit-bstress` makes it its own option; COAWST ties it to `WET_DRY`).
@@ -81,4 +89,7 @@ set-up: mean zeta rows 5-25 minus rows 95-105.)
 
 These grids are test cases for numerics; they are not part of the default
 case family. Member `p2-omega-diag` of the options campaign, phase 2, uses
-`thin_steep`.
+`thin_steep`: the pass-jet blow-up with an unramped 2 m sea is horizontal
+(cross-shore Courant number about 0.75 at onset), `OMEGA_IMPLICIT` does not
+help, DT 3 s does
+([notebook](../notebook/2026-11-02_options-p2-omega-diag.md)).

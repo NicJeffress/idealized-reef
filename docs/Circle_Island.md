@@ -20,7 +20,8 @@ an idealized island counterpart to the straight A15 reef.
   bearing (i - 0.5) x 1.667 degrees from north, ring j at the radius
   550 m x exp(j x 2 pi / 216), so the cells are square: 17.5 m at the shore
   (radius 600 m) to 169 m at the outer edge (radius 5.8 km). 10 levels with
-  A15's vertical grid. `CURVGRID` (metric terms); Coriolis parameter 0.
+  A15's vertical grid of before 2026-11-03 (A15 has 15 since). `CURVGRID`
+  (metric terms); Coriolis parameter 0.
 - **Seam:** between column 216 and column 1, at north. `*_roll54.*` hold the
   same domain numbered from 90 degrees further on (seam at east), to check that
   results do not depend on where the seam is.
@@ -31,14 +32,20 @@ an idealized island counterpart to the straight A15 reef.
 
 ## Physics, forcing, boundaries
 
-- Physics as Reef_Ideal_A15 (vortex-force WEC with spectral Stokes drift, GLS
-  k-epsilon, SSW bottom boundary layer with the same bed properties, T and S
-  fixed at 27 C and 36), plus `CURVGRID`. `VISC2` 0, as the A15
-  cases (since 2026-11-02; the tests below ran with 0.001 m²/s).
+- Physics as Reef_Ideal_A15 before 2026-11-03 (vortex-force WEC with spectral
+  Stokes drift, GLS k-epsilon with `GLS_Kmin` 7.6e-6, SSW bottom boundary
+  layer with the same bed properties and the explicit stress, LF-AM3, T and
+  S fixed at 27 C and 36), plus `CURVGRID`. `VISC2` 0, as the A15 cases
+  (since 2026-11-02; the tests below ran with 0.001 m²/s). Not adopted here
+  yet: the roller, bottom streaming, `TKE_WAVEDISS`, `BKD` breaking, the
+  implicit stress, AB3-AM4, `GLS_Kmin` 1e-8 and 15 levels (see
+  [Island_A15](Island_A15.md)).
 - ROMS `DT` 4 s, `NDTFAST` 10 (barotropic Courant number 0.18); `NTIMES` 900
   (1 h); output every 10 min. SWAN: 36 directions (so 6 columns = one direction
-  bin), time step 60 s. Coupling every 600 s; as shipped ROMS 6 x 1 tiles + 2
-  SWAN processes.
+  bin) x 20 frequencies, `BREAKING CON 1.0 0.73`, `TRIAD`, time step 60 s.
+  On A15 36 directions is within 3 % of 72 with a 30 degree spread, and 20
+  frequencies about 3 % low. Coupling every 600 s; as shipped ROMS 6 x 1
+  tiles + 2 SWAN processes.
 - **Boundaries:** the island side (ROMS south) is closed; the outer ring (ROMS
   north) is open with a 0.15 m, 12 h tide, the same all round (`ana_fsobc.h`),
   and carries SWAN's wave boundary. East-west in ROMS's index space is the

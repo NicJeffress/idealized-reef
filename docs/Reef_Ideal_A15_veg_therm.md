@@ -86,6 +86,26 @@ cross-shore section at x = -2.6 km.*
 
 - **Exact restarts:** 6e-9 m/s and 2e-6 C after a restart; also with the
   AB3-AM4 kernel ([notebook](../notebook/2026-10-24_perfect-restart-spot.md)).
+- **72 h heated with the TKE floor at 7.6e-6, 1e-8 and 1e-10**
+  ([notebook](../notebook/2026-11-03_kmin-heated-72h.md)): all stable; on the
+  forced reef the floor changes the temperatures by a few percent at most
+  (the lagoon's own mixing is 5e-3 m²/s, 1000x the floor's), offshore below
+  the mixed layer it sets the diffusivity (4.7e-5 against 5.1e-6 m²/s), which
+  matters over weeks. 1e-8 is the default.
+- **Turbulence closure** ([notebook](../notebook/2026-11-03_turbulence-closure.md),
+  24 h, density-1 canopy): k-epsilon with Kantha-Clayson or Canuto-A within
+  1-3 %, gen within 5 % (crest shear 10 %); k-omega lets the lagoon
+  diffusivity fall to the background and would need a closer look before
+  use. k-epsilon with `VEG_TURB` stays.
+- **With the defaults of 2026-11-03** (triads, roller, streaming, `BKD`,
+  15 levels) the heated density-1 reef has a set-up of about 2 mm, a crest
+  transport of about 140 m³/s and a reef-flat surface temperature range of
+  1.5 C a day (2.6 C in the earlier 72 h runs with the dense canopy and the
+  settings of before 2026-11-03). `NONLIN_EOS` changes nothing (within
+  0.5 %).
+- Wall time: about 130 s per simulated hour on a 16-vCPU machine with the
+  2026-11-03 defaults (77 s with the 20 m grid, 10 levels and 20
+  frequencies).
 
 ## Caveats
 
@@ -93,8 +113,9 @@ cross-shore section at x = -2.6 km.*
   the seabed and lose it, whereas on a reef flat most of that heat returns
   within hours. A version keeping the absorbed part in the bottom cell is
   planned, not done.
-- The internal-wave Courant limit and the explicit canopy drag of the
-  stratified case apply here too.
+- The internal-wave Courant limit of the stratified case applies here too;
+  the canopy drag is implicit.
 
-Vertical mixing in calm or weakly stratified water is set by the GLS
-minimum TKE, not by `AKT_BAK`: see [gls_kmin.md](gls_kmin.md).
+With `GLS_Kmin` 1e-8 the mixing of calm or weakly stratified water is
+`AKT_BAK` and `AKV_BAK` (5e-6 and 5e-5 m²/s), not the TKE floor: see
+[gls_kmin.md](gls_kmin.md).
