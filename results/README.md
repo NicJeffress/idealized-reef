@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 00:45 UTC.
+**Last updated:** 2026-11-03 01:00 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -85,6 +85,16 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m (dense canopy, triads off, old defaults) | **not converged at 20 m**: the largest numerical effect found; to be repeated on the density-1 canopy with triads and the new defaults | set-up -15 %, crest transport -18 %, pass transport -10 %, crest jet p99 +15 %, forereef shear ratio +22 %, Hs crest +4 %; 8x the cost | results p0-p2 |
+
+## Problems found in the code along the way
+
+| Problem | Status |
+|---|---|
+| SWAN never computed `TRIAD` in coupled runs (first-iteration guard with currents) | fixed: coawst-cloud `swan-triads-nonstationary` |
+| ROMS never wrote the quicksave file's 3-D `u`, `v` (standard NetCDF writer) | fixed: coawst-cloud `roms-quicksave-uv` (already fixed in upstream ROMS) |
+| `VEG_HMIXING`: COAWST v3.6 dropped its routine and kept the rest | explained ([entry](../notebook/2026-11-03_veg-hmixing-and-banihashemi.md)); a port is possible |
+| A coupling interval that is not a multiple of both models' steps is silently replaced (300 s ran as 600 s) | noted; check the coupler log (`CplInt` and `Steps`) |
+| `UV_BANIHASHEMI` "did not compile" | our configuration: it replaces `UV_KIRBY`, it cannot be added to it |
 
 ## Defaults adopted on 2026-11-02 (author's decision), checked
 
