@@ -87,3 +87,6 @@ and a sponge (extra viscosity and diffusivity only) are different things.
 - Stratification on the shallow backreef erodes within hours even at rest
   (vertical diffusivity about 1e-3 m²/s there); cause not traced.
 - The canopy drag is implicit since 2026-11-02 (see the vegetation case).
+
+Vertical mixing in calm or weakly stratified water is set by the GLS
+minimum TKE, not by `AKT_BAK`: see [gls_kmin.md](gls_kmin.md).

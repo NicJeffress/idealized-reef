@@ -95,3 +95,6 @@ cross-shore section at x = -2.6 km.*
   planned, not done.
 - The internal-wave Courant limit and the explicit canopy drag of the
   stratified case apply here too.
+
+Vertical mixing in calm or weakly stratified water is set by the GLS
+minimum TKE, not by `AKT_BAK`: see [gls_kmin.md](gls_kmin.md).
