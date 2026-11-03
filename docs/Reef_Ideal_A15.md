@@ -46,20 +46,20 @@ The grid and initial file come from the author's COAWST v3.7 project
 | Process | Option | Notes |
 |---|---|---|
 | waves on currents | `WEC_VF` (vortex force), `WDISS_WAVEMOD` (breaking dissipation from SWAN), `UV_KIRBY` | spectral Stokes drift (COAWST v3.9's default, summed over SWAN's frequencies); the variant `_bulk` uses bulk Stokes drift |
-| bottom stress | `SSW_BBL` with `SSW_CALC_ZNOT`, `SSW_LOGINT`, `SSW_LOGINT_WBL` | wave-current bottom boundary layer; grain diameter 0.12 m in the initial file, `Zob` 0.01 m; explicit and uncapped (no `LIMIT_BSTRESS`) |
+| bottom stress | `SSW_BBL` with `SSW_CALC_ZNOT`, `SSW_LOGINT`, `SSW_LOGINT_WBL` | wave-current bottom boundary layer; grain diameter 0.12 m in the initial file, `Zob` 0.01 m; implicit since 2026-11-02 (`BSTRESS_IMPLICIT`, coawst-cloud `roms-bstress-implicit`; before: explicit and uncapped, which it equals within 0-3 %), no `LIMIT_BSTRESS` |
 | vertical mixing | `GLS_MIXING`, `KANTHA_CLAYSON`, `RI_SPLINES`, `N2S2_HORAVG` | k-epsilon parameters (`GLS_P` 3, `GLS_M` 1.5, `GLS_N` -1) |
-| vertical operators | `SPLINES_VDIFF`, `SPLINES_VVISC` | |
+| vertical operators | `SPLINES_VDIFF`; `SPLINES_VVISC` off since 2026-11-02 | the implicit bottom stress and canopy drag need the tridiagonal viscous solve |
 | momentum advection | `UV_ADV` (3rd-order upstream horizontal, 4th-order centred vertical) | |
 | horizontal viscosity | `UV_VIS2`, `VISC_GRID`, `MIX_S_UV`, `VISC2 = 0` | the upstream scheme supplies the lateral viscosity |
 | pressure gradient | `DJ_GRADPS` | |
 | tracers | `SALINITY`, `TS_FIXED` (T 18 C, S 35), MPDATA advection | the strat and thermal variants let T and S evolve |
-| barotropic kernel | LF-AM3 (ROMS default) | AB3-AM4 is a build option, see results |
+| barotropic kernel | AB3-AM4 (`STEP2D_FB_AB3_AM4`, coawst-cloud `roms-step2d-fb`) since 2026-11-02 | within the noise floor of LF-AM3 (ROMS's default) and 19 % faster; before: LF-AM3 |
 | vegetation | `#undef VEGETATION` | vegetation input files are present but unused; see `_veg` |
 | restarts | `PERFECT_RESTART` | |
 | output | `AVERAGES`, `DIAGNOSTICS_UV` | |
 
 Time stepping: `DT` 6 s, `NDTFAST` 24 (barotropic Courant number 0.81; the
-LF-AM3 limit is about 0.9). `NTIMES` 14400 = 24 h.
+AB3-AM4 limit is 0.890, LF-AM3's about 0.9). `NTIMES` 14400 = 24 h.
 
 SWAN (`swan.in`): nonstationary, 72 directions, 21 frequencies 0.04-1.0 Hz,
 time step 120 s; `GEN3`, `FRICTION MADSEN 0.3`, `BREAKING CON 1.0 0.73`,

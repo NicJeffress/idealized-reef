@@ -1,28 +1,102 @@
-# Results
+# Results: what the options campaign has shown so far
 
-Results of the **options test campaign** on the A15 cases: which physics and
-numerics choices matter, measured against the baseline's own convergence noise.
+A running summary of what the options test campaign (November 2026) has
+taught us about the physics and the numerics of the idealized reef cases,
+kept up to date as runs finish. The numbers come from the notebook entries
+linked in each section, where the full tables, figures and run details are.
+Percentages are differences between 24 h runs, over hours 12-24 (the second
+tidal cycle), unless stated.
 
-**Phases 0-2 (2026-11-02):** [results entry](../notebook/2026-11-02_options-campaign-results-p0-p2.md)
-(tables, figures, proposed decisions) and the finding that
-[SWAN skips triads in coupled runs with one iteration per step](../notebook/2026-11-02_swan-triads-skipped-first-iteration.md).
-The thermal members and the 10 m grid are still to be added.
+**Last updated:** 2026-11-03 00:10 UTC. Pending: the 10 m grid run, and the
+check runs of the defaults adopted on 2026-11-02 (see the end).
 
-- **Phase 0**, the baseline's own noise (`Reef_Ideal_A15_veg`, constant canopy,
-  24 h): DT 3 s, NDTFAST, SWAN time step and iterations, coupling interval,
-  spectral resolution, tiling, the 10 m grid, the AB3-AM4 kernel, the vertical
-  spline operators, `VISC2`. Submitted 2026-11-02; setup in
-  [the notebook](../notebook/2026-11-02_options-campaign-phase0.md).
-- **Phase 1**, the physics that drives the reef: wave-breaking formulations,
-  wave-generated turbulence, triads, roller, stratified and thermal variants.
-- **Phase 2**, bottom-stress and canopy numerics: implicit bottom stress and
-  canopy drag, the stress cap, canopy-edge viscosity.
+Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
+[triads-on](../notebook/2026-11-02_options-triads-on.md),
+[SWAN triads](../notebook/2026-11-02_swan-triads-skipped-first-iteration.md),
+[OMEGA_IMPLICIT](../notebook/2026-11-02_options-p2-omega-diag.md),
+[island first runs](../notebook/2026-11-02_island-a15-first-runs.md),
+[phases 1-2 setup](../notebook/2026-11-02_options-campaign-phases1-2.md),
+[thin crests](../notebook/2026-11-02_a15-thin-crest-bottom-stress.md).
 
-Metrics (computed over hours 12-24, the second tidal cycle): lagoon set-up
-(mean and range), cross-crest and pass transport, crest and pass jet speeds,
-surface-to-depth-mean speed ratio on the crest and forereef, Hs on the crest and
-reef flat, SWAN surface dissipation across the reef, reef-flat temperature
-(thermal cases), lagoon flushing time, Courant numbers and the fastest current,
-wall time per simulated hour.
+## The headline
 
-No results yet.
+1. **SWAN's triads were never computed in coupled runs, and they matter more
+   than anything else we tested.** SWAN skipped the triad source term in the
+   first iteration of each time step whenever there are currents, and a
+   coupled run does one iteration per step. Fixed in coawst-cloud
+   (`swan-triads-nonstationary`). With triads acting:
+   - dense canopy everywhere: lagoon set-up **5.6x** (3.9 against 0.7 mm),
+     transport over the crest **3.3x**, Hs on the crest **+86 %**;
+   - bare reef: set-up **+46 %** (62 against 42 mm), crest transport +24 %,
+     crest and pass jets +13 to +21 %.
+
+   The likely mechanism on the canopy: triads move wave energy to higher
+   frequencies, whose orbital motion reaches the bed less, so the canopy
+   dissipates less of it and more reaches the crest and breaks there.
+2. **The canopy controls the reef's circulation.** A dense canopy (4 plants
+   per m², 0.5 m diameter, 0.4 m tall) everywhere cuts the lagoon set-up by
+   94 % and the crest transport by 85 % against the bare reef (3.9 against
+   62 mm, 203 against 1396 m³/s; crest jet 0.10 against 0.83 m/s; all with
+   triads); a patchy canopy (30 % dense, 30 % sparse) sits in between.
+3. **Once the triads act, the numerics are well converged:** the physics
+   choices (triads, canopy, breaking formulation) move the answer far more
+   than any numerical setting we tried.
+
+## Physics
+
+| Question | Answer | Size of the effect | Entry |
+|---|---|---|---|
+| Triads (`TRIAD`) | first-order; must be on, with the SWAN fix | set-up x5.6 (canopy), +46 % (bare) | triads-on |
+| Wave breaking formulation, with triads | `BREAKING CON 1.0 0.73`, `CON 1.0 0.80` and `BKD` agree; `TG` (Thornton-Guza) is the outlier | CON 0.80 / BKD: set-up -4 / +6 %, crest transport -5 / +8 %; TG: set-up +12 %, forereef shear +145 %, breaking dissipation +45 % | triads-on |
+| ... without triads (for the record) | the spread looked huge | set-up -24 % to +108 %: an artefact of the missing triads | results p0-p2 |
+| Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | stable; small on the reef, but it increases the forereef shear, the opposite of what was expected; not adopted (tested with triads off) | crest transport -8 %, crest jet -17 to -20 %, forereef surface/mean speed +23 to +42 % | results p0-p2 |
+| Whitecapping on opposing currents (`WCAP AB ... CURRENT`) | no effect on A15 | < 1 % | results p0-p2 |
+| Wave roller (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5) | blew up at 23 min on the reef flat (0.3 -> 27 m/s in two steps); not usable as is | - | results p0-p2 |
+| Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`), canopy-edge viscosity (`VEG_HMIXING`) | do not compile in COAWST v3.9 | - | phases 1-2 setup |
+| Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | the GLS minimum-TKE floor (`GLS_Kmin` 7.6e-6), not the canopy turbulence: identical with `VEG_TURB` off | lagoon diffusivity 7.4e-4 m²/s, TKE at the floor everywhere | results p0-p2 |
+| Lower TKE floor (`GLS_Kmin` 1e-8) | offshore diffusivity 10x lower; the reef-flat temperature range drops | reef-flat SST range -66 % (stratified, 24 h) | results p0-p2 |
+| Stability functions (`CANUTO_A` instead of Kantha-Clayson) | small on the flow, noticeable on the temperature | SST range +29 %, flow within 4 % | results p0-p2 |
+| Nonlinear equation of state (`NONLIN_EOS`), heated reef, 72 h | no new pressure-gradient error at rest; no effect when heated | < 0.5 % everywhere, reef-flat temperature included | results p0-p2 |
+| Heated reef (1000 W/m² peak, balanced over the day) | the reef-flat surface temperature swings 2.6 C a day | - | results p0-p2 |
+| Bottom stress: implicit (`BSTRESS_IMPLICIT`) vs explicit | the same on the bare reef | 0-3 % (forereef shear -17 %, being rechecked with triads) | results p0-p2 |
+| Bottom-stress cap (`LIMIT_BSTRESS`) | changes the answer and depends on DT; do not use without a DT check | set-up +15 %, crest jet +13 % (bare reef) | results p0-p2, thin crests |
+| Round island with passes (Island_A15) | wave-driven island-lagoon circulation: inflow over the windward reef, outflow through every pass, the leeward one most; the windward pass drains too | ~1150 m³/s in over the reef; 2 passes: 590 (windward) and 704 m³/s (leeward) out | island first runs |
+
+## Numerics
+
+| Question | Answer | Size | Entry |
+|---|---|---|---|
+| Time step DT 6 vs 3 s (bare reef, triads on: a flow that moves) | converged | <= 1.6 % (forereef shear 3.4 %) | triads-on |
+| ... on the dense canopy | converged, but only because the canopy damps the flow | ~1e-5 | results p0-p2 |
+| NDTFAST 20 or 30 instead of 24 | no effect | ~1e-5 | results p0-p2 |
+| AB3-AM4 barotropic kernel (`STEP2D_FB_AB3_AM4`) | as accurate as LF-AM3, faster; **now the default** | within the noise; wall time -18 to -19 % | triads-on |
+| SWAN iterations per step (with the fix) | one is enough | 1, 2, 5 iterations within 0.6 % (canopy), 2 % (bare) | triads-on |
+| SWAN time step 60 vs 120 s | no effect (tested with triads off) | ~1e-5 | results p0-p2 |
+| Directions (`CIRCLE 36` vs 72) | matters | set-up -11 %, crest transport -10 %, breaking dissipation -19 % (triads off) | results p0-p2 |
+| Frequencies (34 vs 20) | small | +3 to +5 % (with triads) | triads-on |
+| Coupling interval | must be a multiple of both models' time steps: 300 s with SWAN at 120 s was silently ignored (COAWST kept 600 s); 240 s still to test | - | results p0-p2 |
+| Tiling (2 x 5 vs 1 x 10) | rounding level | 1e-7 | results p0-p2 |
+| `VISC2` 0.001 vs 0 | invisible; 0 is the default | ~1e-5 | results p0-p2 |
+| Vertical viscous operator (`SPLINES_VVISC` off) | small; needs to be off for the implicit schemes | crest surface/mean speed +11 % (canopy) | results p0-p2 |
+| Vertical diffusive operator (`SPLINES_VDIFF` off) | untestable on a case with T and S fixed (bit-identical); to test on the stratified case | - | results p0-p2 |
+| Explicit canopy drag at DT 6 s | fails once triads act, even on the uniform canopy (fore-reef bed, 2 alpha \|U\| DT ~ 6) | 6 of 8 runs blew up | triads-on |
+| Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
+| `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
+| 10 m grid instead of 20 m | **pending** | - | - |
+
+## Defaults adopted on 2026-11-02 (author's decision)
+
+In every A15 case: the AB3-AM4 barotropic kernel, the implicit bottom
+stress, `SPLINES_VVISC` off; in the canopy cases also the implicit canopy
+drag. Images must be built with coawst-cloud `2d5672c` or later so that
+`TRIAD` acts. Check runs of the new defaults (bare, constant and patchy
+canopy, stratified; 24 h) are running and will be added here.
+
+## Still open
+
+- The 10 m grid (grid convergence of the set-up and the crest jet).
+- Coupling interval 240 s; `TKE_WAVEDISS`, the roller and the breaking
+  formulations on the stratified and heated cases with triads on; a rest run
+  with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
+- Infragravity waves: none of the runs has them; a standalone SWAN `SURFBEAT`
+  estimate of their energy on the reef flat is the planned first step.

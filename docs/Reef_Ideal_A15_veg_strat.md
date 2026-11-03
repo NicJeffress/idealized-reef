@@ -86,4 +86,4 @@ and a sponge (extra viscosity and diffusivity only) are different things.
   the reference as files would remove this (open).
 - Stratification on the shallow backreef erodes within hours even at rest
   (vertical diffusivity about 1e-3 m²/s there); cause not traced.
-- The canopy drag is explicit (see the vegetation case).
+- The canopy drag is implicit since 2026-11-02 (see the vegetation case).

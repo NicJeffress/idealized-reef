@@ -20,7 +20,7 @@ into a container image and runs it on Google Cloud Batch (see
 |---|---|---|---|---|---|---|
 | [Reef_Ideal_A15](docs/Reef_Ideal_A15.md) | 203 x 111, 10 | 20-40 m alongshore, 20-80 m cross-shore | 6 km alongshore (periodic) x 5 km; fringing reef with one pass | the base case: waves on currents (vortex force), GLS mixing, wave bottom boundary layer; T and S fixed | Hs 1 m, Tp 10 s from the north; 0.15 m, 12 h tide | 68 s wall per simulated hour on a 16-vCPU machine (10 ROMS + 6 SWAN processes) |
 | [Reef_Ideal_A15_bulk](docs/Reef_Ideal_A15_bulk.md) | as A15 | as A15 | as A15 | bulk (monochromatic) Stokes drift instead of the spectral one | as A15 | as A15 |
-| [Reef_Ideal_A15_veg](docs/Reef_Ideal_A15_veg.md) | as A15 | as A15 | as A15 | coral canopy as rigid cylinders (vegetation drag, canopy turbulence, wave dissipation in SWAN); spatial patterns | as A15 | as A15 (DT 3 s, or the implicit drag, for patchy canopies) |
+| [Reef_Ideal_A15_veg](docs/Reef_Ideal_A15_veg.md) | as A15 | as A15 | as A15 | coral canopy as rigid cylinders (vegetation drag, canopy turbulence, wave dissipation in SWAN); spatial patterns | as A15 | as A15 (DT 6 s for every canopy, with the implicit drag) |
 | [Reef_Ideal_A15_veg_strat](docs/Reef_Ideal_A15_veg_strat.md) | as A15 | as A15 | as A15 | temperature and salinity evolve; constant initial stratification; open north boundary with nudging | as A15, tide set at run time | as A15 |
 | [Reef_Ideal_A15_veg_therm](docs/Reef_Ideal_A15_veg_therm.md) | as A15 | as A15 | as A15 | diurnal solar heating absorbed with depth; far-field ocean column for the boundary | as strat, plus surface heat flux | 77 s wall per simulated hour (16 vCPUs) |
 | [Reef_Ideal_A15_veg_10m](docs/Reef_Ideal_A15_veg_10m.md) | 404 x 220, 10 | half of A15's | as A15 | grid-convergence twin of `_veg` (generated, not stored) | as A15 | about 8x A15 |
@@ -77,9 +77,15 @@ repository.
   not the free-turbulence time scale k/epsilon. The published model
   (COAWST v3.2-v3.7) used min(k/epsilon, tau_veg); restoring it lowered the
   canopy eddy viscosity by 65 % in a test. Kept as shipped for now.
-- **Canopy drag explicit by default; `VEG_DRAG_IMPLICIT` for patchy or dense
-  canopies** (coawst-cloud patch `roms-veg-implicit`, build option
-  `CPP_OPTIONS="+VEG_DRAG_IMPLICIT"`). See [Reef_Ideal_A15_veg](docs/Reef_Ideal_A15_veg.md).
+- **Numerics defaults since 2026-11-02** (options campaign,
+  [notebook](notebook/2026-11-02_options-triads-on.md)): the AB3-AM4 barotropic
+  kernel (`STEP2D_FB_AB3_AM4`: as accurate, 19 % faster), the implicit bottom
+  stress (`BSTRESS_IMPLICIT`: equals the uncapped explicit stress within 0-3 %,
+  stable without a cap), `SPLINES_VVISC` off (both implicit schemes need it),
+  and in the canopy cases the implicit canopy drag (`VEG_DRAG_IMPLICIT`: with
+  triads acting, the explicit drag fails at DT 6 s). All four are coawst-cloud
+  patches; build with coawst-cloud `2d5672c` or later so that SWAN's `TRIAD`
+  actually acts (`swan-triads-nonstationary`).
 - **`VISC2 = 0`.** The third-order upstream advection supplies the lateral
   viscosity; `UV_VIS2` stays compiled so a sponge can still be switched on.
   Circle_Island too since 2026-11-02 (its tests ran with 0.001 m²/s).
@@ -104,9 +110,9 @@ Apptainer, or on Google Cloud.
 ```bash
 # build an image for one case (the header name must be the application flag in lower case)
 coawst-cloud/build/coawst/build.sh --case cases/Reef_Ideal_A15_veg --app REEF_IDEAL_A15 --tag reef_a15_veg
-# with an extra cpp option, e.g. the implicit canopy drag
+# with an extra cpp option, e.g. the explicit canopy drag instead of the implicit default
 coawst-cloud/build/coawst/build.sh --case cases/Reef_Ideal_A15_veg --app REEF_IDEAL_A15 \
-    --tag reef_a15_veg_imp -- --build-arg CPP_OPTIONS="+VEG_DRAG_IMPLICIT"
+    --tag reef_a15_veg_exp -- --build-arg CPP_OPTIONS="-VEG_DRAG_IMPLICIT"
 coawst-cloud/build/coawst/build.sh --case cases/Circle_Island --app CIRCLE_ISLAND
 
 # run it: the .in files name each other without paths, so run inside a copy of the case

@@ -30,8 +30,11 @@
 #define UV_ADV
 #define UV_COR
 #define DJ_GRADPS
+#define STEP2D_FB_AB3_AM4 /* AB3-AM4 barotropic kernel (coawst-cloud 3-experimental/roms-step2d-fb);
+                             A15 default since 2026-11-02 (user): within the bare-reef noise floor
+                             and 19 % faster than LF-AM3 (notebook 2026-11-02_options-triads-on) */
 #define SPLINES_VDIFF
-#define SPLINES_VVISC
+#undef  SPLINES_VVISC  /* off: BSTRESS_IMPLICIT needs the tridiagonal viscous solve (since 2026-11-02) */
 
 #define TS_FIXED
 
@@ -57,6 +60,9 @@
 #undef  MB_BBL
 #undef  SG_BBL
 #define SSW_BBL
+#define BSTRESS_IMPLICIT  /* bottom stress backward Euler (coawst-cloud 3-experimental/roms-bstress-implicit;
+                             needs SPLINES_VVISC off); A15 default since 2026-11-02 (user): equals the
+                             uncapped explicit stress within 0-3 %, stable without LIMIT_BSTRESS's cap */
 #ifdef SSW_BBL
 #define SSW_CALC_ZNOT
 #define SSW_LOGINT

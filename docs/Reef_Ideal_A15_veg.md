@@ -49,10 +49,13 @@ SWAN. This is the case most other variants build on.
   published model and COAWST v3.2-v3.7 (author's choice, to revisit). The units
   of tau_veg are fixed in coawst-cloud's `roms-vegetation` (`tau_veg_units`:
   the plant work per unit mass, as published).
-- **Drag time stepping:** explicit by default (as shipped). For patchy or
-  dense canopies with fast flow, build with `CPP_OPTIONS="+VEG_DRAG_IMPLICIT"`
-  (coawst-cloud `roms-veg-implicit`): backward Euler in the 3-D step and at
-  every barotropic fast step, stable at any DT.
+- **Drag time stepping: implicit by default since 2026-11-02**
+  (`VEG_DRAG_IMPLICIT`, coawst-cloud `roms-veg-implicit`): backward Euler in
+  the 3-D step and at every barotropic fast step, stable at any DT. With
+  SWAN's triads acting, the explicit drag (COAWST as shipped) blew up at DT 6 s
+  even on the constant canopy, at the fore-reef bed
+  ([notebook](../notebook/2026-11-02_options-triads-on.md)); build with
+  `CPP_OPTIONS="-VEG_DRAG_IMPLICIT"` to get it back.
 
 ## Spatial canopy patterns
 
