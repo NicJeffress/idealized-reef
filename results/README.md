@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 23:05 UTC.
+**Last updated:** 2026-11-03 23:20 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -111,7 +111,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
   **breaking-zone grid** (rows 850-1150 m from shore at 10 m, 203 x 126) as
   the default grid of every A15 case; bed roughness under a canopy is allowed
   (one or the other is a suggestion, not a rule), `GLS_Kmin` 1e-8 (the
-  quiet-water mixing is then `AKT_BAK`/`AKV_BAK`), and SWAN's `BKD` breaking
+  quiet-water mixing is then `AKT_BAK` 5e-6 / `AKV_BAK` 5e-5, kept deliberately), and SWAN's `BKD` breaking
   (Salmon et al. 2015; 7-11 % more set-up and crest transport than `CON 0.73`),
   15 vertical levels, and wave streaming from bottom friction and the canopy
   (`BOTTOM_STREAMING`, `VEG_STREAMING`; set-up +95 %)

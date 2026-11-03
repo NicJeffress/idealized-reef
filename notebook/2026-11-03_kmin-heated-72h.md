@@ -92,7 +92,8 @@ Recommendation: **`GLS_Kmin` 1e-8 in every A15 case** (1e-10 gives the same
 answer; 1e-8 is the value ROMS's own input file suggests for the generic
 closure and keeps the TKE further from zero), keeping `AKT_BAK` 5e-6 and
 `AKV_BAK` 5e-5, which now set the quiet-water mixing and should be reported
-with it. **Adopted by the author on 2026-11-03** (1e-8 rather than 1e-10).
+with it. **Adopted by the author on 2026-11-03** (1e-8 rather than 1e-10), and `AKT_BAK`
+5e-6, `AKV_BAK` 5e-5 kept deliberately.
 
 ## Details and links
 

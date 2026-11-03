@@ -149,8 +149,11 @@ numerical (divisions by k).
   value ROMS's input file suggests for the generic closure. The default
   7.6e-6 adds a hidden 1e-5 to 1e-3 m²/s wherever the water is quiet.
 - With the floor that low, **`AKT_BAK` (5e-6) and `AKV_BAK` (5e-5) are the
-  quiet-water mixing**: choose them deliberately and report them with the
-  floor.
+  quiet-water mixing**. Kept deliberately (the author, 2026-11-03): 5e-6 m²/s is the
+  same order as measured ocean-interior diffusivity (Ledwell et al. 1993, about
+  1e-5), the viscosity is 10x the diffusivity as is conventional (KPP, Large et al.
+  1994, uses 1e-4 and 1e-5); on the forced reef they move temperatures by 1-4 %.
+  Report them with the floor.
 - On a forced reef the choice matters little (a few percent); it matters
   in a calm lagoon at slack water and offshore below the mixed layer, and
   more the longer the run.
