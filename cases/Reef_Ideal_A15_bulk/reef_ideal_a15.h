@@ -43,6 +43,10 @@
 #define WEC_VF
 #define BULK_STOKES   /* Stokes drift from Hwave, Lwave, Dwave (as in v3.7), not the SWAN spectrum */
 #define WDISS_WAVEMOD
+#define TKE_WAVEDISS  /* surface TKE flux from SWAN's breaking dissipation (SZ_ALPHA); A15 default since
+                         2026-11-03 (user): with triads the fore-reef flow is less surface-intensified
+                         (-32 %), as the physics expects (notebook 2026-11-03_density1-canopy-tests) */
+#define ZOS_HSIG      /* surface roughness from the wave height (ZOS_HSIG_ALPHA), with TKE_WAVEDISS */
 #define UV_KIRBY
 #undef BOTTOM_STREAMING
 

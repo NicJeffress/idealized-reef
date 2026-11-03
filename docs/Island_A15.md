@@ -48,7 +48,8 @@ k-epsilon, SSW bottom boundary layer with A15's bed properties, T and S fixed
 (27 C, 36), no canopy, `VISC2` 0. Waves Hs 1 m, Tp 10 s from the north on the
 whole outer ring, ramped from 0.125 m over the first 30 min with A15's own
 `wavebc_north.txt` (as `wavebc_ring.txt`); SWAN dt 120 s, `TRIAD`,
-`BREAKING CON 1.0 0.73`; 0.15 m, 12 h tide on the outer ring; coupling every
+`BREAKING CON 1.0 0.73`, 72 directions x 34 frequencies (since 2026-11-03; 20
+before), 30 degree spread (4 before); 0.15 m, 12 h tide on the outer ring; coupling every
 600 s. ROMS DT 4 s, NDTFAST 10 (barotropic Courant number 0.51), 24 h, hourly
 output.
 

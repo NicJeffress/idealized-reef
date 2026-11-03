@@ -86,6 +86,12 @@ repository.
   triads acting, the explicit drag fails at DT 6 s). All four are coawst-cloud
   patches; build with coawst-cloud `2d5672c` or later so that SWAN's `TRIAD`
   actually acts (`swan-triads-nonstationary`).
+- **Breaking-wave turbulence and the wave spread (since 2026-11-03):**
+  `TKE_WAVEDISS` + `ZOS_HSIG` (the surface TKE flux and roughness from SWAN's
+  breaking; with triads it makes the fore-reef flow less surface-intensified,
+  as expected), and a 30 degree directional spread of the incoming waves
+  (4 degrees before: too narrow for SWAN's direction bins). SWAN uses 72
+  directions and 34 frequencies (20 before).
 - **`VISC2 = 0`.** The third-order upstream advection supplies the lateral
   viscosity; `UV_VIS2` stays compiled so a sponge can still be switched on.
   Circle_Island too since 2026-11-02 (its tests ran with 0.001 m²/s).

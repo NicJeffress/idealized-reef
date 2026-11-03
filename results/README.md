@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 02:00 UTC.
+**Last updated:** 2026-11-03 02:20 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -53,7 +53,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Triads (`TRIAD`) | first-order; must be on, with the SWAN fix | without them: set-up -82 % (dense canopy), -61 % (density-1 canopy), -32 % (bare) | triads-on, density-1 |
 | Wave breaking formulation, with triads | CON 0.73 and CON 0.80 agree within 1 % on the realistic canopy; `BKD` gives 7-11 % more set-up, crest transport and crest jet; `TG` (Thornton-Guza) leaves the flow within 3 % but changes the fore-reef shear, crest Hs and flushing | density-1 canopy: BKD set-up +8 %, crest jet +11 %; TG forereef shear +62 %, Hs crest -18 %, flushing +33 % (dense canopy: similar spread) | density-1, triads-on |
 | ... without triads (for the record) | the spread looked huge | set-up -24 % to +108 %: an artefact of the missing triads | results p0-p2 |
-| Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | **with triads it behaves as expected**: less surface-intensified fore-reef flow and a slower crest jet; proposed for adoption. (With triads off it had increased the fore-reef shear: an artefact of the missing triads) | density-1 canopy: forereef surface/mean speed -32 %, crest jet -17 %, set-up -9 %, crest transport -5 % | density-1 |
+| Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | **with triads it behaves as expected**: less surface-intensified fore-reef flow and a slower crest jet; **adopted 2026-11-03** (author). (With triads off it had increased the fore-reef shear: an artefact of the missing triads) | density-1 canopy: forereef surface/mean speed -32 %, crest jet -17 %, set-up -9 %, crest transport -5 % | density-1 |
 | Whitecapping on opposing currents (`WCAP AB ... CURRENT`) | no effect on A15 | < 1 % | results p0-p2 |
 | Wave roller (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5) | blew up at 23 min on the reef flat (0.3 -> 27 m/s in two steps); not usable as is | - | results p0-p2 |
 | Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`) | compiles as `-UV_KIRBY +UV_BANIHASHEMI` (the two are alternatives; our build had both); not yet run | - | VEG_HMIXING entry |
@@ -78,7 +78,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | SWAN iterations per step (with the fix) | one is enough | 1, 2, 5 iterations within 0.6 % (canopy), 2 % (bare) | triads-on |
 | SWAN time step 60 vs 120 s | no effect (tested with triads off) | ~1e-5 | results p0-p2 |
 | Directions (36 / 72 / 144) | **converge slowly** (the 4-degree swell spread is not resolved by 5- or 10-degree bins): 72 directions is about 6 % low in set-up, 36 about 22 % (extrapolated) | 36 vs 72: set-up -16 %, crest transport -9 %; 144 vs 72: +5 %, +3 % | spectral resolution |
-| Frequencies (20 / 34 / 48) | converged by 34; 20 is about 3 % low | 34 vs 20: set-up +3 %, crest transport +1.5 %; 48 = 34 within 0.4 % | spectral resolution |
+| Frequencies (20 / 34 / 48) | converged by 34; 20 is about 3 % low; **34 adopted 2026-11-03** | 34 vs 20: set-up +3 %, crest transport +1.5 %; 48 = 34 within 0.4 % | spectral resolution |
 | Coupling interval | must be a multiple of both models' time steps: 300 s with SWAN at 120 s was silently ignored (COAWST kept 600 s); 240 s still to test | - | results p0-p2 |
 | Tiling (2 x 5 vs 1 x 10) | rounding level | 1e-7 | results p0-p2 |
 | `VISC2` 0.001 vs 0 | invisible; 0 is the default | ~1e-5 | results p0-p2 |
@@ -88,6 +88,15 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m (dense canopy, triads off, old defaults) | **not converged at 20 m**: the largest numerical effect found; to be repeated on the density-1 canopy with triads and the new defaults | set-up -15 %, crest transport -18 %, pass transport -10 %, crest jet p99 +15 %, forereef shear ratio +22 %, Hs crest +4 %; 8x the cost | results p0-p2 |
+
+## Changes adopted on 2026-11-03 (author's decisions)
+
+- `TKE_WAVEDISS` + `ZOS_HSIG` in every A15 case.
+- 34 SWAN frequencies instead of 20 (converged; 20 was about 3 % low).
+- A 30 degree directional spread for the incoming waves (all A15 cases and the
+  islands); the 4 degree spread of the v3.7 project was narrower than SWAN's
+  direction bins, which made the answer depend on the number of directions.
+  The direction study is being repeated at 30 degrees.
 
 ## Problems found in the code along the way
 
@@ -116,6 +125,10 @@ the stratified case run stably at DT 6 s. **Every A15 run is about 20 %
 cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Running now
+
+- The defaults of 2026-11-03 on the density-1 canopy (`TKE_WAVEDISS`, 30 degree
+  spread, 34 frequencies): the new baseline, 36 and 144 directions, 20
+  frequencies, no triads.
 
 - The roller (`WEC_ALPHA` 0.5 at DT 6 and 3 s, 0.2) and the 10 m grid with the
   current physics (density-1 canopy).

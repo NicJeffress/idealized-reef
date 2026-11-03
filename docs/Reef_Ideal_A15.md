@@ -45,7 +45,7 @@ The grid and initial file come from the author's COAWST v3.7 project
 
 | Process | Option | Notes |
 |---|---|---|
-| waves on currents | `WEC_VF` (vortex force), `WDISS_WAVEMOD` (breaking dissipation from SWAN), `UV_KIRBY` | spectral Stokes drift (COAWST v3.9's default, summed over SWAN's frequencies); the variant `_bulk` uses bulk Stokes drift |
+| waves on currents | `WEC_VF` (vortex force), `WDISS_WAVEMOD` (breaking dissipation from SWAN), `UV_KIRBY`; `TKE_WAVEDISS` + `ZOS_HSIG` since 2026-11-03 (surface TKE flux and roughness from breaking) | spectral Stokes drift (COAWST v3.9's default, summed over SWAN's frequencies); the variant `_bulk` uses bulk Stokes drift |
 | bottom stress | `SSW_BBL` with `SSW_CALC_ZNOT`, `SSW_LOGINT`, `SSW_LOGINT_WBL` | wave-current bottom boundary layer; grain diameter 0.12 m in the initial file, `Zob` 0.01 m; implicit since 2026-11-02 (`BSTRESS_IMPLICIT`, coawst-cloud `roms-bstress-implicit`; before: explicit and uncapped, which it equals within 0-3 %), no `LIMIT_BSTRESS` |
 | vertical mixing | `GLS_MIXING`, `KANTHA_CLAYSON`, `RI_SPLINES`, `N2S2_HORAVG` | k-epsilon parameters (`GLS_P` 3, `GLS_M` 1.5, `GLS_N` -1) |
 | vertical operators | `SPLINES_VDIFF`; `SPLINES_VVISC` off since 2026-11-02 | the implicit bottom stress and canopy drag need the tridiagonal viscous solve |
@@ -70,7 +70,8 @@ ROMS steps and 5 SWAN steps per exchange.
 ## Forcing and boundaries
 
 - **Waves:** JONSWAP (gamma 3.3), Hs ramped from 0.125 m to 1.0 m over the
-  first 30 min, Tp 10 s, from the north, 4 degree directional spread, on the
+  first 30 min, Tp 10 s, from the north, 30 degree directional spread (4 degrees
+  until 2026-11-03, as in the v3.7 project), on the
   north boundary only (`wavebc_north.txt`, TPAR format). `wavebc_east.txt` and
   `wavebc_west.txt` are left from the non-periodic v3.7 setup and unused.
 - **Tide:** zeta at the north boundary = -0.15 sin(2 pi t / 12 h)
@@ -138,8 +139,10 @@ output is about 3x smaller.
 - The original v3.7 project's numbers in some old notes (crest 0.63 m at
   600 m) came from a coarse profile; the grid's crest is 0.50 m at 940-1000 m
   ([notebook](../notebook/2026-10-23_a15-crest-depth.md)).
-- SWAN's directional spreading at the boundary is narrow (4 degrees), as in the
-  v3.7 project.
+- SWAN's directional spreading at the boundary was 4 degrees (as in the v3.7
+  project) until 2026-11-03, now 30 degrees: at 4 degrees, 72 direction bins did
+  not resolve the incoming spectrum and the set-up depended strongly on the
+  number of directions ([notebook](../notebook/2026-11-03_swan-spectral-resolution.md)).
 - With varying alongshore spacing (20-40 m), SWAN's Hs varies by about 0.1-0.2 %
   along an alongshore-uniform crest (finer mesh, higher Hs), periodic or not
   ([Swan_Periodic_Test](Swan_Periodic_Test.md)).

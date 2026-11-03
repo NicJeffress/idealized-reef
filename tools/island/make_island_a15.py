@@ -24,7 +24,8 @@ closes on itself), Lm = 360 columns (1 degree each: SWAN's CIRCLE 72 bins
 are 5 columns), Mm rows out to A15's 5 km offshore: cells 10.5 m at the
 shore, 28 m on the crest, about 100 m at the outer ring. Waves and physics
 as Reef_Ideal_A15 (Hs 1 m, Tp 10 s from the north, ramped over 30 min with
-A15's wavebc_north.txt; 0.15 m, 12 h tide on the outer ring; no canopy),
+A15's wavebc_north.txt, 30 degree spread; 0.15 m, 12 h tide on the outer ring;
+no canopy; SWAN 72 directions x 34 frequencies),
 case files from cases/Circle_Island (header CIRCLE_ISLAND, CURVGRID).
 
 Writes into OUTDIR: island_grid.nc, island_init.nc, swan_coord.grd,
@@ -52,6 +53,7 @@ R_B = 590.0                            # radius of rho row 0 (land)
 Y_MAX = 5040.0                         # A15's outermost rho row (m from the shore)
 PASS_I = 101                           # A15 rho column at the centre of its pass (columns 92-110)
 NDIR = 72                              # SWAN direction bins, as A15 (5 degrees = 5 columns)
+NFREQ = 34                             # SWAN frequencies, as A15 (since 2026-11-03)
 DT, NDTFAST = 4.0, 10                  # ROMS steps (10.5 m cells at the shore)
 THETA_S, THETA_B, HC = 3.0, 2.0, 20.0  # vertical grid as Reef_Ideal_A15
 MM = int(np.ceil(np.log((R_SHORE + Y_MAX) / R_B) / DTH))   # rows 0..MM+1 reach past Y_MAX
@@ -229,7 +231,7 @@ def write_swan_in(out, n):
                  (r"CURVILINEAR 0 0 216 81 ", f"CURVILINEAR 0 0 {LM} {MM + 1} ")):
         s = re.sub(a, b, s)
     s = re.sub(r"(ROMS column k \(k = 1\.\.)216(\), rows = ROMS rows 0\.\.)81", rf"\g<1>{LM}\g<2>{MM + 1}", s)
-    s = sub1(s, r"CIRCLE 36 0\.04 1\.0 20", f"CIRCLE {NDIR} 0.04 1.0 20", "swan.in")
+    s = sub1(s, r"CIRCLE 36 0\.04 1\.0 20", f"CIRCLE {NDIR} 0.04 1.0 {NFREQ}", "swan.in")
     s = sub1(s, r"\(row 81\)", f"(row {MM + 1})", "swan.in")
     # waves on the outer ring from A15's time series (ramp 0.125 -> 1 m over 30 min);
     # Circle_Island's inactive "$INWARD" alternative is dropped
