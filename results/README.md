@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 03:15 UTC.
+**Last updated:** 2026-11-03 03:45 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -77,7 +77,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | AB3-AM4 barotropic kernel (`STEP2D_FB_AB3_AM4`) | as accurate as LF-AM3, faster; **now the default** | within the noise; wall time -18 to -19 % | triads-on |
 | SWAN iterations per step (with the fix) | one is enough | 1, 2, 5 iterations within 0.6 % (canopy), 2 % (bare) | triads-on |
 | SWAN time step 60 vs 120 s | no effect (tested with triads off) | ~1e-5 | results p0-p2 |
-| Directions (36 / 72 / 144) | **converge slowly** (the 4-degree swell spread is not resolved by 5- or 10-degree bins): 72 directions is about 6 % low in set-up, 36 about 22 % (extrapolated) | 36 vs 72: set-up -16 %, crest transport -9 %; 144 vs 72: +5 %, +3 % | spectral resolution |
+| Directions (36 / 72 / 144) | **converged at 72 with the 30-degree spread** (within 1 % of 144; 36 within 3 %). With the old 4-degree swell they converged slowly (the bins did not resolve the spread) | 30 deg: 36 -3 %, 144 +1 % (set-up); 4 deg: 36 -16 %, 144 +5 % | spread-30, spectral resolution |
 | Frequencies (20 / 34 / 48) | converged by 34; 20 is about 3 % low; **34 adopted 2026-11-03** | 34 vs 20: set-up +3 %, crest transport +1.5 %; 48 = 34 within 0.4 % | spectral resolution |
 | Coupling interval | must be a multiple of both models' time steps: 300 s with SWAN at 120 s was silently ignored (COAWST kept 600 s); 240 s still to test | - | results p0-p2 |
 | Tiling (2 x 5 vs 1 x 10) | rounding level | 1e-7 | results p0-p2 |
@@ -96,7 +96,10 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 - A 30 degree directional spread for the incoming waves (all A15 cases and the
   islands); the 4 degree spread of the v3.7 project was narrower than SWAN's
   direction bins, which made the answer depend on the number of directions.
-  The direction study is being repeated at 30 degrees.
+  With it, 72 directions is converged (144 within 1 %).
+- The new baseline (density-1 canopy): set-up 12.5 mm, crest transport
+  465 m³/s, crest jet 0.24 m/s; about a third less set-up than with the old
+  4-degree swell. Runs take 60 % longer with 34 frequencies.
 
 ## Problems found in the code along the way
 
@@ -127,12 +130,8 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Running now
 
-- The defaults of 2026-11-03 on the density-1 canopy (`TKE_WAVEDISS`, 30 degree
-  spread, 34 frequencies): the new baseline, 36 and 144 directions, 20
-  frequencies, no triads.
-
-- The roller (`WEC_ALPHA` 0.5 at DT 6 and 3 s, 0.2) and the 10 m grid with the
-  current physics (density-1 canopy).
+- The 10 m grid with the current physics of 2026-11-02 (density-1 canopy, 4-degree
+  spread, 20 frequencies; finishes about 05:10 UTC).
 
 ## Still open
 

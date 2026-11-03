@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-03 | [30-degree spread: new baseline, directions converged](2026-11-03_spread30-baseline-and-resolution.md) | A15_veg, density 1 | 72 directions within 1 % of 144 (36 within 3 %); 20 frequencies 3 % low; triads -58 %; new baseline set-up 12.5 mm (a third less than at 4 degrees) |
 | 2026-11-03 | [The roller blow-up and its fix](2026-11-03_roller-substeps.md) | A15_veg, density 1 | COAWST advects the roller with one step per DT (unstable at DT 6 s); sub-steps fix it (DT 6 = DT 3 within 0.1 %); roller raises set-up 25 % |
 | 2026-11-03 | [SWAN spectral resolution with triads](2026-11-03_swan-spectral-resolution.md) | A15_veg, density 1 | Frequencies converged by 34 (20 is 3 % low); directions slow (36: -16 % set-up, 144: +5 %; the 4-degree swell is under-resolved) |
 | 2026-11-03 | [Density-1 canopy tests](2026-11-03_density1-canopy-tests.md) | A15_veg, density 1 | Realistic canopy (set-up 18 mm, crest jet 0.29 m/s); triads -61 % set-up when off; TKE_WAVEDISS now as expected (forereef shear -32 %); BKD +8 %; explicit drag fine at this density |
