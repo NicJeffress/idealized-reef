@@ -92,7 +92,7 @@ GridsInLayer =  1
 ! these parameters correctly.
 
           Lm == 201            ! Number of I-direction INTERIOR RHO-points
-          Mm == 109            ! Number of J-direction INTERIOR RHO-points
+          Mm == 124            ! Number of J-direction INTERIOR RHO-points
            N == 10             ! Number of vertical levels
           ND == 11            ! Number of wave directional bins
 
@@ -385,7 +385,7 @@ LtracerSponge == F F                            ! temperature, salinity, inert
  ZOS_HSIG_ALPHA == 0.5d0                        ! roughness from wave amplitude
        SZ_ALPHA == 0.25d0                       ! roughness from wave dissipation
       CRGBAN_CW == 100.0d0                      ! Craig and Banner wave breaking
-      WEC_ALPHA == 0.0d0                        ! 0: all wave dissip goes to break and none to roller.
+      WEC_ALPHA == 0.5d0                        ! roller share of the breaking dissipation (A15 default since 2026-11-03)
                                                 ! 1: all wave dissip goes to roller and none to breaking.
 
 ! Constants used in momentum stress computation.

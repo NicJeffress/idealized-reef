@@ -59,6 +59,9 @@
 #undef  WEC_MELLOR
 #define WEC_VF
 #define WDISS_WAVEMOD
+#define ROLLER_RENIERS  /* Reniers surface roller, WEC_ALPHA 0.5 in ocean.in; A15 default since 2026-11-03
+                         (user); needs coawst-cloud roms-roller-substeps (DT 6 s) and roms-restart-roller
+                         (restarts); notebook 2026-11-03_roller-checks */
 #define TKE_WAVEDISS  /* surface TKE flux from SWAN's breaking dissipation (SZ_ALPHA); A15 default since
                          2026-11-03 (user): with triads the fore-reef flow is less surface-intensified
                          (-32 %), as the physics expects (notebook 2026-11-03_density1-canopy-tests) */

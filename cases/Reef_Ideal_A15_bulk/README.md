@@ -1,6 +1,17 @@
 # Reef_Ideal_A15_bulk
 
-Reef_Ideal_A15 with bulk Stokes drift (`BULK_STOKES`) instead of the spectral
-one. Application flag `REEF_IDEAL_A15`. Note: this folder's `swan.in` is not
-periodic (A15's original v3.7 wave boundaries). See
-[docs/Reef_Ideal_A15_bulk.md](../../docs/Reef_Ideal_A15_bulk.md).
+> **Grid and roller since 2026-11-03 (author's decisions).** The default grid is
+> the breaking-zone grid: 203 x 126 rho points, the rows between 850 and 1150 m
+> from the shore (crest, breaking zone, top of the fore reef) split in two (10 m
+> across the shore, 20 m elsewhere), DT 6 s kept (barotropic Courant 0.81).
+> Made from the 20 m grid (203 x 111, this folder before 2026-11-03 in git) with
+> `tools/reef/refine_a15_grid.py --band 850 1150 --factor 2`; it recovers the
+> uniform 10 m answer at +16 % cost (notebook 2026-11-03_grid-10m). Row numbers
+> quoted below refer to the 20 m grid. The Reniers roller is on
+> (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5; notebook 2026-11-03_roller-checks).
+
+
+Experiment: A15 with `#define BULK_STOKES` (bulk Stokes drift from Hwave,
+Lwave, Dwave, as COAWST v3.7 did) instead of v3.9's default spectral Stokes
+drift, to compare cost and Stokes profiles. Otherwise identical to
+`cases/Reef_Ideal_A15`.

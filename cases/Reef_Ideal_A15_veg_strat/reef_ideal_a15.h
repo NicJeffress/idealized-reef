@@ -40,7 +40,7 @@
 
 /* Open north boundary options for stratified runs, all switched at run
    time in ocean.in (default: nudged radiation plus the interior nudging
-   band, sponge off; see docs/Reef_Ideal_A15_veg_strat.md):
+   band, sponge off; see the case README):
    - nudged radiation: LBC(isUvel/isVvel/isTvar) north = RadNud, exterior
      state = the initial stratification at rest
    - interior nudging band: Lm3CLM, LtracerCLM, LnudgeM3CLM, LnudgeTCLM = T,
@@ -59,6 +59,9 @@
 #undef  WEC_MELLOR
 #define WEC_VF
 #define WDISS_WAVEMOD
+#define ROLLER_RENIERS  /* Reniers surface roller, WEC_ALPHA 0.5 in ocean.in; A15 default since 2026-11-03
+                         (user); needs coawst-cloud roms-roller-substeps (DT 6 s) and roms-restart-roller
+                         (restarts); notebook 2026-11-03_roller-checks */
 #define TKE_WAVEDISS  /* surface TKE flux from SWAN's breaking dissipation (SZ_ALPHA); A15 default since
                          2026-11-03 (user): with triads the fore-reef flow is less surface-intensified
                          (-32 %), as the physics expects (notebook 2026-11-03_density1-canopy-tests) */
