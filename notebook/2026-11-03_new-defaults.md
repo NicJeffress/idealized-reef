@@ -46,7 +46,7 @@ modelling choices and made these defaults.
 
 ## Tests started with the new defaults
 
-- **SWAN limiters** (band grid, roller, 24 h): current settings,
+- **SWAN limiters** (band grid, roller, 24 h; done: no effect, [entry](2026-11-03_swan-limiters.md)): current settings,
   `NUM CTHETA 0.9`, `NUM CTHETA 0.9 CSIGMA 0.9`, `NUM DIRIMPL 1`.
 - **Vertical resolution** (band grid, roller, 24 h): N 10, 15 and 20 at
   DT 6 s, and N 20 at DT 3 s (the crest layers are 2.5 cm at N 20).

@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 17:40 UTC.
+**Last updated:** 2026-11-03 18:20 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -72,6 +72,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Question | Answer | Size | Entry |
 |---|---|---|---|
+| SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 %; `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
 | Time step DT 6 vs 3 s (bare reef, triads on: a flow that moves) | converged | <= 1.6 % (forereef shear 3.4 %) | triads-on |
 | ... on the dense canopy | converged, but only because the canopy damps the flow | ~1e-5 | results p0-p2 |
 | NDTFAST 20 or 30 instead of 24 | no effect | ~1e-5 | results p0-p2 |
@@ -105,9 +106,9 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
   **breaking-zone grid** (rows 850-1150 m from shore at 10 m, 203 x 126) as
   the default grid of every A15 case; bed roughness under a canopy is allowed
   (one or the other is a suggestion, not a rule)
-  ([new defaults](../notebook/2026-11-03_new-defaults.md)). Tests of SWAN's
-  refraction limiter (`CTHETA`), vertical resolution and wave streaming are
-  running on the new defaults.
+  ([new defaults](../notebook/2026-11-03_new-defaults.md)). SWAN's refraction
+  limiters changed nothing (within 1 %); vertical resolution and wave
+  streaming are being tested.
 
 ## Problems found in the code along the way
 
