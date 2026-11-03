@@ -11,25 +11,39 @@ python3 -I tools/reef/make_thin_crest.py cases/Reef_Ideal_A15 cases/Reef_Ideal_A
 
 This writes `roms_grid_<name>.nc` and `swan_bathy_<name>.bot` for each variant;
 point `GRDNAME` in `ocean.in` and the bottom `READINP` in `swan.in` at the pair
-you want. Only the reef columns (default depth < 0.6 m on row 32) change; the
-pass and everything else are untouched.
+you want. Only the reef columns change (those whose shallowest wet point is
+less than 0.6 m deep); the pass and everything else are untouched.
+
+The variants are depth profiles against the distance from the crest centre,
+in metres. The script finds the crest by depth (the centre is midway between
+the two places where the reef's median profile crosses 1 m), puts each
+profile point on the row nearest its offset and interpolates the rows in
+between, so it works on any A15 grid. On the 20 m grid (203 x 111, the A15
+grid until 2026-11-03) every profile point has its own row and the grids are
+those of the tests below, bit for bit; on today's breaking-zone grid (10 m
+rows across the crest) the same profiles are sampled every 10 m. The slope
+factor rx0 is a per-cell number, so the "steep" variants are less steep per
+cell on 10 m rows (0.26 and 0.37 instead of 0.41): the profile is the same,
+the numerical difficulty is not. The tests below were run on the 20 m grid
+with 10 levels and LF-AM3; their conclusions do not depend on either.
 
 ![Thin-crest profiles](../figures/a15_thin_crest_profiles.png)
 
-| Grid | Crest | Flanks (slope factor rx0) | Isolates |
+| Grid | Crest | Flanks (slope factor rx0 on the 20 m grid) | Isolates |
 |---|---|---|---|
-| `default_1` | 0.50 m, rows 31-34 | 0.34 | A15 as used elsewhere |
-| `thin_smooth` | 0.30 m, rows 31-34 | rows 29-39 eased, <= 0.32 | depth alone |
-| `thin_steep` | 0.30 m, rows 32-33; 0.71 m on rows 31 and 34 | 0.41 | a narrow two-row crest |
-| `steep_050` | 0.50 m, rows 32-33; 1.19 m on rows 31 and 34 | 0.41 | steepness alone |
+| `default_1` | 0.50 m over 60 m (the 20 m grid's rows 31-34) | 0.34 | A15 as used elsewhere |
+| `thin_smooth` | 0.30 m over the same 60 m | eased over 140 m either side, <= 0.32 | depth alone |
+| `thin_steep` | 0.30 m over 20 m (rows 32-33); 0.71 m 20 m either side (rows 31 and 34) | 0.41 | a narrow two-row crest |
+| `steep_050` | 0.50 m over 20 m; 1.19 m 20 m either side | 0.41 | steepness alone |
 
 On the 0.30 m crest the bottom layer is 3 cm thick at rest and about 1.5 cm
-near low tide (0.15 m of water over the crest).
+near low tide (0.15 m of water over the crest), with 10 levels.
 
 ## The bottom-stress schemes compared
 
 ROMS (here with `SSW_BBL`) applies the bottom stress explicitly. Two
-alternatives exist as build options:
+alternatives exist as build options (the implicit one is the A15 default
+since 2026-11-02, on the strength of these tests):
 
 - `LIMIT_BSTRESS`: caps the stress at 0.75 Hz_1 |u_1| / DT (coawst-cloud's
   `roms-limit-bstress` makes it its own option; COAWST ties it to `WET_DRY`).
@@ -81,4 +95,7 @@ set-up: mean zeta rows 5-25 minus rows 95-105.)
 
 These grids are test cases for numerics; they are not part of the default
 case family. Member `p2-omega-diag` of the options campaign, phase 2, uses
-`thin_steep`.
+`thin_steep`: the pass-jet blow-up with an unramped 2 m sea is horizontal
+(cross-shore Courant number about 0.75 at onset), `OMEGA_IMPLICIT` does not
+help, DT 3 s does
+([notebook](../notebook/2026-11-02_options-p2-omega-diag.md)).

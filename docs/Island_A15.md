@@ -36,29 +36,40 @@ crest, a fore reef three times gentler, no pass).
 
 Closed log-polar O-grid as Circle_Island (square cells, the grid closes on
 itself, `CURVGRID`): 360 columns (1 degree each), 130 interior rows, 10
-levels (A15's vertical grid). Cells 10.5 m at the shore, 28 m on the crest,
+levels (A15's vertical grid until 2026-11-03; A15 has 15 since, which this
+case has not adopted yet). Cells 10.5 m at the shore, 28 m on the crest,
 101 m at the outer ring. SWAN on the same grid, `CIRCLE 72` (5 degree bins,
 5 columns each), so a pass layout that repeats every 360/N degrees lines up
 with SWAN's direction bins.
 
 ## Physics and forcing
 
-As Reef_Ideal_A15: vortex-force WEC with spectral Stokes drift, GLS
-k-epsilon, SSW bottom boundary layer with A15's bed properties, T and S fixed
-(27 C, 36), no canopy, `VISC2` 0. Waves Hs 1 m, Tp 10 s from the north on the
-whole outer ring, ramped from 0.125 m over the first 30 min with A15's own
-`wavebc_north.txt` (as `wavebc_ring.txt`); SWAN dt 120 s, `TRIAD`,
+As Reef_Ideal_A15 before 2026-11-03: vortex-force WEC with spectral Stokes
+drift, GLS k-epsilon (`GLS_Kmin` 7.6e-6), SSW bottom boundary layer with
+A15's bed properties (explicit stress), LF-AM3 barotropic kernel, T and S
+fixed (27 C, 36), no canopy, `VISC2` 0. Waves Hs 1 m, Tp 10 s from the north
+on the whole outer ring, ramped from 0.125 m over the first 30 min with A15's
+own `wavebc_north.txt` (as `wavebc_ring.txt`); SWAN dt 120 s, `TRIAD`,
 `BREAKING CON 1.0 0.73`, 72 directions x 34 frequencies (since 2026-11-03; 20
-before), 30 degree spread (4 before); 0.15 m, 12 h tide on the outer ring; coupling every
-600 s. ROMS DT 4 s, NDTFAST 10 (barotropic Courant number 0.51), 24 h, hourly
-output.
+before), 30 degree spread (4 before); 0.15 m, 12 h tide on the outer ring;
+coupling every 600 s. ROMS DT 4 s, NDTFAST 10 (barotropic Courant number
+0.51), 24 h, hourly output.
+
+**Not yet adopted here** from A15's defaults of 2026-11-03: the Reniers
+roller, bottom wave streaming, `TKE_WAVEDISS` + `ZOS_HSIG`, `BKD` breaking,
+the implicit bottom stress, AB3-AM4, `GLS_Kmin` 1e-8 and 15 levels. On A15
+the first two together raise the set-up by about 2.5x and the crest
+transport by 50 %, so the island's numbers below are not comparable with
+A15's current ones until they are switched on and tested on the ring grid
+(see the [README](../README.md#the-a15-defaults-since-2026-11-03-and-why)).
 
 ## Running
 
 `build.sh --case cases/Island_A15_2pass --app CIRCLE_ISLAND` (coawst-cloud),
 10 ROMS processes (10 x 1 tiles round the island) + 6 SWAN on a 16-vCPU
-machine. About twice A15's cells (360 x 130 against 203 x 111) and a smaller
-time step: 2.4x A15's wall time per simulated hour (measured).
+machine. About twice the cells of A15's 20 m grid (360 x 130 against
+203 x 111) and a smaller time step: 2.4x that grid's wall time per simulated
+hour (measured; about 1.5x today's A15).
 
 ## Status
 

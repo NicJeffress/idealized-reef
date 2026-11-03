@@ -34,8 +34,13 @@ variant compares the two, in cost and in Stokes profiles.
 
 - **SWAN is not periodic in this folder.** Its `swan.in` keeps A15's original
   (v3.7) wave boundaries: waves enter on the north edge and on the offshore
-  half of the east and west edges, without `REPEATING`. With non-periodic SWAN,
-  A15's periodic ROMS seam gets mismatched wave forcing (a 58 mm/s jump in the
-  alongshore current in a 3 h test). For a like-for-like comparison with A15,
-  copy `cases/Reef_Ideal_A15/swan.in` into this folder.
+  half of the east and west edges (rows 72-125 of the breaking-zone grid),
+  without `REPEATING`. With non-periodic SWAN, A15's periodic ROMS seam gets
+  mismatched wave forcing (a 58 mm/s jump in the alongshore current in a 3 h
+  test). For a like-for-like comparison with A15, copy
+  `cases/Reef_Ideal_A15/swan.in` into this folder.
+- Otherwise the case follows every A15 default of 2026-11-03 (breaking-zone
+  grid, 15 levels, roller, bottom streaming, `TKE_WAVEDISS`, `BKD` breaking,
+  34 frequencies, `GLS_Kmin` 1e-8); none of the campaign's tests was run
+  with the bulk Stokes drift.
 - No comparison of the Stokes profiles themselves is recorded yet.

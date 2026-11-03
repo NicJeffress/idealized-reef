@@ -1,0 +1,9 @@
+{
+  "description": "Density-1 canopy everywhere (n 1 m-2, D 0.5 m, h 0.4 m: frontal area 0.2, bed cover 0.2); the standard test canopy of the A15 campaign since 2026-11-03",
+  "classes": {
+    "sparse": {"density": 1, "diameter": 0.5, "height": 0.4}
+  },
+  "layers": [
+    {"where": "all", "class": "sparse"}
+  ]
+}

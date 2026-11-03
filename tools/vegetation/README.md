@@ -16,7 +16,9 @@ python3 -I tools/vegetation/make_veg_init.py tools/vegetation/patterns/patchy.js
 
 It prints, per reef zone, the area, the share of each plant class and
 the mean frontal area, and with `--png` draws a map. Examples in
-`patterns/`: `const.json` (the case's constant canopy), `zones.json`
+`patterns/`: `const.json` (the case's constant dense canopy),
+`sparse.json` (the density-1 canopy everywhere: the standard test canopy
+since 2026-11-03), `reef.json` (dense on the reef only), `zones.json`
 (amount by zone), `patchy.json` (random patches).
 
 ## Pattern format
@@ -120,14 +122,17 @@ Cd = 1, as ROMS's `CD_VEG`), so the canopy dissipates waves the same
 way it did with `VEGETATION 1`. The summary reports how much of the
 vegetated area reaches the surface at the lowest tide (h - 0.17 m).
 
-## Time step: the vegetation drag is explicit
+## Time step: the vegetation drag is implicit by default
 
-ROMS steps the vegetation drag explicitly, so a canopy limits the time
-step: the number 2 alpha |U| DT (alpha = 0.5 Cd D n; 1 m-1 for the dense
-example class) must stay near or below about 1. Uniform or zoned
-canopies slow the flow and run at A15's DT 6 s; patchy canopies funnel
-fast flow from bare gaps into dense patches, and `patchy.json` blew up at
-6 s after 42 min but ran at 3 s. The drag stays explicit by default; the
-build option `VEG_DRAG_IMPLICIT` (coawst-cloud's `roms-veg-implicit`) takes it
-implicitly and runs the patchy pattern at 6 s (see
-`docs/Reef_Ideal_A15_veg.md`).
+As shipped, ROMS steps the vegetation drag explicitly, so a canopy limits
+the time step: the number 2 alpha |U| DT (alpha = 0.5 Cd D n; 1 m-1 for
+the dense example class) must stay near or below about 1. Uniform or
+zoned canopies slow the flow and ran at A15's DT 6 s; patchy canopies
+funnel fast flow from bare gaps into dense patches, and `patchy.json` blew
+up at 6 s after 42 min but ran at 3 s; once SWAN's triads act, even the
+uniform dense canopy blows up at 6 s (0.5 m/s at the bottom of the fore
+reef). Since 2026-11-02 the A15 canopy cases take the drag implicitly
+(`VEG_DRAG_IMPLICIT`, coawst-cloud's `roms-veg-implicit`), which runs
+every pattern at 6 s within 2.5 % of the explicit drag at 3 s (see
+`docs/Reef_Ideal_A15_veg.md`). Build with `CPP_OPTIONS="-VEG_DRAG_IMPLICIT"`
+for the explicit drag.

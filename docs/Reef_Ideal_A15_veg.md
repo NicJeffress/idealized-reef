@@ -16,14 +16,21 @@ SWAN. This is the case most other variants build on.
 
 ## What changes from A15
 
-- **Header:** `VEGETATION`, `VEG_DRAG`, `VEG_TURB`, `VEG_SWAN_COUPLING` on;
-  `VEG_FLEX` and `VEG_STREAMING` off (rigid cylinders). `N2S2_HORAVG` is
-  switched off with `VEG_TURB`.
+- **Header:** `VEGETATION`, `VEG_DRAG` (implicit, `VEG_DRAG_IMPLICIT`),
+  `VEG_TURB`, `VEG_SWAN_COUPLING` and, since 2026-11-03, `VEG_STREAMING` (the
+  wave momentum the canopy dissipates goes to the mean flow in the canopy
+  layers; with `BOTTOM_STREAMING` the set-up nearly doubles,
+  [notebook](../notebook/2026-11-03_wave-streaming.md)); `VEG_FLEX` off
+  (rigid cylinders). `N2S2_HORAVG` is switched off with `VEG_TURB`. The grid,
+  levels and the rest of the physics are A15's defaults of 2026-11-03.
 - **Initial file** (`init_reef.nc`): the same constant canopy everywhere:
   density n = 4 m⁻², diameter D = 0.5 m, height h = 0.4 m (frontal area per
   bed area lambda_f = n D h = 0.8), thickness (pi/4) x 0.5 = 0.3927 m (bed
   coverage pi D² n / 4 = 0.785). Drag coefficient `CD_VEG` 1.0
-  (`vegetation.in`).
+  (`vegetation.in`). This dense canopy damps the reef flow to a few percent
+  of the bare reef's; **the standard test canopy since 2026-11-03 is density
+  1 m⁻²** (frontal area 0.2, closer to measured reef canopies), made with
+  `tools/vegetation/patterns/sparse.json`, and most results below are for it.
 - **SWAN:** `VEGETATION 3 0.4 0.5 1 1` selects COAWST's `SVEG_COAWST`, which
   takes density, height and diameter at each point from ROMS's plant fields
   through the coupler (so they may vary in space); the last value is the drag
@@ -69,7 +76,8 @@ across the periodic seam). Point `ININAME` in `ocean.in` at the new file.
 
 | Pattern | Layout |
 |---|---|
-| `const.json` | the case's constant canopy everywhere |
+| `const.json` | the case's constant dense canopy everywhere |
+| `sparse.json` | the density-1 canopy everywhere (the standard test canopy) |
 | `reef.json` | dense on backreef, crest and forereef; lagoon, pass and deep water bare |
 | `zones.json` | dense forereef and crest, sparse backreef, bare lagoon and pass |
 | `patchy.json` | 30 % dense, 30 % sparse, 40 % bare in about 150 m patches over the reef |
@@ -124,16 +132,46 @@ area; Hs; depth-averaged speed; speed minus the bare-reef run.*
   ([notebook](../notebook/2026-10-24_ab3-am4-barotropic-kernel.md)).
 - **Exact restarts:** 2e-10 m/s after a restart, SWAN bit-identical
   ([notebook](../notebook/2026-10-24_perfect-restart-spot.md)).
-- **Options campaign, phase 0** runs on this case (constant canopy); see
-  [`results/`](../results).
+- **The canopy sets the size of the circulation** (24 h, hours 12-24, 20 m
+  grid, triads on; [notebook](../notebook/2026-11-03_density1-canopy-tests.md),
+  [triads on](../notebook/2026-11-02_options-triads-on.md)): lagoon set-up
+  62 mm on the bare reef, 18 mm with the density-1 canopy, 3.9 mm with the
+  dense one; crest transport 1396, 563 and 203 m³/s; crest jet 0.83, 0.29
+  and 0.10 m/s. The patchy canopy sits in between.
+- **SWAN's triads are first order on the canopy:** without them the set-up
+  of the dense canopy is 82 % lower and that of the density-1 canopy 58-61 %
+  lower, because the triads move energy to higher frequencies that the
+  canopy and the bottom friction take less of. They act only with
+  coawst-cloud `swan-triads-nonstationary`.
+- **With triads the explicit drag fails on the dense canopy at DT 6 s** (the
+  near-bottom flow at the top of the fore reef reaches 0.5 m/s, stability
+  number 6); it is fine on the density-1 canopy (within 3 % of the implicit
+  drag). The implicit drag is the default.
+- **Canopy wave streaming:** the canopy takes about a quarter of the wave
+  energy over this reef, bottom friction a third; `VEG_STREAMING` with
+  `BOTTOM_STREAMING` raises the set-up 95 % and the crest transport 32 % on
+  the density-1 canopy, stable at DT 6 s. The canopy force needed five fixes
+  (coawst-cloud `roms-veg-streaming-fixes`).
+- **`VEG_TURB`** raises the reef-flat and crest diffusivity by 60 % and
+  changes the flow by 2-4 % on the heated reef; it is a k-epsilon source, so
+  the closure stays k-epsilon
+  ([notebook](../notebook/2026-11-03_turbulence-closure.md)).
+- **The options test campaign** ran on this case: results in
+  [`results/`](../results/README.md) and the
+  [README](../README.md#what-we-have-learned-about-the-physics).
 
 ## Caveats
 
 - Canopy parameters for real coral are open: match frontal area n D h and bed
-  coverage pi D² n / 4 separately.
+  coverage pi D² n / 4 separately. With the streaming force the canopy
+  parameters set the flow directly, not only through the wave height.
 - At a patch edge ROMS averages the drag onto the face between a bare and a
   vegetated cell, so edges are half a cell wide; bare cells get no dissipation
   source (their gap is capped at 1e11 m).
-- On the 2 m backreef the vertical diffusivity at rest is about 1e-3 m²/s,
-  much above the background; dense canopy and GLS in very shallow water are
-  candidates, not traced.
+- The vertical diffusivity of about 1e-3 m²/s on the 2 m backreef at rest,
+  seen in the stratified case, was the GLS minimum-TKE floor, not the canopy
+  turbulence (identical with `VEG_TURB` off); `GLS_Kmin` 1e-8 removes it
+  ([gls_kmin.md](gls_kmin.md)).
+- The canopy-edge viscosity (`VEG_HMIXING`, `VEGHMIXCOEF` in `vegetation.in`)
+  does not compile in COAWST v3.9, which dropped its routine in v3.6
+  ([notebook](../notebook/2026-11-03_veg-hmixing-and-banihashemi.md)).

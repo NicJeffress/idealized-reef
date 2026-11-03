@@ -215,21 +215,23 @@ def fig_thin_crest(tmp):
     dst = tmp / "A15_thin"
     run(ROOT / "tools/reef/make_thin_crest.py", A15, dst)
     fig, ax = plt.subplots(figsize=(7.5, 3.8))
-    names = [("default_1", "default_1: 0.50 m, 4 rows", C1),
+    names = [("default_1", "default_1: 0.50 m over 60 m", C1),
              ("thin_smooth", "thin_smooth: 0.30 m, eased flanks", C2),
-             ("thin_steep", "thin_steep: 0.30 m, 2 rows, rx0 0.41", C3),
-             ("steep_050", "steep_050: 0.50 m, 2 rows, rx0 0.41", C4)]
-    rows = slice(25, 43)
+             ("thin_steep", "thin_steep: 0.30 m over 20 m, 0.71 m either side", C3),
+             ("steep_050", "steep_050: 0.50 m over 20 m, 1.19 m either side", C4)]
     for n, lab, col in names:
         g = grid(dst / f"roms_grid_{n}.nc")
-        ax.plot(g["y_rho"][rows, 50], g["h"][rows, 50], "-o", color=col, ms=4, label=lab)
+        y, h = g["y_rho"][:, 50], g["h"][:, 50]
+        sel = (y > 820) & (y < 1200)
+        ax.plot(y[sel], h[sel], "-o", color=col, ms=4, label=lab)
     ax.axhline(0.15, color=INK2, lw=1, ls="--")
-    ax.text(870, 0.12, "low tide (-0.15 m)", color=INK2, fontsize=8, va="bottom")
+    ax.text(830, 0.12, "low tide (-0.15 m)", color=INK2, fontsize=8, va="bottom")
     ax.invert_yaxis()
     ax.set_ylim(6, 0)
-    ax.set_xlabel("y, cross-shore (m); dots = rho rows 25-42 (20 m apart)")
+    ax.set_xlabel("y, cross-shore (m); dots = rho rows (10 m apart from 850 to 1150 m)")
     ax.set_ylabel("depth (m)")
-    ax.set_title("Thin-crest variants of Reef_Ideal_A15 (reef columns; the pass is unchanged)")
+    ax.set_title("Thin-crest variants of Reef_Ideal_A15 on the breaking-zone grid (reef columns; the pass is unchanged)",
+                 fontsize=9)
     ax.legend(loc="lower right", fontsize=8)
     fig.tight_layout()
     save(fig, "a15_thin_crest_profiles.png")
