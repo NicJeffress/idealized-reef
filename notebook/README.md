@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-03 | [The wave roller: strength, refined grid, restarts](2026-11-03_roller-checks.md) | A15_veg, density 1 | Linear in `WEC_ALPHA` (0.5: set-up +25 %); larger on the refined grid (+32 %), less grid-sensitive; restart fixed (`roms-restart-roller`). Recommended on at 0.5 |
 | 2026-11-03 | [Grid convergence: 10 m vs 20 m](2026-11-03_grid-10m.md) | A15_veg, dense and density 1 | 20 m not converged: set-up -16 %, crest transport -11 to -18 % at 10 m; the breaking zone is 2-3 cells wide at 20 m; same dissipation |
 | 2026-11-03 | [30-degree spread: new baseline, directions converged](2026-11-03_spread30-baseline-and-resolution.md) | A15_veg, density 1 | 72 directions within 1 % of 144 (36 within 3 %); 20 frequencies 3 % low; triads -58 %; new baseline set-up 12.5 mm (a third less than at 4 degrees) |
 | 2026-11-03 | [The roller blow-up and its fix](2026-11-03_roller-substeps.md) | A15_veg, density 1 | COAWST advects the roller with one step per DT (unstable at DT 6 s); sub-steps fix it (DT 6 = DT 3 within 0.1 %); roller raises set-up 25 % |
