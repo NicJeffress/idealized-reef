@@ -13,9 +13,25 @@ In the vortex-force formulation (`WEC_VF`), the momentum the waves lose reaches 
 mean flow only through explicit force terms, one per way of losing it: breaking
 (always on), bottom friction (`BOTTOM_STREAMING`) and plants (`VEG_STREAMING`). The
 options note had both streaming options off as "second-order". On the density-1
-canopy reef SWAN's dissipation over the reef is 37 % breaking, 36 % bottom friction
-and 27 % canopy (8 h run), so without them 63 % of the wave momentum lost on the
-reef (all of it on the fore reef) pushed no water. The author's view was that they
+canopy reef SWAN's dissipation is about 40 % breaking, 34 % bottom friction and
+26 % canopy, so without them about 60 % of the wave momentum lost pushed no water.
+Where (alongshore mean, end of the baseline run; W per metre of reef):
+
+| zone | depth | Hs | near-bed orbital velocity | friction | breaking | canopy |
+|---|---|---|---|---|---|---|
+| lagoon, back reef (0-950 m from shore) | 1.4-6.6 m | 0.11-0.14 m | 0.04-0.13 m/s | 83 | 5 | 34 |
+| crest (950-1050 m) | 0.55 m | 0.37 m | 0.44 m/s | 741 | 1545 | 476 |
+| top of the fore reef (1050-1150 m) | 6.3 m | 0.95 m | 0.36 m/s | 520 | 94 | 542 |
+| fore-reef slope, offshore | 23-110 m | 0.9-1.0 m | <= 0.13 m/s | 63 | 0 | 38 |
+
+The friction is not the result of an extreme roughness: SWAN's Madsen et al. (1988)
+friction factor is capped at 0.3, and on the crest it is about 0.25-0.3 (orbital
+excursion 0.5-0.6 m against KN 0.3 m), a moderate value for a reef (field reefs
+reach and exceed it; Lowe et al. 2005 found about 0.28 on Kaneohe, where friction
+rivalled breaking). The friction is large because the near-bed orbital velocity is
+0.36-0.44 m/s over the 0.5 m crest and the top of the fore reef. (An earlier split of
+the same budget by depth called the 3-20 m zone "fore reef": in A15 that depth range
+is mostly the 10 m deep lagoon.) The author's view was that the streaming terms
 should be on.
 
 ## Code fixes first
