@@ -1,7 +1,7 @@
 # Wave streaming: the wave momentum lost to bottom friction and the canopy
 
 - **Date:** 2026-11-03
-- **Status:** bottom streaming done (first-order: set-up +57 %); bottom + canopy streaming being rerun after a fix
+- **Status:** done: bottom streaming set-up +57 %, bottom + canopy +95 %; adopting them is the author's decision
 - **Builds:** coawst-cloud `ae2da7f` (`roms-veg-streaming-fixes`), `+BOTTOM_STREAMING`
   (and `+VEG_STREAMING`); `Reef_Ideal_A15_veg`, breaking-zone grid, roller, density-1
   canopy, 10 levels, `GLS_Kmin` 7.6e-6, `BREAKING CON 1.0 0.73` (as the baseline member
@@ -71,6 +71,30 @@ itself was right.
   case of the coawst-cloud fix blew up; cost +1.5 %.
 - The waves themselves change little (Hs +3.7 % from the deeper water over the crest).
 
+## Results: bottom and canopy streaming
+
+Same runs plus `VEG_STREAMING` (coawst-cloud `4abff12`, after the restart-file fix):
+
+| Metric | none | bottom | bottom + canopy, DT 6 s | bottom + canopy, DT 3 s |
+|---|---|---|---|---|
+| set-up | 14.18 mm | +57 % | **+95 %** | +95 % |
+| set-up range | 13.48 mm | +32 % | +56 % | +56 % |
+| crest transport | 521 m³/s | +22 % | **+32 %** | +33 % |
+| pass transport | 618 m³/s | +19 % | +29 % | +29 % |
+| crest jet p99 / max | 0.195 / 0.264 m/s | +17 / +13 % | +27 / +21 % | +27 / +21 % |
+| pass jet p99 / max | 0.337 / 0.404 m/s | +22 / +21 % | +35 / +33 % | +35 / +33 % |
+| surface / mean speed, crest / fore reef | 1.13 / 1.07 | -2 / -5 % | -3 / +7 % | -3 / +10 % |
+| Hs crest / reef flat | 0.199 / 0.192 m | +4 / +3 % | +6 / +6 % | same |
+| lagoon flushing time | 64 h | -5 % | -8.5 % | -8 % |
+| wall s per simulated hour | 115 | 116 | 116 | 178 |
+
+- **The canopy part adds about as much again**: with both forces the lagoon
+  set-up nearly doubles and the crest and pass transports rise by about 30 %.
+- Again stable and converged in time (DT 6 s = DT 3 s within 0.1 %), at no cost.
+- Together the two streaming forces give the mean flow the momentum of the
+  60 % of the wave dissipation that is not breaking; on this reef that is the
+  difference between a set-up of 14 and of 28 mm.
+
 ## What it means
 
 Without `BOTTOM_STREAMING`, the model leaves out a forcing as large as a third of the
@@ -80,14 +104,17 @@ bottom-friction dissipation, so the bed roughness (`grain_diameter` 0.12 m, SWAN
 0.3 m) now sets the flow directly as well as the wave height: it moves up the list of
 ensemble axes.
 
+The same holds for the canopy: its streaming force is proportional to the canopy's
+wave dissipation, so the canopy parameters set the flow through it too.
+
 ## Decision / outcome
 
-Open (the author's decision): `BOTTOM_STREAMING` on in the A15 defaults; `VEG_STREAMING`
-pending its rerun.
+Open (the author's decision): `BOTTOM_STREAMING` and `VEG_STREAMING` on in the A15
+defaults (they need images from coawst-cloud `4abff12` on).
 
 ## Details and links
 
 - coawst-cloud: `roms-veg-streaming-fixes` (patch, document, test)
 - [Vertical resolution](2026-11-03_vertical-resolution.md) (the baseline member),
   [results summary](../results/README.md)
-- Cost: bottom-streaming pair about $0.35.
+- Cost: bottom pair about $0.35, bottom + canopy pair about $0.35 (plus a failed first try, $0.1).
