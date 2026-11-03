@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 03:45 UTC.
+**Last updated:** 2026-11-03 04:40 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -42,8 +42,9 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
    triads); a patchy canopy (30 % dense, 30 % sparse) sits in between.
 3. **Once the triads act, the time stepping and SWAN settings are well
    converged, but the 20 m grid is not:** halving the grid spacing lowers the
-   crest transport by 18 % and the set-up by 15 % (dense canopy, triads off;
-   being repeated with triads). The other physics choices (triads, canopy,
+   set-up by 16 % and the crest transport by 11-18 %, because the narrow
+   breaking zone at the top of the fore reef is only two or three 20 m cells
+   wide. The other physics choices (triads, canopy,
    breaking) still move the answer more.
 
 ## Physics
@@ -87,7 +88,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Explicit canopy drag at DT 6 s | fails once triads act on the dense canopy (fore-reef bed, 2 alpha \|U\| DT ~ 6); fine on the density-1 canopy (within 3 % of implicit) | dense: 6 of 8 runs blew up | triads-on, density-1 |
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
-| 10 m grid instead of 20 m (dense canopy, triads off, old defaults) | **not converged at 20 m**: the largest numerical effect found; to be repeated on the density-1 canopy with triads and the new defaults | set-up -15 %, crest transport -18 %, pass transport -10 %, crest jet p99 +15 %, forereef shear ratio +22 %, Hs crest +4 %; 8x the cost | results p0-p2 |
+| 10 m grid instead of 20 m | **not converged at 20 m**, the same in two regimes: the breaking zone (1010-1060 m from shore, 2-3 cells at 20 m) is under-resolved; dissipation is the same, the momentum transfer is not. Proposed: refine across the shore over that zone only (~+20 % cost instead of 8x) | set-up -16 % (both regimes), crest transport -11 % (density 1, triads) / -18 % (dense, no triads), dissipation +0.2 % | grid-10m |
 
 ## Changes adopted on 2026-11-03 (author's decisions)
 
@@ -128,14 +129,9 @@ mean set-up (-6.7 %, from the implicit bottom stress). The patchy canopy and
 the stratified case run stably at DT 6 s. **Every A15 run is about 20 %
 cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
-## Running now
-
-- The 10 m grid with the current physics of 2026-11-02 (density-1 canopy, 4-degree
-  spread, 20 frequencies; finishes about 05:10 UTC).
-
 ## Still open
 
-- The 10 m grid with triads and the new defaults on the density-1 canopy.
+- A grid refined across the shore over the breaking zone only (proposed).
 - Coupling interval 240 s; `TKE_WAVEDISS`, the roller and the breaking
   formulations on the stratified and heated cases with triads on; a 72 h
   heated run with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
