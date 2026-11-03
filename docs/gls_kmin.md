@@ -1,7 +1,7 @@
 # The GLS minimum TKE (`GLS_Kmin`): what it does and what value to use
 
 A reference note for the A15 cases (and any ROMS/COAWST run with the GLS
-k-epsilon closure). Last updated 2026-11-03 (72 h heated runs added).
+k-epsilon closure). Last updated 2026-11-03 (72 h heated runs added; 1e-8 adopted as the A15 default).
 
 ## In short
 
@@ -144,7 +144,7 @@ numerical (divisions by k).
 
 ## Recommendation for the A15 cases
 
-- **`GLS_Kmin` 1e-8** in every A15 case (proposed 2026-11-03, the author's
+- **`GLS_Kmin` 1e-8** in every A15 case (adopted 2026-11-03, the author's
   decision): stable in 72 h heated runs, the same answer as 1e-10, and the
   value ROMS's input file suggests for the generic closure. The default
   7.6e-6 adds a hidden 1e-5 to 1e-3 m²/s wherever the water is quiet.

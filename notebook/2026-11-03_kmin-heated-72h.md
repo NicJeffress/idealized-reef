@@ -1,7 +1,7 @@
 # GLS_Kmin and background mixing in the heated case, 72 h
 
 - **Date:** 2026-11-03
-- **Status:** done; recommendation below (the author's decision)
+- **Status:** done; `GLS_Kmin` 1e-8 adopted as the A15 default (the author, 2026-11-03)
 - **Builds:** coawst-cloud `61f8cea`, Reef_Ideal_A15_veg_therm with the defaults
   of 2026-11-03 (30-degree spread, 34 frequencies, `TKE_WAVEDISS`, triads)
 
@@ -92,7 +92,7 @@ Recommendation: **`GLS_Kmin` 1e-8 in every A15 case** (1e-10 gives the same
 answer; 1e-8 is the value ROMS's own input file suggests for the generic
 closure and keeps the TKE further from zero), keeping `AKT_BAK` 5e-6 and
 `AKV_BAK` 5e-5, which now set the quiet-water mixing and should be reported
-with it. The author's decision.
+with it. **Adopted by the author on 2026-11-03** (1e-8 rather than 1e-10).
 
 ## Details and links
 

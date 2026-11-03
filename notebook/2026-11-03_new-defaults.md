@@ -57,8 +57,10 @@ modelling choices and made these defaults.
 
 ## Decision / outcome
 
-Adopted: roller, band grid, roughness as a suggestion. Open: `GLS_Kmin`
-1e-8 or 1e-10 (they agree to three digits; 1e-8 proposed).
+Adopted: roller, band grid, roughness as a suggestion, and `GLS_Kmin` 1e-8
+(1e-8 and 1e-10 agree to three digits; [72 h runs](2026-11-03_kmin-heated-72h.md)).
+Noted for later: `UV_BANIHASHEMI` may replace `UV_KIRBY`; check whether it is
+needed on every new domain (sheared currents with waves spanning kD ~ 1).
 
 ## Details and links
 
