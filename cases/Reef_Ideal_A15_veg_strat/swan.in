@@ -127,7 +127,10 @@ BLOCK 'COMPGRID' NOHEADER 'output/urms.nc'  LAY 4 URMS 1.
 GEN3
 FRICTION MADSEN 0.3
 OFF QUAD
-BREAKING CON 1.0 0.73
+&& Depth-induced breaking: BKD (Salmon et al. 2015, breaker index from bottom slope and kd) &&
+&& SWAN defaults alpha 1.0 gamma0 0.54 a1 7.59 a2 -8.06 a3 8.09; A15 default since 2026-11-03 &&
+&& (author); with triads 7-11 percent more set-up and crest transport than CON 1.0 0.73 &&
+BREAKING BKD 1.0 0.54 7.59 -8.06 8.09
 PROP BSBT
 TRIAD
 

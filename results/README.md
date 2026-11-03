@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 19:20 UTC.
+**Last updated:** 2026-11-03 19:50 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -105,8 +105,9 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 - Later the same day: the **Reniers roller** on (`WEC_ALPHA` 0.5) and the
   **breaking-zone grid** (rows 850-1150 m from shore at 10 m, 203 x 126) as
   the default grid of every A15 case; bed roughness under a canopy is allowed
-  (one or the other is a suggestion, not a rule), and `GLS_Kmin` 1e-8 (the
-  quiet-water mixing is then `AKT_BAK`/`AKV_BAK`)
+  (one or the other is a suggestion, not a rule), `GLS_Kmin` 1e-8 (the
+  quiet-water mixing is then `AKT_BAK`/`AKV_BAK`), and SWAN's `BKD` breaking
+  (Salmon et al. 2015; 7-11 % more set-up and crest transport than `CON 0.73`)
   ([new defaults](../notebook/2026-11-03_new-defaults.md)). SWAN's refraction
   limiters changed nothing (within 1 %); vertical resolution and wave
   streaming are being tested.
@@ -141,6 +142,9 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Still open
 
+- Later, once the physics and numerics are settled: the list of ensemble axes
+  (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,
+  `ZOS_HSIG_ALPHA`, ...) and lagoon residence time with ROMSPath.
 - Wave streaming: bottom friction and the canopy remove 63 % of the wave
   energy on the canopy reef (breaking 37 %), but without `BOTTOM_STREAMING`
   and `VEG_STREAMING` only the breaking part pushes the mean flow; the

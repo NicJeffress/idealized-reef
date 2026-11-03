@@ -57,7 +57,9 @@ modelling choices and made these defaults.
 
 ## Decision / outcome
 
-Adopted: roller, band grid, roughness as a suggestion, and `GLS_Kmin` 1e-8
+Adopted: roller, band grid, roughness as a suggestion, `GLS_Kmin` 1e-8,
+and `BREAKING BKD 1.0 0.54 7.59 -8.06 8.09` (SWAN's defaults; 7-11 % more set-up and
+crest transport than `CON 0.73` with triads, [breaking test](2026-11-03_density1-canopy-tests.md))
 (1e-8 and 1e-10 agree to three digits; [72 h runs](2026-11-03_kmin-heated-72h.md)).
 Noted for later: `UV_BANIHASHEMI` may replace `UV_KIRBY`; check whether it is
 needed on every new domain (sheared currents with waves spanning kD ~ 1).
