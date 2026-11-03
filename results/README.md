@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 05:30 UTC.
+**Last updated:** 2026-11-03 05:50 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -57,7 +57,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | **with triads it behaves as expected**: less surface-intensified fore-reef flow and a slower crest jet; **adopted 2026-11-03** (author). (With triads off it had increased the fore-reef shear: an artefact of the missing triads) | density-1 canopy: forereef surface/mean speed -32 %, crest jet -17 %, set-up -9 %, crest transport -5 % | density-1 |
 | Whitecapping on opposing currents (`WCAP AB ... CURRENT`) | no effect on A15 | < 1 % | results p0-p2 |
 | Wave roller (`ROLLER_RENIERS`) | blew up at DT 6 s: COAWST advects the roller with one explicit step per DT (Courant 1.1-1.6 on the crest); **fixed** with sub-steps (coawst-cloud `roms-roller-substeps`): DT 6 s now equals DT 3 s within 0.1 %. A sizeable term: more set-up and transport | `WEC_ALPHA` 0.5: set-up +25 %, crest transport +16 %, jets +10 %, forereef surface/mean +32 % (density-1 canopy) | roller entry |
-| Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`) | compiles as `-UV_KIRBY +UV_BANIHASHEMI` (the two are alternatives; our build had both); not yet run | - | VEG_HMIXING entry |
+| Wave-number-dependent current to SWAN (`UV_BANIHASHEMI` instead of `UV_KIRBY`) | **no practical difference**: keep `UV_KIRBY` (the two are alternatives; the first build had both, which does not compile) | within 0.5 % (forereef shear ratio +5 %), wall time +5 % | VEG_HMIXING entry; run 2026-11-03 |
 | Canopy-edge viscosity (`VEG_HMIXING`) | does not compile since COAWST v3.6, which dropped its routine (`vegetation_hmixing.F`) but kept everything else; nothing replaces it | - | VEG_HMIXING entry |
 | Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | **the GLS minimum-TKE floor** (`GLS_Kmin` 7.6e-6), not the canopy turbulence (identical with `VEG_TURB` off); `GLS_Kmin` 1e-8 removes it | lagoon diffusivity at rest 7.4e-4 -> 5.1e-6 m²/s (150x); the calm lagoon keeps its stratification | results p0-p2, Kmin at rest |
 | Lower TKE floor (`GLS_Kmin` 1e-8; see [docs/gls_kmin.md](../docs/gls_kmin.md)) | diffusivity falls to ROMS's background everywhere at rest; proposed for stratified and heated runs after a 72 h heated check | reef-flat SST range -66 % (stratified, forced, 24 h) | results p0-p2, Kmin at rest |
