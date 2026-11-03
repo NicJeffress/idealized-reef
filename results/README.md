@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 01:00 UTC.
+**Last updated:** 2026-11-03 01:20 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -55,8 +55,8 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Wave roller (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5) | blew up at 23 min on the reef flat (0.3 -> 27 m/s in two steps); not usable as is | - | results p0-p2 |
 | Wave-number-dependent current to SWAN (`UV_BANIHASHEMI`) | compiles as `-UV_KIRBY +UV_BANIHASHEMI` (the two are alternatives; our build had both); not yet run | - | VEG_HMIXING entry |
 | Canopy-edge viscosity (`VEG_HMIXING`) | does not compile since COAWST v3.6, which dropped its routine (`vegetation_hmixing.F`) but kept everything else; nothing replaces it | - | VEG_HMIXING entry |
-| Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | the GLS minimum-TKE floor (`GLS_Kmin` 7.6e-6), not the canopy turbulence: identical with `VEG_TURB` off | lagoon diffusivity 7.4e-4 m²/s, TKE at the floor everywhere | results p0-p2 |
-| Lower TKE floor (`GLS_Kmin` 1e-8) | offshore diffusivity 10x lower; the reef-flat temperature range drops | reef-flat SST range -66 % (stratified, 24 h) | results p0-p2 |
+| Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | **the GLS minimum-TKE floor** (`GLS_Kmin` 7.6e-6), not the canopy turbulence (identical with `VEG_TURB` off); `GLS_Kmin` 1e-8 removes it | lagoon diffusivity at rest 7.4e-4 -> 5.1e-6 m²/s (150x); the calm lagoon keeps its stratification | results p0-p2, Kmin at rest |
+| Lower TKE floor (`GLS_Kmin` 1e-8) | diffusivity falls to ROMS's background everywhere at rest; proposed for stratified and heated runs after a 72 h heated check | reef-flat SST range -66 % (stratified, forced, 24 h) | results p0-p2, Kmin at rest |
 | Stability functions (`CANUTO_A` instead of Kantha-Clayson) | small on the flow, noticeable on the temperature | SST range +29 %, flow within 4 % | results p0-p2 |
 | Nonlinear equation of state (`NONLIN_EOS`), heated reef, 72 h | no new pressure-gradient error at rest; no effect when heated | < 0.5 % everywhere, reef-flat temperature included | results p0-p2 |
 | Heated reef (1000 W/m² peak, balanced over the day) | the reef-flat surface temperature swings 2.6 C a day | - | results p0-p2 |
@@ -124,7 +124,7 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 - The 10 m grid with triads and the new defaults on the density-1 canopy.
 - Coupling interval 240 s; `TKE_WAVEDISS`, the roller and the breaking
-  formulations on the stratified and heated cases with triads on; a rest run
-  with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
+  formulations on the stratified and heated cases with triads on; a 72 h
+  heated run with `GLS_Kmin` 1e-8; `SPLINES_VDIFF` on the stratified case.
 - Infragravity waves: none of the runs has them; a standalone SWAN `SURFBEAT`
   estimate of their energy on the reef flat is the planned first step.
