@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-03 | [The roller blow-up and its fix](2026-11-03_roller-substeps.md) | A15_veg, density 1 | COAWST advects the roller with one step per DT (unstable at DT 6 s); sub-steps fix it (DT 6 = DT 3 within 0.1 %); roller raises set-up 25 % |
 | 2026-11-03 | [SWAN spectral resolution with triads](2026-11-03_swan-spectral-resolution.md) | A15_veg, density 1 | Frequencies converged by 34 (20 is 3 % low); directions slow (36: -16 % set-up, 144: +5 %; the 4-degree swell is under-resolved) |
 | 2026-11-03 | [Density-1 canopy tests](2026-11-03_density1-canopy-tests.md) | A15_veg, density 1 | Realistic canopy (set-up 18 mm, crest jet 0.29 m/s); triads -61 % set-up when off; TKE_WAVEDISS now as expected (forereef shear -32 %); BKD +8 %; explicit drag fine at this density |
 | 2026-11-03 | [The GLS_Kmin floor at rest](2026-11-03_gls-kmin-at-rest.md) | A15_veg_strat | Lagoon diffusivity at rest 7.4e-4 m²/s is the TKE floor; Kmin 1e-8 gives 5.1e-6 (background) and keeps the lagoon stratified |
