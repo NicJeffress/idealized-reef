@@ -80,7 +80,7 @@ is identical with the canopy turbulence (`VEG_TURB`) switched off.
 
 ### Heated, forced, 72 h
 
-Heated case (shortwave peak 1000 W/m², tide, waves, canopy), 72 h, third day
+Heated case (shortwave peak 1000 W/m², tide, waves, dense canopy, density 4 m⁻²), 72 h, third day
 ([notebook](../notebook/2026-11-03_kmin-heated-72h.md)):
 
 | Zone | AKt, 7.6e-6 / 1e-8 / 1e-10 | top-bottom temperature, mean | surface daily range |

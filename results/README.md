@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 22:55 UTC.
+**Last updated:** 2026-11-03 23:05 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -51,7 +51,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Question | Answer | Size of the effect | Entry |
 |---|---|---|---|
-| Turbulence closure on the heated reef (k-epsilon KC / Canuto-A, gen, k-omega) | **k-epsilon is fine**: Canuto-A within 1-3 %; gen within 5 % (crest shear 10 %); k-omega odd in the lagoon (AKt at the background, weaker mean stratification), needs a look; `VEG_TURB` itself 2-8 % | 5-10 % | closure entry; keep k-epsilon proposed |
+| Turbulence closure on the heated reef (k-epsilon KC / Canuto-A, gen, k-omega) | **k-epsilon is fine**: Canuto-A within 1-3 %; gen within 5 % (crest shear 10 %); k-omega odd in the lagoon (AKt at the background, weaker mean stratification), needs a look; `VEG_TURB` itself 2-8 % | 5-10 % | closure entry (dense canopy); **k-epsilon, Kantha-Clayson, `VEG_TURB` on adopted** |
 | Wave streaming: the wave momentum lost to bottom friction (`BOTTOM_STREAMING`) | **first-order**: bottom alone set-up +57 %, crest transport +22 %; **bottom + canopy (`VEG_STREAMING`) set-up +95 %, crest +32 %, pass +29 %, jets +27-35 %**; stable at DT 6 s (= DT 3 s), no cost | without them 60 % of the dissipated wave momentum pushes no water | wave-streaming entry; **adopted** |
 | Triads (`TRIAD`) | first-order; must be on, with the SWAN fix | without them: set-up -82 % (dense canopy), -61 % (density-1 canopy), -32 % (bare) | triads-on, density-1 |
 | Wave breaking formulation, with triads | CON 0.73 and CON 0.80 agree within 1 % on the realistic canopy; `BKD` gives 7-11 % more set-up, crest transport and crest jet; `TG` (Thornton-Guza) leaves the flow within 3 % but changes the fore-reef shear, crest Hs and flushing | density-1 canopy: BKD set-up +8 %, crest jet +11 %; TG forereef shear +62 %, Hs crest -18 %, flushing +33 % (dense canopy: similar spread) | density-1, triads-on |
@@ -154,8 +154,6 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 - Later, once the physics and numerics are settled: the list of ensemble axes
   (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,
   `ZOS_HSIG_ALPHA`, ...) and lagoon residence time with ROMSPath.
-- `VEG_TURB` is written for k-epsilon only: the closure test favours keeping
-  k-epsilon, so no patch is needed (to revisit only if gen or k-omega is chosen).
 - `TKE_WAVEDISS`, the roller and the breaking
   formulations on the stratified and heated cases with triads on; (`SPLINES_VDIFF`: inert with MPDATA.)
 - `UV_BANIHASHEMI` instead of `UV_KIRBY`: no difference on A15 (within 0.5 %); to

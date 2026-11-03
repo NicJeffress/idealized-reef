@@ -1,7 +1,7 @@
 # Turbulence closure on the heated reef: k-epsilon, k-omega, gen; `SPLINES_VDIFF`
 
 - **Date:** 2026-11-03
-- **Status:** done; k-epsilon kept (proposed; the author's decision); `SPLINES_VDIFF` is inert here
+- **Status:** done; **k-epsilon with Kantha-Clayson and `VEG_TURB` on adopted** (the author, 2026-11-03); `SPLINES_VDIFF` is inert here
 - **Builds:** coawst-cloud `fa37747` series; `Reef_Ideal_A15_veg_therm` with the defaults of
   2026-11-03 evening (breaking-zone grid, roller, 15 levels, `GLS_Kmin` 1e-8, BKD), 24 h;
   `VEG_TURB` off in the closure members (its canopy source is a k-epsilon source)
@@ -17,7 +17,7 @@ off; one member with it on gives the reference.
 
 ## What was run
 
-Heated case (shortwave peak 1000 W/m², tide 0.15 m, waves, density-1 canopy),
+Heated case (shortwave peak 1000 W/m², tide 0.15 m, waves, the case's dense canopy, density 4 m⁻²),
 24 h, metrics over hours 12-24:
 
 | Member | closure (`GLS_P`, `M`, `N`) | stability functions | `VEG_TURB` |
@@ -81,9 +81,10 @@ k-omega would need investigation first.
 
 ## Decision / outcome
 
-Proposed: keep k-epsilon with Kantha-Clayson and `VEG_TURB` on (no patch needed);
-gen as a sensitivity member if the closure becomes an ensemble axis. `SPLINES_VDIFF`:
-irrelevant with MPDATA (kept as is). The author's decision.
+**Adopted** (the author, 2026-11-03): k-epsilon with Kantha-Clayson and `VEG_TURB` on, so
+`VEG_TURB`'s source needs no port. gen stays a possible sensitivity member if the closure
+becomes an ensemble axis. `SPLINES_VDIFF`: irrelevant with MPDATA (kept as is). Note that
+this test ran the dense canopy (density 4), not the density-1 reef of most other tests.
 
 ## Details and links
 

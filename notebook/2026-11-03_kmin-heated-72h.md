@@ -19,7 +19,7 @@ their sensitivity was checked in the same setting.
 
 ## What was run
 
-Heated case (shortwave peak 1000 W/m², tide 0.15 m, waves, density-1 canopy),
+Heated case (shortwave peak 1000 W/m², tide 0.15 m, waves, the case's dense canopy, density 4 m⁻²),
 72 h in 4 h restart segments on Spot VMs, five members:
 
 | Member | `GLS_Kmin` | `AKT_BAK` | `AKV_BAK` |
