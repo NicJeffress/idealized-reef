@@ -3,7 +3,7 @@
 - **Date:** 2026-11-03
 - **Status:** done; recommendation below (the author's decision)
 - **Builds:** coawst-cloud `61f8cea` (with `roms-roller-substeps`), `+ROLLER_RENIERS`;
-  restart pair also with `roms-restart-roller` (new, below). Case defaults of
+  restart pair also with the first version of `roms-restart-roller` (below; final version coawst-cloud `3227cce`). Case defaults of
   2026-11-03 (30-degree spread, 34 frequencies, `TKE_WAVEDISS`), density-1
   canopy, 24 h, DT 6 s
 
@@ -68,12 +68,21 @@ through.)
 straight one: 1.4e-4 m/s four hours after the restart, 400 times the control
 without a roller (3.7e-7 m/s). Cause: the Reniers roller carries its own
 state from step to step, the roller area `rollA`, and COAWST does not write it
-to the restart file, so each restarted segment began with no roller. The new
-coawst-cloud fix `roms-restart-roller` writes and reads it. With it, the same
-pair differs by 2e-7 to 4e-7 m/s at hours 5-7 and 1.4e-6 m/s at hour 8, the
-level of the no-roller control (the remaining 1e-6 is the small restart
-residual of the new defaults, tracked separately; it is a millionth of the
-flow).
+to the restart file, so each restarted segment began with no roller. A first
+version of the coawst-cloud fix `roms-restart-roller` wrote and read `rollA`;
+on this pair it gave 2e-7 to 4e-7 m/s at hours 5-7 and 1.4e-6 m/s at hour 8.
+
+That first version was not right: ROMS writes the restart record after the
+roller update of the same step, so a restarted run that reads `rollA` and then
+updates it again moves the roller forward twice. On a 4 h canopy run the
+roller is close to equilibrium and one extra update barely shows; on the A15
+test case 30 min after a restart, where the roller is still growing, it made
+the restart worse than no fix (1.3e-3 against 6.4e-4 m/s). The final fix
+also stores the roller dissipation `Dissip_roller` and skips the roller update
+in the first step after a restart: the test case then restarts to 5.8e-11 m/s
+(round-off), and builds without the roller are unchanged (bit-identical
+output). The 3.7e-7 m/s of the no-roller control is a separate restart
+residual of the current A15 defaults, being traced.
 
 ## What the literature says
 
@@ -102,7 +111,7 @@ flow).
   +50 % in set-up. Any result that depends on the set-up or the crest
   transport inherits that uncertainty.
 - With `roms-roller-substeps` and `roms-restart-roller` it is stable at DT 6 s,
-  free in cost, and restarts as well as the rest of the model.
+  free in cost, and with the final `roms-restart-roller` it restarts to round-off.
 
 ## Decision / outcome
 

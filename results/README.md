@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 05:50 UTC.
+**Last updated:** 2026-11-03 16:45 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -56,7 +56,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | ... without triads (for the record) | the spread looked huge | set-up -24 % to +108 %: an artefact of the missing triads | results p0-p2 |
 | Turbulence from breaking (`TKE_WAVEDISS + ZOS_HSIG`) | **with triads it behaves as expected**: less surface-intensified fore-reef flow and a slower crest jet; **adopted 2026-11-03** (author). (With triads off it had increased the fore-reef shear: an artefact of the missing triads) | density-1 canopy: forereef surface/mean speed -32 %, crest jet -17 %, set-up -9 %, crest transport -5 % | density-1 |
 | Whitecapping on opposing currents (`WCAP AB ... CURRENT`) | no effect on A15 | < 1 % | results p0-p2 |
-| Wave roller (`ROLLER_RENIERS`) | blew up at DT 6 s: COAWST advects the roller with one explicit step per DT (Courant 1.1-1.6 on the crest); **fixed** with sub-steps (coawst-cloud `roms-roller-substeps`): DT 6 s now equals DT 3 s within 0.1 %. **Real physics, linear in `WEC_ALPHA`**: its effect grows on the refined breaking-zone grid, and with it the grid sensitivity drops; restarts exact with `roms-restart-roller`. Recommended on, `WEC_ALPHA` 0.5, with 0.25/1.0 as a sensitivity pair (author's decision) | `WEC_ALPHA` 0.25/0.5/1.0: set-up +12/+25/+50 %, crest transport +8/+15/+30 %; band grid 0.5: set-up +32 %, crest +19 % | roller entry; roller checks |
+| Wave roller (`ROLLER_RENIERS`) | blew up at DT 6 s: COAWST advects the roller with one explicit step per DT (Courant 1.1-1.6 on the crest); **fixed** with sub-steps (coawst-cloud `roms-roller-substeps`): DT 6 s now equals DT 3 s within 0.1 %. **Real physics, linear in `WEC_ALPHA`**: its effect grows on the refined breaking-zone grid, and with it the grid sensitivity drops; restarts to round-off with `roms-restart-roller`. Recommended on, `WEC_ALPHA` 0.5, with 0.25/1.0 as a sensitivity pair (author's decision) | `WEC_ALPHA` 0.25/0.5/1.0: set-up +12/+25/+50 %, crest transport +8/+15/+30 %; band grid 0.5: set-up +32 %, crest +19 % | roller entry; roller checks |
 | Wave-number-dependent current to SWAN (`UV_BANIHASHEMI` instead of `UV_KIRBY`) | **no practical difference**: keep `UV_KIRBY` (the two are alternatives; the first build had both, which does not compile) | within 0.5 % (forereef shear ratio +5 %), wall time +5 % | VEG_HMIXING entry; run 2026-11-03 |
 | Canopy-edge viscosity (`VEG_HMIXING`) | does not compile since COAWST v3.6, which dropped its routine (`vegetation_hmixing.F`) but kept everything else; nothing replaces it | - | VEG_HMIXING entry |
 | Mixing at rest (the unexplained 1e-3 m²/s on the backreef) | **the GLS minimum-TKE floor** (`GLS_Kmin` 7.6e-6), not the canopy turbulence (identical with `VEG_TURB` off); `GLS_Kmin` 1e-8 removes it | lagoon diffusivity at rest 7.4e-4 -> 5.1e-6 m²/s (150x); the calm lagoon keeps its stratification | results p0-p2, Kmin at rest |
@@ -108,7 +108,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 |---|---|
 | SWAN never computed `TRIAD` in coupled runs (first-iteration guard with currents) | fixed: coawst-cloud `swan-triads-nonstationary` |
 | The Reniers roller took one explicit step per DT (`numits=1`; 30 commented out): unstable at DT 6 s on a reef crest | fixed: coawst-cloud `roms-roller-substeps` |
-| The Reniers roller area `rollA` was not in the restart file: each restarted segment began with no roller (1.4e-4 m/s off after 4 h) | fixed: coawst-cloud `roms-restart-roller` (1e-6 m/s, the level of the no-roller control) |
+| The Reniers roller area `rollA` was not in the restart file: each restarted segment began with no roller (1.4e-4 m/s off after 4 h) | fixed: coawst-cloud `roms-restart-roller` stores `rollA` and `Dissip_roller` and does not step the roller twice in the first restarted step (A15 test: 6.4e-4 m/s before, 5.8e-11 after, round-off) |
 | ROMS never wrote the quicksave file's 3-D `u`, `v` (standard NetCDF writer) | fixed: coawst-cloud `roms-quicksave-uv` (already fixed in upstream ROMS) |
 | `VEG_HMIXING`: COAWST v3.6 dropped its routine and kept the rest | explained ([entry](../notebook/2026-11-03_veg-hmixing-and-banihashemi.md)); a port is possible |
 | A coupling interval that is not a multiple of both models' steps is silently replaced (300 s ran as 600 s) | noted; check the coupler log (`CplInt` and `Steps`) |
