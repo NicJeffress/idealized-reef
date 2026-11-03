@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 19:50 UTC.
+**Last updated:** 2026-11-03 20:10 UTC.
 
 Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -72,6 +72,7 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 
 | Question | Answer | Size | Entry |
 |---|---|---|---|
+| Vertical resolution (N 10 / 15 / 20) | **N 10 not converged**: set-up -7 % at N 15, -10 to -12 % at N 20; crest and pass flow +2 to +3 %, pass jet +9 %; N 20 needs DT 3 s; N 15 at DT 6 s clean | 10 % in set-up; cost +7 % (N 15), 2.7x (N 20, DT 3 s) | vertical-resolution entry; the author's choice of N open |
 | SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 %; `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
 | Time step DT 6 vs 3 s (bare reef, triads on: a flow that moves) | converged | <= 1.6 % (forereef shear 3.4 %) | triads-on |
 | ... on the dense canopy | converged, but only because the canopy damps the flow | ~1e-5 | results p0-p2 |
@@ -109,8 +110,9 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
   quiet-water mixing is then `AKT_BAK`/`AKV_BAK`), and SWAN's `BKD` breaking
   (Salmon et al. 2015; 7-11 % more set-up and crest transport than `CON 0.73`)
   ([new defaults](../notebook/2026-11-03_new-defaults.md)). SWAN's refraction
-  limiters changed nothing (within 1 %); vertical resolution and wave
-  streaming are being tested.
+  limiters changed nothing (within 1 %); N 10 levels is not converged (set-up
+  -7 % at N 15, -10 to -12 % at N 20; the choice of N is open); wave streaming is
+  being tested.
 
 ## Problems found in the code along the way
 
@@ -145,6 +147,8 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 - Later, once the physics and numerics are settled: the list of ensemble axes
   (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,
   `ZOS_HSIG_ALPHA`, ...) and lagoon residence time with ROMSPath.
+- `VEG_TURB` is written for k-epsilon only (its canopy source is an epsilon source):
+  if the closure test favours k-omega or gen, patch it first; otherwise none needed.
 - Wave streaming: bottom friction and the canopy remove 63 % of the wave
   energy on the canopy reef (breaking 37 %), but without `BOTTOM_STREAMING`
   and `VEG_STREAMING` only the breaking part pushes the mean flow; the
