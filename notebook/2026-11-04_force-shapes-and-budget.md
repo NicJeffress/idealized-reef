@@ -3,6 +3,7 @@
 - **Date:** 2026-11-04
 - **Status:** done; no change to the shapes or to N 15 (the author asked for the checks; `KWD` and breaking
   shape left at stock pending the author's confirmation); **diagnostics patch adopted**
+- **Correction (2026-11-04):** "flushing time" in this entry is about 8x too long, and its relative changes don't carry over: `tests/options_compare.py` divided the lagoon volume by what is nearly only the Stokes transport. Fixed; see [default check](2026-11-04_default-check.md). Other columns are unaffected.
 - **Builds:** coawst-cloud `896232a` plus `+WEC_BREAK_UNIFORM`, or debug patches (`KWDmax`, Kumar's form, never-frozen
   index, untracked `patches/9-debug`); `0a177ff` adds `roms-diag-implicit-drag`. Density 1, DT 3 s, N 15, 24 h,
   `c2d-standard-16` Spot, 10 + 6

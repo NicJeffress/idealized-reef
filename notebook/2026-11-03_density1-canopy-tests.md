@@ -2,6 +2,7 @@
 
 - **Date:** 2026-11-03
 - **Status:** done
+- **Correction (2026-11-04):** "flushing time" in this entry is about 8x too long, and its relative changes don't carry over: `tests/options_compare.py` divided the lagoon volume by what is nearly only the Stokes transport. Fixed; see [default check](2026-11-04_default-check.md). Other columns are unaffected.
 - **Builds:** coawst-cloud `f62dff3`, case defaults of 2026-11-02
   (`v3.9-ccf62dff3-reef_a15_veg-def1102`, `-tkew`, `-vegexp`)
 

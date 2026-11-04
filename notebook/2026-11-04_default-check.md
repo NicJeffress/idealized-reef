@@ -1,8 +1,8 @@
 # The default A15 canopy case at DT 2.5 s: Courant numbers, full-day budget, canopy extent
 
 - **Date:** 2026-11-04
-- **Status:** default check passed; **canopy extent still the author's call**; grid checks still running (5 m band
-  blew up at DT 2.5 s, rerun at DT 1.25 s; uniform 10 m running)
+- **Status:** default check passed; **canopy extent still the author's call**; 5 m band within 4 % at DT 1.25 s (it blew up at
+  DT 2.5 s); uniform 10 m still running; **"flushing time" found wrong by about 8x and fixed**
 - **Build:** coawst-cloud `ca5316d`, case commit `26e6fb7`, `c2d-standard-16` Spot, 10 ROMS (1 x 10) + 6 SWAN
 
 ## Question / why
@@ -30,7 +30,7 @@ up to 20 m deep; lagoon, pass and deep water bare, 35 % of the wet cells (`def11
 
 All three Courant numbers fall by exactly the ratio of the steps, so on density 1 they are physical, unlike the low-tide peak on the smooth reef.
 
-DT 3 s and DT 2.5 s agree on density 1: set-up, its range, transports, jets and Hs within 0.02 %, flushing time 0.1 %. Sea level differs by
+DT 3 s and DT 2.5 s agree on density 1: set-up, its range, transports, jets and Hs within 0.02 %. Sea level differs by
 under 8 micrometres rms all day. The only difference that grows is in `vbar` far offshore, 3.9-4.9 km from shore over 280-380 m of water
 above the pass (max 7 cm/s, largest-row rms 1 cm/s at hour 24): the plume there diverges chaotically and does not touch the reef statistics.
 DT 2.5 s costs 1.17x DT 3 s here. It is needed for the smooth end of the range, not for density 1.
@@ -73,7 +73,8 @@ zone, and 1e-7 of the largest term at every grid point, every hour of the day, i
 | surface/mean speed, crest / fore reef | 1.11 / 1.00 | -0.1 / +12.5 % |
 | Hs crest / reef flat | 0.198 / 0.198 m | +0.3 / +3.8 % |
 | dissipation across the reef | 1588 W/m | +0.3 % |
-| flushing time | 65.8 h | -3.9 % |
+| crest transport with Stokes | 780 m³/s | +2.6 % |
+| flushing time (corrected, below) | 7.9 h | -2.6 % |
 | canopy drag / bed stress, 0-1500 m | 0.469 / 0.308 | 0.502 / 0.317 |
 
 **The difference is the way out.** Sea level on the crest is the same in both (77.6 against 77.3 mm, at 1005 m). The lagoon is 5.7 mm lower with a bare lagoon and pass, and
@@ -82,15 +83,52 @@ return route. Waves hardly notice: canopy over deep water does nothing to them.
 
 For a canopy axis this matters: with canopy everywhere, changing density also changes the drag on the exit route, so 22 % of the set-up at density 1 is not a reef-canopy effect.
 
-## Results: the grid checks (in progress)
+## Results: the flushing time was wrong
 
-The question is whether the band grid is converged with today's defaults; until now it had only been compared with a uniform 10 m grid on older settings.
+While comparing the grids, flushing time moved +8 % when transport moved only 2 %. `tests/options_compare.py` divided the lagoon volume by the *signed sum* of the crest
+and pass transports. These nearly cancel, and what's left is almost only the Stokes transport, since `vbar` is Eulerian:
 
-**5 m rows (1018 m from shore) at DT 2.5 s blew up** at hour 1.77: Cw 0.10 at 0.67 h, 3.41 at 0.83 h, then 4-5, in the top layer at rows 60-62 (h 0.7-0.9 m); Cv only reached about
-0.1 until the end (7.4, 20.8 m/s). Cost $0.03. Rerunning at DT 1.25 s, `NDTFAST` 10.
+| Default, hours 12-24, crest row | Crest | Pass | Net |
+|---|---|---|---|
+| Eulerian (`vbar`) | +719.9 m³/s | -813.5 | -93.6 |
+| Stokes | +60.0 | +21.7 | +81.7 |
+| Lagrangian | +779.9 | -791.8 | -11.9 |
 
-**Hypothesis, not yet tested:** stability depends on DT over the row spacing in the breaking zone. Density 1 at 10 m is noisy at DT 6 s (ratio 0.6); 5 m at DT 2.5 s blows up (0.5); the
-smooth bare reef has Cw 1.39 at 10 m and DT 3 s (0.3), 0.61 at DT 2.5 s (0.25). The speed this implies, about 3 m/s, is close to sqrt(gD) at D of about 1 m. The rerun is the test.
+**So the "flushing time" of 65.8 h was the lagoon volume over the Stokes transport. Volume over the through-flow is 7.9 h, about 8x shorter.** The tool's own description said "crest + pass
+inflow". It now uses the positive parts of the Lagrangian transports, and it also reports crest transport with Stokes. This has been in every table with that column since 2026-11-02; those entries now carry a
+correction note. Their other columns are unaffected, but note that "crest transport" throughout is Eulerian, 8 % below the Lagrangian figure here. No default was chosen on this number.
+It's still only a mean through-flow time, which ignores tidal exchange; ROMSPath residence time is the real measure, as planned.
+
+## Results: the grid checks
+
+Until now the band grid had only been compared with a uniform 10 m grid on older settings.
+
+**5 m rows at DT 2.5 s blew up** at hour 1.77: Cw 0.10 at 0.67 h, 3.41 at 0.83 h, then 4-5, in the top layer at rows 60-62 (1018-1028 m from shore, h 0.7-0.9 m); Cv only about
+0.1 until the end (7.4, 20.8 m/s). **At DT 1.25 s, `NDTFAST` 10, it runs clean:** peak Cu 0.010, Cv 0.18, Cw 0.09.
+
+| Metric | 10 m band, DT 2.5 s | 5 m band, DT 1.25 s |
+|---|---|---|
+| set-up | 25.7 mm | **-3.9 %** |
+| set-up range | 19.1 mm | +0.3 % |
+| crest transport / with Stokes | 720 / 780 m³/s | -1.9 / -2.6 % |
+| pass transport | 814 m³/s | -2.5 % |
+| crest jet p99 / max | 0.256 / 0.331 m/s | -0.7 / +0.9 % |
+| pass jet p99 / max | 0.482 / 0.568 m/s | -2.3 / -1.8 % |
+| surface/mean speed, crest / fore reef | 1.11 / 1.00 | -0.8 / +4.3 % |
+| Hs crest / reef flat | 0.198 / 0.198 m | -3.0 / -2.0 % |
+| dissipation across the reef | 1588 W/m | -1.6 % |
+| flushing time | 7.9 h | +2.7 % |
+| peak of sea level | 86.0 mm at 995 m | 86.1 mm at 993 m |
+| wall s per simulated hour | 280 | 694 (2.48x) |
+
+Both grid and step changed, but DT alone did almost nothing on density 1 (above). Sea level on the crest front moves most, up to 4.4 mm around 1015 m, where its slope is steepest; the peak doesn't move.
+**The 10 m band is within 4 % of 5 m on everything measured**, about the size of N 20 (-2.8 %), at 2.5x less cost. It's not fully converged, and set-up would probably still fall slightly with more rows.
+
+**Stability, a hypothesis still.** Stability may depend on DT over the row spacing in the breaking zone. Density 1 at 10 m is noisy at DT 6 s (ratio 0.6); 5 m at DT 2.5 s blows up (0.5); the
+smooth bare reef has Cw 1.39 at 10 m and DT 3 s (0.3), 0.61 at DT 2.5 s (0.25). The speed this implies, about 3 m/s, is close to sqrt(gD) at D of about 1 m. The clean run at 5 m and DT 1.25 s (0.25) fits, but any shorter step would also: it
+doesn't separate this from a plain DT limit, and the mechanism is unknown. A run at 5 m and DT 2 s (0.4) would separate them; it only matters if a finer grid is ever used. In practice: **a finer grid needs its own DT check.**
+
+**Uniform 10 m** is still running; it tests whether 30 m alongshore is enough.
 
 ## Decision / outcome
 
@@ -100,7 +138,7 @@ are the less likely places for them, and a canopy axis then varies the reef alon
 ## Open questions
 
 - Canopy extent.
-- Grid: the two runs above.
+- Grid: uniform 10 m still running.
 - Is 22 % of set-up to a canopy on the return route a sign that pass and lagoon drag should be an axis of its own?
 - 7-day spin-up: every number here is hours 12-24 of the first day.
 - Why the fore-reef surface/mean speed moves +12.5 % with canopy extent while the crest does not. Not investigated.
@@ -109,4 +147,4 @@ are the less likely places for them, and a canopy axis then varies the reef alon
 
 - [All defaults](2026-11-04_all-defaults.md), [force shapes and budget](2026-11-04_force-shapes-and-budget.md), [results summary](../results/README.md)
 - Figure: [canopy extent](../figures/2026-11-04_canopy-extent.png), `tests/options_compare.py --png`.
-- Cost: `def1104-check` $0.33, `def1104-reef` $0.32 (1.8-1.9 h at $0.17 per hour Spot), `grid-b5` $0.03.
+- Cost: `def1104-check` $0.33, `def1104-reef` $0.32 (1.8-1.9 h at $0.17 per hour Spot), `grid-b5` $0.03, `grid-b5-dt125` $0.81.

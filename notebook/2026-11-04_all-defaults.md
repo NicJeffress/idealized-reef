@@ -2,6 +2,7 @@
 
 - **Date:** 2026-11-04
 - **Status:** decision (author): **DT 2.5 s, `NDTFAST` 10 in all A15 cases**; restarts exact again
+- **Correction (2026-11-04):** "flushing time" in this entry is about 8x too long, and its relative changes don't carry over: `tests/options_compare.py` divided the lagoon volume by what is nearly only the Stokes transport. Fixed; see [default check](2026-11-04_default-check.md). Other columns are unaffected.
 - **Builds:** coawst-cloud `3341634` (all-defaults runs), `26e6fb7` commit of the case repository;
   `0a177ff` (with `swan-bkd-exact-restart` and `roms-diag-implicit-drag`) for the restart fix and the
   DT 2.5 s and DT 2 s runs. `c2d-standard-16` Spot, 10 ROMS (1 x 10) + 6 SWAN

@@ -2,6 +2,7 @@
 
 - **Date:** 2026-11-03
 - **Status:** done; **both adopted in the A15 defaults** (the author, 2026-11-03)
+- **Correction (2026-11-04):** "flushing time" in this entry is about 8x too long, and its relative changes don't carry over: `tests/options_compare.py` divided the lagoon volume by what is nearly only the Stokes transport. Fixed; see [default check](2026-11-04_default-check.md). Other columns are unaffected.
 - **Builds:** coawst-cloud `ae2da7f` (`roms-veg-streaming-fixes`), `+BOTTOM_STREAMING`
   (and `+VEG_STREAMING`); `Reef_Ideal_A15_veg`, breaking-zone grid, roller, density-1
   canopy, 10 levels, `GLS_Kmin` 7.6e-6, `BREAKING CON 1.0 0.73` (as the baseline member

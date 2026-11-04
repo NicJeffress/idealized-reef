@@ -3,6 +3,7 @@
 - **Date:** 2026-11-02 (evening)
 - **Status:** done: both islands run cleanly; the circulation is the expected
   island-lagoon pattern
+- **Correction (2026-11-04):** "flushing time" in this entry is about 8x too long, and its relative changes don't carry over: `tests/options_compare.py` divided the lagoon volume by what is nearly only the Stokes transport. Fixed; see [default check](2026-11-04_default-check.md). Other columns are unaffected.
 - **Builds:** coawst-cloud `2d5672c` (includes swan-triads-nonstationary)
 
 ## Question / why
