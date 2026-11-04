@@ -22,13 +22,14 @@
 Same as `cases/Reef_Ideal_A15` (application REEF_IDEAL_A15, so the A15
 tide branch applies), plus canopy drag everywhere (user's test, 2026-10-20):
 
-- Header: VEGETATION, VEG_DRAG, VEG_TURB, VEG_SWAN_COUPLING on (VEG_FLEX,
-  VEG_STREAMING off).
-- `init_reef.nc`: plant_density 4 m-2, plant_diameter 0.5 m, plant_height
-  0.4 m everywhere (frontal area per bed area lambda_f = 4 x 0.5 x 0.4 =
-  0.8); plant_thickness = (pi/4) x 0.5 = 0.3927 m (cylinders, bed
-  coverage pi D^2 n / 4 = 0.785). It was 0.5 m until 2026-10-21, which
-  made D t n = 1 and ROMS blow up. The reef crest is 0.50 m deep
+- Header: VEGETATION, VEG_DRAG, VEG_DRAG_IMPLICIT, VEG_TURB, VEG_SWAN_COUPLING,
+  VEG_STREAMING on (VEG_FLEX off).
+- `init_reef.nc`: plant_density **1 m-2 since 2026-11-04** (author; 4 m-2
+  before, the dense class), plant_diameter 0.5 m, plant_height
+  0.4 m everywhere (frontal area per bed area lambda_f = 1 x 0.5 x 0.4 =
+  0.2); plant_thickness = (pi/4) x 0.5 = 0.3927 m (cylinders, bed
+  coverage pi D^2 n / 4 = 0.196). Thickness was 0.5 m until 2026-10-21, which
+  at density 4 made D t n = 1 and ROMS blow up. The reef crest is 0.50 m deep
   (rows 31-34 of the grid), 0.35 m at low tide (0.15 m tide), so the
   0.4 m canopy reaches the surface on the crest around low tide (ROMS
   then applies the drag over the whole water column; SWAN needed patch

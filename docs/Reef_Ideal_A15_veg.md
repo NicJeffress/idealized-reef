@@ -24,13 +24,13 @@ SWAN. This is the case most other variants build on.
   (rigid cylinders). `N2S2_HORAVG` is switched off with `VEG_TURB`. The grid,
   levels and the rest of the physics are A15's defaults of 2026-11-03.
 - **Initial file** (`init_reef.nc`): the same constant canopy everywhere:
-  density n = 4 m⁻², diameter D = 0.5 m, height h = 0.4 m (frontal area per
-  bed area lambda_f = n D h = 0.8), thickness (pi/4) x 0.5 = 0.3927 m (bed
-  coverage pi D² n / 4 = 0.785). Drag coefficient `CD_VEG` 1.0
-  (`vegetation.in`). This dense canopy damps the reef flow to a few percent
-  of the bare reef's; **the standard test canopy since 2026-11-03 is density
-  1 m⁻²** (frontal area 0.2, closer to measured reef canopies), made with
-  `tools/vegetation/patterns/sparse.json`, and most results below are for it.
+  density n = 1 m⁻², diameter D = 0.5 m, height h = 0.4 m (frontal area per
+  bed area lambda_f = n D h = 0.2), thickness (pi/4) x 0.5 = 0.3927 m (bed
+  coverage pi D² n / 4 = 0.196). Drag coefficient `CD_VEG` 1.0
+  (`vegetation.in`). A dense canopy (4 m⁻²) damps the reef flow to a few percent
+  of the bare reef's; **the case folders hold density 1 m⁻² since 2026-11-04**
+  (the author's decision; frontal area 0.2, closer to measured reef canopies), the
+  `tools/vegetation/patterns/sparse.json` pattern, and most results below are for it.
 - **SWAN:** `VEGETATION 3 0.4 0.5 1 1` selects COAWST's `SVEG_COAWST`, which
   takes density, height and diameter at each point from ROMS's plant fields
   through the coupler (so they may vary in space); the last value is the drag
@@ -76,7 +76,7 @@ across the periodic seam). Point `ININAME` in `ocean.in` at the new file.
 
 | Pattern | Layout |
 |---|---|
-| `const.json` | the case's constant dense canopy everywhere |
+| `const.json` | constant dense canopy (density 4) everywhere, the case's canopy until 2026-11-04 |
 | `sparse.json` | the density-1 canopy everywhere (the standard test canopy) |
 | `reef.json` | dense on backreef, crest and forereef; lagoon, pass and deep water bare |
 | `zones.json` | dense forereef and crest, sparse backreef, bare lagoon and pass |

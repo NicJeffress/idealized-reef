@@ -78,8 +78,9 @@ into a repeating 12 h tidal cycle by hour 12, and the metrics are taken over
 hours 12-24), unless a longer run is named. The standard test configuration
 since 2026-11-03 is `Reef_Ideal_A15_veg` with a **density-1 canopy** (1
 plant per m², 0.5 m diameter, 0.4 m tall: frontal area 0.2, close to measured
-reef canopies), because the case's dense canopy (4 per m², frontal area 0.8)
-holds the flow at a few percent of the bare reef's and hides everything else.
+reef canopies), because a dense canopy (4 per m², frontal area 0.8)
+holds the flow at a few percent of the bare reef's and hides everything else. The case
+folders hold density 1 since 2026-11-04 (the author's decision).
 The metrics: the lagoon set-up (mean sea level in the lagoon minus offshore),
 the transport over the crest and through the pass (per 6 km of reef), the
 crest and pass jets, Hs, SWAN's dissipation terms and the lagoon flushing
