@@ -1,5 +1,5 @@
 {
-  "description": "Constant canopy everywhere (as cases/Reef_Ideal_A15_veg/init_reef.nc)",
+  "description": "Constant dense canopy (density 4) everywhere; the case folders held this until 2026-11-04",
   "classes": {
     "dense": {"density": 4, "diameter": 0.5, "height": 0.4}
   },

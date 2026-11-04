@@ -147,7 +147,7 @@ exact restarts with `BKD`. Check Cu, Cv and Cw in the log of every new setup. N 
 ## Open questions
 
 - Why the low-tide Cw at DT 3 s is so sensitive to the step.
-- The canopy cases have not yet run at DT 2.5 s; they were clean at DT 3 s (peak Cw 0.19 at density 1).
+- ~~The canopy cases have not yet run at DT 2.5 s~~: clean, peak Cw 0.16 ([default check](2026-11-04_default-check.md)). The strat and therm cases have not.
 
 ## Details and links
 

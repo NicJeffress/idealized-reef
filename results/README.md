@@ -7,9 +7,10 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-04 05:55 UTC.
+**Last updated:** 2026-11-04 08:30 UTC.
 
-Entries: [all defaults](../notebook/2026-11-04_all-defaults.md),
+Entries: [default check](../notebook/2026-11-04_default-check.md),
+[all defaults](../notebook/2026-11-04_all-defaults.md),
 [force shapes and budget](../notebook/2026-11-04_force-shapes-and-budget.md),
 [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
@@ -70,6 +71,8 @@ Entries: [all defaults](../notebook/2026-11-04_all-defaults.md),
 | Heated reef (1000 W/m² peak, balanced over the day) | the reef-flat surface temperature swings 2.6 C a day | - | results p0-p2 |
 | Bottom stress: implicit (`BSTRESS_IMPLICIT`) vs explicit | the same on the bare reef; **now the default** | 0-3 % (forereef shear ratio -6 % with triads, -17 % without) | results p0-p2, new-defaults check |
 | Bottom-stress cap (`LIMIT_BSTRESS`) | changes the answer and depends on DT; do not use without a DT check | set-up +15 %, crest jet +13 % (bare reef) | results p0-p2, thin crests |
+| Momentum budget, density 1 (measured, closes to 1e-7) | of the wave force (47 % breaking and roller, 53 % streaming), pressure takes 41 %, canopy drag 37 %, bed stress 24 %. The force acts on the crest front, where pressure takes 84 % of it; 69 % of the canopy drag acts in the 80 m behind it | sea level -13 to +78 mm across the crest front, +33 mm behind, +26 mm in the lagoon | default check |
+| Canopy on the reef only instead of everywhere (density 1) | the difference is the way out: crest sea level the same, lagoon lower, the head loss through the lagoon and pass gone | set-up -22 %, range -17 %, transports +3 %, pass jet +9 %, Hs crest +0.3 % | default check |
 | Round island with passes (Island_A15) | wave-driven island-lagoon circulation: inflow over the windward reef, outflow through every pass, the leeward one most; the windward pass drains too | ~1150 m³/s in over the reef; 2 passes: 590 (windward) and 704 m³/s (leeward) out | island first runs |
 
 ## Numerics
@@ -81,6 +84,8 @@ Entries: [all defaults](../notebook/2026-11-04_all-defaults.md),
 | Vertical resolution (N 10 / 15 / 20) | **N 10 not converged**: set-up -7 % at N 15, -10 to -12 % at N 20; crest and pass flow +2 to +3 %, pass jet +9 %; N 20 needs DT 3 s; N 15 at DT 6 s clean | 10 % in set-up; cost +7 % (N 15), 2.7x (N 20, DT 3 s) | vertical-resolution entry; **N 15 adopted** |
 | SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 % (bare reef: 0.8 %); `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
 | **Time step, all defaults (`BKD`, streaming, N 15)** | **DT 2.5 s, `NDTFAST` 10 adopted**: every Courant number below 1 across the roughness and canopy range. DT 6 s stable on density 1 but Cw above 1 on 96 % of steps (peak 2.65, numerical: DT 3 s cuts it 13x); DT 3 s still Cw 1.39 at low tide on a smooth bare reef; DT 2.5 s 0.61 | DT 3 s vs DT 6 s, density 1: set-up +4.4 %, crest transport +3.0 %, range +8.0 %. Cost: DT 3 s 1.84x DT 6 s, DT 2.5 s 1.22x DT 3 s | all defaults |
+| The default at DT 2.5 s, density 1 | **all below 1**: Cu 0.018, Cv 0.17, Cw 0.16. Same answer as DT 3 s; DT 2.5 s is for the smooth end of the range | within 0.02 %, sea level 8 micrometres rms; 1.17x cost | default check |
+| 5 m rows in the breaking zone at DT 2.5 s | **blows up** at hour 1.8, Cw 3-5 in the top layer. Uniform-grid and DT 1.25 s checks still running; stability may depend on DT over the row spacing (untested) | - | default check |
 | Vertical levels with streaming on | **N 15 converged**: N 20 within 2.8 % in set-up, 1 % in transports, 4 % in pass jet and fore-reef shear | 1.33x cost | force shapes |
 | Vertical shape of the breaking force | **matters little for bulk flow**: Kumar et al. 2012's form within 0.7 %, uniform -4.7 % in set-up; fore-reef shear is sensitive (-5.4 %, +43 %). Stock COAWST's length is D/2 pi (a_b about 0.29-0.45 against Uchiyama's best 0.1-0.2) | under 5 % | force shapes |
 | Vertical shape of the bottom streaming force (`KWD` cap) | **matters little**: cap 200 -1.8 %, cap 5 +6.1 % in set-up; no paper has a cap like 20 | transports within 1.3 % | force shapes |
@@ -168,7 +173,8 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 - **Is the size of the streaming force right?** It is 53 % of the wave force on density 1 and now the main unverified piece: the total
   follows Luhar et al. 2010 and Beudin et al. 2017, its vertical shape is our choice, and Beudin says it is unverified. At density 1, A/S is below
   Luhar's limit of 1 everywhere on the reef.
-- Which canopy density and extent the default holds (the case folders hold density 4 everywhere; most tests ran density 1).
+- **Canopy extent:** everywhere (what the folders hold, density 1) or reef only; set-up differs by 22 %.
+- Is the band grid converged with today's defaults? Two runs in progress.
 - Before a bed-roughness axis: `FRICTION MADSEN` per member, since SWAN uses the larger of it and the coupled KN (the cases hold 0.3).
 - Later, once the physics and numerics are settled: the list of ensemble axes
   (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,

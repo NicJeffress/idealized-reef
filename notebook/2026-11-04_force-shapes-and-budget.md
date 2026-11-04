@@ -119,7 +119,7 @@ unchanged.
 
 ## Open questions
 
-- Splitting bed stress and canopy drag over a full day: run the budget with the new image.
+- ~~Splitting bed stress and canopy drag over a full day~~: pressure 41 %, canopy 37 %, bed 24 % ([default check](2026-11-04_default-check.md)).
 - Whether the canopy streaming force's total and shape hold: Luhar's Eq. 21, U_c = [(4/3 pi)(k/omega) u^3]^0.5, gives about 0.12 m/s on the
   crest, against 0.25 m/s for our depth-mean jet; not directly comparable, because set-up also drives our flow. It needs a run without
   set-up forcing, or a flume-like case, ideally against data.
