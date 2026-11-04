@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-04 12:15 UTC.
+**Last updated:** 2026-11-04 14:30 UTC.
 
 Entries: [default check](../notebook/2026-11-04_default-check.md),
 [all defaults](../notebook/2026-11-04_all-defaults.md),
@@ -87,6 +87,7 @@ Entries: [default check](../notebook/2026-11-04_default-check.md),
 | SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 % (bare reef: 0.8 %); `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
 | **Time step, all defaults (`BKD`, streaming, N 15)** | **DT 2.5 s, `NDTFAST` 10 adopted**: every Courant number below 1 across the roughness and canopy range. DT 6 s stable on density 1 but Cw above 1 on 96 % of steps (peak 2.65, numerical: DT 3 s cuts it 13x); DT 3 s still Cw 1.39 at low tide on a smooth bare reef; DT 2.5 s 0.61 | DT 3 s vs DT 6 s, density 1: set-up +4.4 %, crest transport +3.0 %, range +8.0 %. Cost: DT 3 s 1.84x DT 6 s, DT 2.5 s 1.22x DT 3 s | all defaults |
 | The default at DT 2.5 s, density 1 | **all below 1**: Cu 0.018, Cv 0.17, Cw 0.16. Same answer as DT 3 s; DT 2.5 s is for the smooth end of the range | within 0.02 %, sea level 8 micrometres rms; 1.17x cost | default check |
+| Band grid with today's defaults against the rest of the domain refined 2x (density 1) | **the band grid is good**: sea level within 0.2 mm along the reef | set-up +0.5 %, transports within 0.6 %, jets within 1.5 %, Hs -2.2 to -2.5 %; 3.88x cost | default check |
 | 5 m rows in the breaking zone | **blows up at DT 2.5 s** (hour 1.8, Cw 3-5 in the top layer), clean at DT 1.25 s. **The 10 m band is within 4 % of it.** A finer grid needs its own DT check; stability may depend on DT over the row spacing (not separated from a plain DT limit) | set-up -3.9 %, transports -2 to -3 %, Hs crest -3 %, jets within 2.3 %; 2.48x cost | default check |
 | Vertical levels with streaming on | **N 15 converged**: N 20 within 2.8 % in set-up, 1 % in transports, 4 % in pass jet and fore-reef shear | 1.33x cost | force shapes |
 | Vertical shape of the breaking force | **matters little for bulk flow**: Kumar et al. 2012's form within 0.7 %, uniform -4.7 % in set-up; fore-reef shear is sensitive (-5.4 %, +43 %). Stock COAWST's length is D/2 pi (a_b about 0.29-0.45 against Uchiyama's best 0.1-0.2) | under 5 % | force shapes |
@@ -176,7 +177,7 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
   follows Luhar et al. 2010 and Beudin et al. 2017, its vertical shape is our choice, and Beudin says it is unverified. At density 1, A/S is below
   Luhar's limit of 1 everywhere on the reef.
 - **Canopy extent:** everywhere (what the folders hold, density 1) or reef only; set-up differs by 22 %.
-- Band grid against a uniform 10 m grid with today's defaults: running. (5 m rows: within 4 %.)
+- Grid checks so far are on density 1 with a canopy uniform alongshore: repeat on the bare or smooth end, or with patches, if those become ensemble cases.
 - Before a bed-roughness axis: `FRICTION MADSEN` per member, since SWAN uses the larger of it and the coupled KN (the cases hold 0.3).
 - Later, once the physics and numerics are settled: the list of ensemble axes
   (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,

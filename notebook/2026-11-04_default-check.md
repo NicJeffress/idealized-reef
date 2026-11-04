@@ -1,8 +1,8 @@
 # The default A15 canopy case at DT 2.5 s: Courant numbers, full-day budget, canopy extent
 
 - **Date:** 2026-11-04
-- **Status:** default check passed; **canopy extent still the author's call**; 5 m band within 4 % at DT 1.25 s (it blew up at
-  DT 2.5 s); uniform 10 m still running; **"flushing time" found wrong by about 8x and fixed**
+- **Status:** default check passed; **canopy extent still the author's call**; **band grid holds up:** a 2x finer grid outside the band within 2.5 %, 5 m rows within 4 % at DT 1.25 s (they blew up at
+  DT 2.5 s); **"flushing time" found wrong by about 8x and fixed**
 - **Build:** coawst-cloud `ca5316d`, case commit `26e6fb7`, `c2d-standard-16` Spot, 10 ROMS (1 x 10) + 6 SWAN
 
 ## Question / why
@@ -101,7 +101,7 @@ It's still only a mean through-flow time, which ignores tidal exchange; ROMSPath
 
 ## Results: the grid checks
 
-Until now the band grid had only been compared with a uniform 10 m grid on older settings.
+Until now the band grid had only been compared with a finer grid on older settings. Both checks are on density 1, with a canopy uniform alongshore.
 
 **5 m rows at DT 2.5 s blew up** at hour 1.77: Cw 0.10 at 0.67 h, 3.41 at 0.83 h, then 4-5, in the top layer at rows 60-62 (1018-1028 m from shore, h 0.7-0.9 m); Cv only about
 0.1 until the end (7.4, 20.8 m/s). **At DT 1.25 s, `NDTFAST` 10, it runs clean:** peak Cu 0.010, Cv 0.18, Cw 0.09.
@@ -128,7 +128,27 @@ Both grid and step changed, but DT alone did almost nothing on density 1 (above)
 smooth bare reef has Cw 1.39 at 10 m and DT 3 s (0.3), 0.61 at DT 2.5 s (0.25). The speed this implies, about 3 m/s, is close to sqrt(gD) at D of about 1 m. The clean run at 5 m and DT 1.25 s (0.25) fits, but any shorter step would also: it
 doesn't separate this from a plain DT limit, and the mechanism is unknown. A run at 5 m and DT 2 s (0.4) would separate them; it only matters if a finer grid is ever used. In practice: **a finer grid needs its own DT check.**
 
-**Uniform 10 m** is still running; it tests whether 30 m alongshore is enough.
+**Everything outside the band refined 2x** (`grid-u10`, called "uniform 10 m" in earlier notes, which isn't accurate: 220 x 404, same 10 m rows in the band, 10-40 m across elsewhere, and alongshore 10 m at the pass, 10-20 m
+on the reef, against the band grid's 20 and 20-40 m; 3.5x the cells). DT 2.5 s, `NDTFAST` 20, four 6 h restart segments, clean: peak Cu 0.038, Cv 0.18, Cw 0.16.
+
+| Metric | Band grid | 2x finer outside the band |
+|---|---|---|
+| set-up / range | 25.7 / 19.1 mm | +0.5 / +1.2 % |
+| crest transport / with Stokes | 720 / 780 m³/s | -0.6 / -0.6 % |
+| pass transport | 814 m³/s | +0.1 % |
+| crest jet p99 / max | 0.256 / 0.331 m/s | -1.5 / +0.7 % |
+| pass jet p99 / max | 0.482 / 0.568 m/s | +0.3 / +0.3 % |
+| surface/mean speed, crest / fore reef | 1.11 / 1.00 | 0.0 / +0.8 % |
+| Hs crest / reef flat | 0.198 / 0.198 m | -2.2 / -2.5 % |
+| dissipation across the reef | 1588 W/m | +0.8 % |
+| wall s per simulated hour | 280 | 1085 (3.88x) |
+
+Mean sea level along the reef agrees within 0.2 mm everywhere from 420 to 1227 m, and the depth-mean current within 1 mm/s. Flushing time from the tool reads -5.8 %, but that is the region mapping: the lagoon rows hold 5.8 % less volume on this grid. With the same volume it is +0.6 %.
+
+**So the band grid is good on density 1 for 3.9x less cost.** Refining the rest of the domain does almost nothing, and the rows in the breaking zone are the only spacing that still matters, at under 4 %.
+Not covered: **an alongshore-patchy canopy**, whose patches have to be resolved at 20-40 m alongshore, and the bare or smooth end of the range, where the flow is 3-4x faster.
+
+It also shows alongshore spacing isn't the trigger for the 5 m blow-up: half the alongshore spacing at the same DT and row spacing runs clean.
 
 ## Decision / outcome
 
@@ -138,7 +158,7 @@ are the less likely places for them, and a canopy axis then varies the reef alon
 ## Open questions
 
 - Canopy extent.
-- Grid: uniform 10 m still running.
+- A grid check on the bare or smooth end, and with a patchy canopy, if either becomes an ensemble case.
 - Is 22 % of set-up to a canopy on the return route a sign that pass and lagoon drag should be an axis of its own?
 - 7-day spin-up: every number here is hours 12-24 of the first day.
 - Why the fore-reef surface/mean speed moves +12.5 % with canopy extent while the crest does not. Not investigated.
@@ -147,4 +167,4 @@ are the less likely places for them, and a canopy axis then varies the reef alon
 
 - [All defaults](2026-11-04_all-defaults.md), [force shapes and budget](2026-11-04_force-shapes-and-budget.md), [results summary](../results/README.md)
 - Figure: [canopy extent](../figures/2026-11-04_canopy-extent.png), `tests/options_compare.py --png`.
-- Cost: `def1104-check` $0.33, `def1104-reef` $0.32 (1.8-1.9 h at $0.17 per hour Spot), `grid-b5` $0.03, `grid-b5-dt125` $0.81.
+- Cost: `def1104-check` $0.33, `def1104-reef` $0.32 (1.8-1.9 h at $0.17 per hour Spot), `grid-b5` $0.03, `grid-b5-dt125` $0.81, `grid-u10` $1.26.
