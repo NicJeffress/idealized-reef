@@ -75,6 +75,7 @@ Entries: [default check](../notebook/2026-11-04_default-check.md),
 | Bottom-stress cap (`LIMIT_BSTRESS`) | changes the answer and depends on DT; do not use without a DT check | set-up +15 %, crest jet +13 % (bare reef) | results p0-p2, thin crests |
 | Momentum budget, density 1 (measured, closes to 1e-7) | of the wave force (47 % breaking and roller, 53 % streaming), pressure takes 41 %, canopy drag 37 %, bed stress 24 %. The force acts on the crest front, where pressure takes 84 % of it; 69 % of the canopy drag acts in the 80 m behind it | sea level -13 to +78 mm across the crest front, +33 mm behind, +26 mm in the lagoon | default check |
 | Canopy on the reef only instead of everywhere (density 1) | the difference is the way out: crest sea level the same, lagoon lower, the head loss through the lagoon and pass gone | set-up -22 %, range -17 %, transports +3 %, pass jet +9 %, Hs crest +0.3 % | default check |
+| How far the pass jet goes (default, 24 h) | **no natural end in the domain**: reaches the 5 km boundary by about hour 18; offshore-going transport grows to 5x the pass outflow; 40 m wide at 1.75-2.5 km on both grids. Boundary feedback on the reef not yet known | 0.42 m/s at 1.2 km, 0.27 at 2 km, 0.04 at 4 km | jet and 10 m limit |
 | Round island with passes (Island_A15) | wave-driven island-lagoon circulation: inflow over the windward reef, outflow through every pass, the leeward one most; the windward pass drains too | ~1150 m³/s in over the reef; 2 passes: 590 (windward) and 704 m³/s (leeward) out | island first runs |
 
 ## Numerics
