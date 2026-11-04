@@ -109,4 +109,4 @@ are the less likely places for them, and a canopy axis then varies the reef alon
 
 - [All defaults](2026-11-04_all-defaults.md), [force shapes and budget](2026-11-04_force-shapes-and-budget.md), [results summary](../results/README.md)
 - Figure: [canopy extent](../figures/2026-11-04_canopy-extent.png), `tests/options_compare.py --png`.
-- Cost: `def1104-check` and `def1104-reef` about $0.34 each at $0.17 per hour Spot (1.8-1.9 h each), `grid-b5` $0.03.
+- Cost: `def1104-check` $0.33, `def1104-reef` $0.32 (1.8-1.9 h at $0.17 per hour Spot), `grid-b5` $0.03.
