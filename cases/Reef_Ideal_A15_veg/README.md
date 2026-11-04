@@ -10,8 +10,8 @@
 > quoted below refer to the 20 m grid. The Reniers roller is on
 > (`ROLLER_RENIERS`, `WEC_ALPHA` 0.5; notebook 2026-11-03_roller-checks). Also since
 > 2026-11-03: 15 vertical levels (was 10), `GLS_Kmin` 1e-8, SWAN `BKD` breaking and wave
-> streaming (`BOTTOM_STREAMING`; `VEG_STREAMING` with the canopy). **DT 3 s, `NDTFAST` 12
-> since 2026-11-04** (to stay below the CFL limits; DT 6 s was unsafe with streaming at 15 levels).
+> streaming (`BOTTOM_STREAMING`; `VEG_STREAMING` with the canopy). **DT 2.5 s, `NDTFAST` 10
+> since 2026-11-04** (to stay below the CFL limits at every canopy density and bed roughness; with streaming at 15 levels DT 6 s was unsafe, and DT 3 s reached a vertical Courant number of 1.39 on a smooth bare reef).
 
 
 > **Vegetation elements are cylinders: `plant_thickness = (pi/4) x

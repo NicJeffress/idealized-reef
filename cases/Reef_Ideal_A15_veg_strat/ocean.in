@@ -238,9 +238,9 @@ ad_VolCons(north) ==  F                            ! northern boundary
 
 ! Time-Stepping parameters.
 
-      NTIMES == 28800
-          DT == 3.0d0
-     NDTFAST == 12
+      NTIMES == 34560
+          DT == 2.5d0
+     NDTFAST == 10
 ! Number of timesteps for computing observation impacts during the
 ! analysis-forecast cycle.
 
@@ -267,7 +267,7 @@ ad_VolCons(north) ==  F                            ! northern boundary
 
        NRREC == 0
    LcycleRST == F
-        NRST == 1200
+        NRST == 1440
         NSTA == 1
         NFLT == 1
        NINFO == 1
@@ -275,15 +275,15 @@ ad_VolCons(north) ==  F                            ! northern boundary
 ! Output history, quicksave, average, and diagnostic files parameters.
 
      LDEFOUT == T
-        NHIS == 1200
+        NHIS == 1440
      NDEFHIS == 0
         NQCK == 0
      NDEFQCK == 0
       NTSAVG == 1
-        NAVG == 1200
+        NAVG == 1440
      NDEFAVG == 0
       NTSDIA == 1
-        NDIA == 1200
+        NDIA == 1440
      NDEFDIA == 0
 
 ! Output tangent linear and adjoint models parameters.

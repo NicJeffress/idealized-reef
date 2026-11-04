@@ -21,6 +21,8 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-04 | [All the A15 defaults together](2026-11-04_all-defaults.md) | A15 all | DT 6 s Cw 2.65, DT 3 s still 1.39 on a smooth bare reef; **DT 2.5 s, `NDTFAST` 10 adopted** (Cw 0.61, 1.22x cost); `BKD` restart residual traced and fixed: bit-identical again |
+| 2026-11-04 | [Force shapes, vertical convergence and the momentum budget](2026-11-04_force-shapes-and-budget.md) | A15_veg, density 1 | N 20 within 2.8 %; uniform breaking -4.7 %, Kumar's form +0.7 %, `KWD` caps +6.1 / -1.8 % in set-up; budget now closes (`roms-diag-implicit-drag`) |
 | 2026-11-03 | [GLS_Kmin and background mixing, heated 72 h](2026-11-03_kmin-heated-72h.md) | A15_veg_therm | 1e-8 and 1e-10 stable, same answer; on the forced reef a few percent; offshore AKt tenfold lower. Recommend 1e-8 |
 | 2026-11-03 | [The wave roller: strength, refined grid, restarts](2026-11-03_roller-checks.md) | A15_veg, density 1 | Linear in `WEC_ALPHA` (0.5: set-up +25 %); larger on the refined grid (+32 %), less grid-sensitive; restart fixed (`roms-restart-roller`). Recommended on at 0.5 |
 | 2026-11-03 | [New A15 defaults: the roller and the breaking-zone grid](2026-11-03_new-defaults.md) | all A15 cases | Roller on (`WEC_ALPHA` 0.5) and the breaking-zone grid adopted; roughness rule softened; CTHETA, vertical-resolution and streaming tests started |

@@ -7,9 +7,11 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-03 23:20 UTC.
+**Last updated:** 2026-11-04 05:55 UTC.
 
-Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
+Entries: [all defaults](../notebook/2026-11-04_all-defaults.md),
+[force shapes and budget](../notebook/2026-11-04_force-shapes-and-budget.md),
+[results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
 [triads-on](../notebook/2026-11-02_options-triads-on.md),
 [SWAN triads](../notebook/2026-11-02_swan-triads-skipped-first-iteration.md),
 [OMEGA_IMPLICIT](../notebook/2026-11-02_options-p2-omega-diag.md),
@@ -78,6 +80,11 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | `SPLINES_VDIFF` | **inert with MPDATA tracers** (bit-identical): the spline vertical diffusion is used only for non-MPDATA tracers | - | closure entry |
 | Vertical resolution (N 10 / 15 / 20) | **N 10 not converged**: set-up -7 % at N 15, -10 to -12 % at N 20; crest and pass flow +2 to +3 %, pass jet +9 %; N 20 needs DT 3 s; N 15 at DT 6 s clean | 10 % in set-up; cost +7 % (N 15), 2.7x (N 20, DT 3 s) | vertical-resolution entry; **N 15 adopted** |
 | SWAN refraction / frequency-shift limiters (`CTHETA`, `CSIGMA`), upwind direction (`DIRIMPL 1`) | **not needed on A15**: defaults converged | `CTHETA` 0.9 within 0.7 % (bare reef: 0.8 %); `CSIGMA` never acts; `DIRIMPL` 1 within 1 % | limiters entry |
+| **Time step, all defaults (`BKD`, streaming, N 15)** | **DT 2.5 s, `NDTFAST` 10 adopted**: every Courant number below 1 across the roughness and canopy range. DT 6 s stable on density 1 but Cw above 1 on 96 % of steps (peak 2.65, numerical: DT 3 s cuts it 13x); DT 3 s still Cw 1.39 at low tide on a smooth bare reef; DT 2.5 s 0.61 | DT 3 s vs DT 6 s, density 1: set-up +4.4 %, crest transport +3.0 %, range +8.0 %. Cost: DT 3 s 1.84x DT 6 s, DT 2.5 s 1.22x DT 3 s | all defaults |
+| Vertical levels with streaming on | **N 15 converged**: N 20 within 2.8 % in set-up, 1 % in transports, 4 % in pass jet and fore-reef shear | 1.33x cost | force shapes |
+| Vertical shape of the breaking force | **matters little for bulk flow**: Kumar et al. 2012's form within 0.7 %, uniform -4.7 % in set-up; fore-reef shear is sensitive (-5.4 %, +43 %). Stock COAWST's length is D/2 pi (a_b about 0.29-0.45 against Uchiyama's best 0.1-0.2) | under 5 % | force shapes |
+| Vertical shape of the bottom streaming force (`KWD` cap) | **matters little**: cap 200 -1.8 %, cap 5 +6.1 % in set-up; no paper has a cap like 20 | transports within 1.3 % | force shapes |
+| `BKD` breaker index, frozen in every non-stationary run once accuracy reaches 95 % | **harmless on A15**: never frozen within 2e-6 mm of set-up; where kD < 1 it depends only on the bed slope. Recheck on other domains | none | all defaults |
 | Time step DT 6 vs 3 s (bare reef, triads on: a flow that moves) | converged | <= 1.6 % (forereef shear 3.4 %) | triads-on |
 | ... on the dense canopy | converged, but only because the canopy damps the flow | ~1e-5 | results p0-p2 |
 | NDTFAST 20 or 30 instead of 24 | no effect | ~1e-5 | results p0-p2 |
@@ -95,6 +102,11 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m | **not converged at 20 m**: the breaking zone (2-3 cells at 20 m) is under-resolved. **Refining only that zone across the shore** (10 m rows from 850 to 1150 m) recovers the uniform 10 m answer at +16 % cost (instead of 8x) | 20 m vs 10 m: set-up -16 %, crest transport -11 %; band grid = 10 m for set-up, pass transport and jets | grid-10m |
+
+## Changes adopted on 2026-11-04 (author's decisions)
+
+- **DT 2.5 s, `NDTFAST` 10 in every A15 case**, to stay below the CFL limits; DT 6 s then DT 3 s were not enough.
+- Momentum budgets close (`roms-diag-implicit-drag`); restarts with `BKD` exact (`swan-bkd-exact-restart`).
 
 ## Changes adopted on 2026-11-03 (author's decisions)
 
@@ -132,6 +144,8 @@ Entries: [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.m
 | `VEG_HMIXING`: COAWST v3.6 dropped its routine and kept the rest | explained ([entry](../notebook/2026-11-03_veg-hmixing-and-banihashemi.md)); a port is possible |
 | A coupling interval that is not a multiple of both models' steps is silently replaced (300 s ran as 600 s) | noted; check the coupler log (`CplInt` and `Steps`) |
 | `UV_BANIHASHEMI` "did not compile" | our configuration: it replaces `UV_KIRBY`, it cannot be added to it |
+| `BKD`'s one-way switch `MODGAM` was not in the restart file: restarted runs recomputed the breaker index once (1e-7 m/s after an hour, 5e-5 m/s later) | fixed: coawst-cloud `swan-bkd-exact-restart`, bit-identical over three segments |
+| With implicit bottom stress and canopy drag, `*_bstr` held only the explicit remainder and the canopy drag was missing or mixed into `*_vvis`; `*_fveg` never written | fixed: coawst-cloud `roms-diag-implicit-drag`, 2-D and 3-D budgets close to 1e-7 of the largest term; solution bit-identical |
 
 ## Defaults adopted on 2026-11-02 (author's decision), checked
 
@@ -151,6 +165,11 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Still open
 
+- **Is the size of the streaming force right?** It is 53 % of the wave force on density 1 and now the main unverified piece: the total
+  follows Luhar et al. 2010 and Beudin et al. 2017, its vertical shape is our choice, and Beudin says it is unverified. At density 1, A/S is below
+  Luhar's limit of 1 everywhere on the reef.
+- Which canopy density and extent the default holds (the case folders hold density 4 everywhere; most tests ran density 1).
+- Before a bed-roughness axis: `FRICTION MADSEN` per member, since SWAN uses the larger of it and the coupled KN (the cases hold 0.3).
 - Later, once the physics and numerics are settled: the list of ensemble axes
   (bed roughness, canopy parameters, `BKD` parameters, `WEC_ALPHA`, `SZ_ALPHA`,
   `ZOS_HSIG_ALPHA`, ...) and lagoon residence time with ROMSPath.

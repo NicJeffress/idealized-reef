@@ -91,6 +91,7 @@ Same runs plus `VEG_STREAMING` (coawst-cloud `4abff12`, after the restart-file f
 - **The canopy part adds about as much again**: with both forces the lagoon
   set-up nearly doubles and the crest and pass transports rise by about 30 %.
 - Again stable and converged in time (DT 6 s = DT 3 s within 0.1 %), at no cost.
+- **Added 2026-11-04:** that holds at N 10. At N 15, with the other defaults, DT 6 s ran stably but with the vertical Courant number above 1 on 96 % of steps (top crest layer, peak 2.65, a noisy crest), and DT 3 s differed by up to 8 %: see [all defaults](2026-11-04_all-defaults.md), which led to DT 2.5 s.
 - Together the two streaming forces give the mean flow the momentum of the
   60 % of the wave dissipation that is not breaking; on this reef that is the
   difference between a set-up of 14 and of 28 mm.
