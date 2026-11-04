@@ -83,9 +83,10 @@ and the [results summary](../results/README.md).
 | restarts | `PERFECT_RESTART` | |
 | output | `AVERAGES`, `DIAGNOSTICS_UV` | |
 
-Time stepping: `DT` 6 s, `NDTFAST` 24 (barotropic Courant number 0.81; the
-AB3-AM4 limit is 0.890, LF-AM3's about 0.9). `NTIMES` 14400 = 24 h. DT 3 s
-changes nothing by more than 1.6 %.
+Time stepping: `DT` 3 s, `NDTFAST` 12 since 2026-11-04 (barotropic Courant number
+0.81; the AB3-AM4 limit is 0.890, LF-AM3's about 0.9). `NTIMES` 28800 = 24 h. All Courant
+numbers must stay below 1 (the author's rule): DT 6 s, the default until then, is unsafe
+once streaming and 15 levels are on.
 
 SWAN (`swan.in`): nonstationary, 72 directions, 34 frequencies 0.04-1.0 Hz
 (20 until 2026-11-03, about 3 % low), time step 120 s, one iteration per
@@ -168,9 +169,8 @@ which more than pays for the 15 levels and the extra rows.
   jet 1.03 m/s, breaking dissipation 3044 W/m. DT 3 s, two SWAN iterations
   and the AB3-AM4 kernel are all within 1.6 % (the noise floor of the case).
   The bare reef is the stiffest member of the family: on the breaking-zone
-  grid it needs DT 3 s (cross-shore Courant number 1 on the 10 m rows at
-  the top of the fore reef at DT 6 s, where the flow is 3-4x faster than
-  with a canopy; [notebook](../notebook/2026-11-03_swan-limiters.md)).
+  grid it needs DT 3 s (blow-ups at DT 6 s and DT 4 s, where the flow is 3-4x
+  faster than with a canopy; [notebook](../notebook/2026-11-03_swan-limiters.md)).
 - **The options test campaign** (November 2026; summary in
   [`results/`](../results/README.md), figures in the
   [README](../README.md#what-we-have-learned-about-the-physics)): SWAN's

@@ -246,15 +246,15 @@ lose the same energy on both grids; the difference comes from one strip, the
 breaking zone at the top of the fore reef (0.7-1.6 m deep), which is two or
 three 20 m cells wide, and everything shoreward follows. Refining only the
 rows between 850 and 1150 m from the shore to 10 m (the **breaking-zone
-grid**, 203 x 126, DT 6 s kept) recovers the 10 m answer at +16 % cost
+grid**, 203 x 126) recovers the 10 m answer at +16 % cost
 instead of 8x, and is the grid of every A15 case since 2026-11-03.
 
 In the vertical, 10 levels (5 cm layers on the crest) were not converged
 either: the set-up falls 7 % at 15 levels and 10-12 % at 20, while the crest
 and pass flows rise 2-3 % (pass jet +9 %); the waves are untouched, so it is
 how the ocean model spreads the wave forcing and the drag over depth. 15
-levels at DT 6 s is the default (+7 % cost); 20 levels needs DT 3 s (2.7x)
-and the remaining 3-4 % is noted as a resolution uncertainty. A caveat on
+levels is the default (+7 % cost; at the DT 3 s since adopted, see below); 20 levels
+costs 2.7x at the time when it was tested, and the remaining 3-4 % is noted as a resolution uncertainty. A caveat on
 going finer: the k-epsilon closure is columnwise and hydrostatic, sound
 while cells are much wider than the water is deep, which at 10 m holds on
 the crest and reef flat but not in the pass or on the fore reef.
@@ -404,7 +404,7 @@ Every A15 case shares these; each line names the test that set it.
 |---|---|---|
 | grid | the breaking-zone grid, 203 x 126, 10 m rows from 850 to 1150 m from the shore | recovers the uniform 10 m answer for +16 % cost ([grid](notebook/2026-11-03_grid-10m.md)) |
 | vertical levels | 15 (`Vstretching` 4) | N 10 was 7-12 % off in the set-up; N 20 needs DT 3 s ([vertical](notebook/2026-11-03_vertical-resolution.md)) |
-| time step | DT 6 s, `NDTFAST` 24, AB3-AM4 barotropic kernel (`STEP2D_FB_AB3_AM4`) | DT 3 s within 1.6 %; AB3-AM4 within the noise and 19 % faster ([entry](notebook/2026-11-02_options-triads-on.md)) |
+| time step | **DT 3 s, `NDTFAST` 12 (since 2026-11-04)**, AB3-AM4 barotropic kernel (`STEP2D_FB_AB3_AM4`) | every Courant number stays below 1: with streaming at 15 levels, DT 6 s had the vertical Courant number above 1 on 90-96 % of steps on density 1, and the bare reef blows up at DT 6 and 4 s; AB3-AM4 within the noise and 19 % faster ([entry](notebook/2026-11-02_options-triads-on.md)) |
 | waves on currents | `WEC_VF`, spectral Stokes drift, `UV_KIRBY`, `WDISS_WAVEMOD` | COAWST v3.9's vortex force; Banihashemi within 0.5 % |
 | wave streaming | `BOTTOM_STREAMING`, and `VEG_STREAMING` in the canopy cases | set-up +95 %, transports +30 % ([entry](notebook/2026-11-03_wave-streaming.md)) |
 | roller | `ROLLER_RENIERS`, `WEC_ALPHA` 0.5 | moves the breaking force onto the crest; linear in `WEC_ALPHA` ([entry](notebook/2026-11-03_roller-checks.md)) |

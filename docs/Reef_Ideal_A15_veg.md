@@ -150,7 +150,8 @@ area; Hs; depth-averaged speed; speed minus the bare-reef run.*
 - **Canopy wave streaming:** the canopy takes about a quarter of the wave
   energy over this reef, bottom friction a third; `VEG_STREAMING` with
   `BOTTOM_STREAMING` raises the set-up 95 % and the crest transport 32 % on
-  the density-1 canopy, stable at DT 6 s. The canopy force needed five fixes
+  the density-1 canopy, no blow-up at DT 6 s (but above the vertical CFL limit once at
+  15 levels: the default is DT 3 s since 2026-11-04). The canopy force needed five fixes
   (coawst-cloud `roms-veg-streaming-fixes`).
 - **`VEG_TURB`** raises the reef-flat and crest diffusivity by 60 % and
   changes the flow by 2-4 % on the heated reef; it is a k-epsilon source, so
