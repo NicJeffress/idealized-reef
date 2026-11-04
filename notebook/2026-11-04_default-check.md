@@ -1,7 +1,7 @@
 # The default A15 canopy case at DT 2.5 s: Courant numbers, full-day budget, canopy extent
 
 - **Date:** 2026-11-04
-- **Status:** default check passed; **canopy extent still the author's call**; **band grid holds up:** a 2x finer grid outside the band within 2.5 %, 5 m rows within 4 % at DT 1.25 s (they blew up at
+- **Status:** default check passed; **canopy stays everywhere (author)**; **band grid holds up:** a 2x finer grid outside the band within 2.5 %, 5 m rows within 4 % at DT 1.25 s (they blew up at
   DT 2.5 s); **"flushing time" found wrong by about 8x and fixed**
 - **Build:** coawst-cloud `ca5316d`, case commit `26e6fb7`, `c2d-standard-16` Spot, 10 ROMS (1 x 10) + 6 SWAN
 
@@ -152,12 +152,12 @@ It also shows alongshore spacing isn't the trigger for the 5 m blow-up: half the
 
 ## Decision / outcome
 
-The default check passes. No change made. **The extent is the author's call:** *(recommendation, not yet decided)* reef only, because plants don't grow on 300 m of water, a scoured pass and a deep lagoon
-are the less likely places for them, and a canopy axis then varies the reef alone.
+> "Keep everywhere"
+
+Canopy stays over the whole domain at density 1, as the case folders already hold it. The default check passes; no file changes. A density or other canopy axis therefore also changes the drag on the route out through the lagoon and pass, which accounts for 22 % of set-up at density 1: keep that in mind when reading set-up along such an axis. The reef-only pattern stays available as `def1104-reef/reef_sparse.json`. (My recommendation had been reef only.)
 
 ## Open questions
 
-- Canopy extent.
 - A grid check on the bare or smooth end, and with a patchy canopy, if either becomes an ensemble case.
 - Is 22 % of set-up to a canopy on the return route a sign that pass and lagoon drag should be an axis of its own?
 - 7-day spin-up: every number here is hours 12-24 of the first day.

@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-04 14:30 UTC.
+**Last updated:** 2026-11-04.
 
 Entries: [default check](../notebook/2026-11-04_default-check.md),
 [all defaults](../notebook/2026-11-04_all-defaults.md),
@@ -114,6 +114,7 @@ Entries: [default check](../notebook/2026-11-04_default-check.md),
 ## Changes adopted on 2026-11-04 (author's decisions)
 
 - **DT 2.5 s, `NDTFAST` 10 in every A15 case**, to stay below the CFL limits; DT 6 s then DT 3 s were not enough.
+- **Canopy stays over the whole domain, density 1** (reef only would lower set-up 22 %, through head loss on the way out).
 - Momentum budgets close (`roms-diag-implicit-drag`); restarts with `BKD` exact (`swan-bkd-exact-restart`).
 
 ## Changes adopted on 2026-11-03 (author's decisions)
@@ -176,7 +177,6 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 - **Is the size of the streaming force right?** It is 53 % of the wave force on density 1 and now the main unverified piece: the total
   follows Luhar et al. 2010 and Beudin et al. 2017, its vertical shape is our choice, and Beudin says it is unverified. At density 1, A/S is below
   Luhar's limit of 1 everywhere on the reef.
-- **Canopy extent:** everywhere (what the folders hold, density 1) or reef only; set-up differs by 22 %.
 - Grid checks so far are on density 1 with a canopy uniform alongshore: repeat on the bare or smooth end, or with patches, if those become ensemble cases.
 - Before a bed-roughness axis: `FRICTION MADSEN` per member, since SWAN uses the larger of it and the coupled KN (the cases hold 0.3).
 - Later, once the physics and numerics are settled: the list of ensemble axes
