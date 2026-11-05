@@ -21,6 +21,7 @@ options test campaign (phases 0-2) gets one entry per phase.
 
 | Date | Entry | Case | Result in one line |
 |---|---|---|---|
+| 2026-11-05 | [Seven days of the A15 default](2026-11-05_seven-day-run.md) | A15_veg, density 1 | **Reef and lagoon settle within the first tide** (hours 12-24 against 156-168: set-up +0.05 %, transports +0.04 %, budget the same); offshore of 2.5 km keeps growing, the jet spreads along the boundary, the reef doesn't feel it; restarts bit-identical; $2.34 |
 | 2026-11-04 | [All the A15 defaults together](2026-11-04_all-defaults.md) | A15 all | DT 6 s Cw 2.65, DT 3 s still 1.39 on a smooth bare reef; **DT 2.5 s, `NDTFAST` 10 adopted** (Cw 0.61, 1.22x cost); `BKD` restart residual traced and fixed: bit-identical again |
 | 2026-11-04 | [Force shapes, vertical convergence and the momentum budget](2026-11-04_force-shapes-and-budget.md) | A15_veg, density 1 | N 20 within 2.8 %; uniform breaking -4.7 %, Kumar's form +0.7 %, `KWD` caps +6.1 / -1.8 % in set-up; budget now closes (`roms-diag-implicit-drag`) |
 | 2026-11-04 | [The default canopy case at DT 2.5 s](2026-11-04_default-check.md) | A15_veg, density 1 | Peak Cw 0.16; DT 3 s the same within 0.02 %; **budget measured: pressure 41 %, canopy drag 37 %, bed stress 24 %, 69 % of the canopy drag at the back of the crest**; canopy on the reef only: set-up -22 %, the rest within 10 %; **band grid holds up**: rest of the domain 2x finer within 2.5 %, 5 m rows within 4 % at DT 1.25 s (blew up at DT 2.5 s); **flushing time found about 8x too long, fixed** |

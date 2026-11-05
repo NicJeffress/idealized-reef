@@ -7,9 +7,10 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-04.
+**Last updated:** 2026-11-05.
 
-Entries: [default check](../notebook/2026-11-04_default-check.md),
+Entries: [seven-day run](../notebook/2026-11-05_seven-day-run.md),
+[default check](../notebook/2026-11-04_default-check.md),
 [all defaults](../notebook/2026-11-04_all-defaults.md),
 [force shapes and budget](../notebook/2026-11-04_force-shapes-and-budget.md),
 [results p0-p2](../notebook/2026-11-02_options-campaign-results-p0-p2.md),
@@ -111,6 +112,10 @@ Entries: [default check](../notebook/2026-11-04_default-check.md),
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m | **not converged at 20 m**: the breaking zone (2-3 cells at 20 m) is under-resolved. **Refining only that zone across the shore** (10 m rows from 850 to 1150 m) recovers the uniform 10 m answer at +16 % cost (instead of 8x) | 20 m vs 10 m: set-up -16 %, crest transport -11 %; band grid = 10 m for set-up, pass transport and jets | grid-10m |
+
+## How long a run has to be (2026-11-05)
+
+Seven days of the default canopy case (density 1, unstratified, steady waves): **the reef and lagoon settle within the first tide.** Hours 12-24 against hours 156-168: set-up +0.05 %, crest and pass transport +0.04 and +0.03 %, Hs crest +0.01 %, and every budget term within 0.1 % of the largest. Offshore of about 2.5 km the slow recirculation keeps growing all week (offshore-going transport at 4 km +50 %), and the jet spreads along the 5 km boundary, so the outer 1.5 km depends on that boundary; none of it reaches the reef. Restarted segments are bit-identical to an uninterrupted run; only the first hourly diagnostic record after a restart is off (`*_accel` mainly). Not yet shown for a bare or patchy reef, for stratified or heated cases, or for residence time. [Entry](../notebook/2026-11-05_seven-day-run.md).
 
 ## Changes adopted on 2026-11-04 (author's decisions)
 
