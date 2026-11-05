@@ -9,7 +9,8 @@ tidal cycle), unless stated.
 
 **Last updated:** 2026-11-05.
 
-Entries: [seven-day run](../notebook/2026-11-05_seven-day-run.md),
+Entries: [making A15 faster](../notebook/2026-11-05_speed-stokes-and-machines.md),
+[seven-day run](../notebook/2026-11-05_seven-day-run.md),
 [default check](../notebook/2026-11-04_default-check.md),
 [all defaults](../notebook/2026-11-04_all-defaults.md),
 [force shapes and budget](../notebook/2026-11-04_force-shapes-and-budget.md),
@@ -116,6 +117,10 @@ Entries: [seven-day run](../notebook/2026-11-05_seven-day-run.md),
 ## How long a run has to be (2026-11-05)
 
 Seven days of the default canopy case (density 1, unstratified, steady waves): **the reef and lagoon settle within the first tide.** Hours 12-24 against hours 156-168: set-up +0.05 %, crest and pass transport +0.04 and +0.03 %, Hs crest +0.01 %, and every budget term within 0.1 % of the largest. TKE and `AKv` on the reef and in the lagoon settle just as fast (rms under 0.15 % in every layer); past the crest `AKv` doesn't (1150-2000 m 13 % low on day 1, 3.8-5 km 86 % low). Offshore of about 2.5 km the slow recirculation keeps growing all week (offshore-going transport at 4 km +50 %), and the jet spreads along the 5 km boundary, so the outer 1.5 km depends on that boundary; none of it reaches the reef. Restarted segments are bit-identical to an uninterrupted run; only the first hourly diagnostic record after a restart is off (`*_accel` mainly). Not yet shown for a bare or patchy reef, for stratified or heated cases, or for residence time. [Entry](../notebook/2026-11-05_seven-day-run.md).
+
+## Speed (2026-11-05)
+
+ROMS spent 59 % of its time in the WEC kernel, nearly all re-summing the spectral Stokes drift every step on an unchanged spectrum. `roms-stokes-interval` (off by default) updates it `STOKES_NCPL` times per wave exchange: at 120 s, 2.2x faster, set-up within 0.003 %, transports within 0.002 %, budget unchanged, restarts exact. Beyond 2 km the flow differs by 7-30 % at any interval, under test as chaos. With it on, 10 + 6 stays the best split on `c2d-standard-16`; `c2d-standard-8` with 5 + 3 is cheapest per member ($0.14 per simulated day). [Entry](../notebook/2026-11-05_speed-stokes-and-machines.md).
 
 ## Changes adopted on 2026-11-04 (author's decisions)
 
