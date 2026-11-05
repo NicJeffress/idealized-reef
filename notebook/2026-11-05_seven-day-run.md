@@ -48,6 +48,25 @@ Offshore-going transport by distance from shore (tide means, m³/s; net transpor
 - **None of this reaches the reef in 7 days**: transport inside 1.5 km doesn't change, and tide-mean `vbar` from 1150 m to 2 km changes by 0.5 mm/s rms or less. No growth in alongshore variation of sea level at the boundary (0.02 mm).
 - That holds for reef and lagoon momentum. Anything that depends on where the offshore water goes does not get the same answer: water leaving by the jet and coming back over the crest, as in a residence-time calculation, sees the unsettled and boundary-affected flow.
 
+## Results: turbulence (added 2026-11-05, the author asked whether TKE had been checked)
+
+It hadn't been. `tke` and `AKv` from the hourly history files, tide means, hours 12-24 against hours 156-168, compared point by point in every layer (rms and largest change, where the value is above 10 % of the zone's largest):
+
+| Zone (from shore) | TKE rms | TKE largest | `AKv` rms | `AKv` largest |
+|---|---|---|---|---|
+| lagoon, 233-815 m | 0.07 % | 0.10 % | 0.05 % | 0.09 % |
+| back of crest, 815-1000 m | 0.07 % | 0.94 % | 0.06 % | 1.8 % |
+| crest front, 1000-1150 m | 0.09 % | 0.27 % | 0.13 % | 8.4 % |
+| slope, 1150-1500 m | 0.22 % | 2.4 % | 1.9 % | 36 % |
+| slope, 1500-2000 m | 1.5 % | 11 % | 5.0 % | 76 % |
+| 2-3 km | 4.4 % | 23 % | 6.8 % | 54 % |
+| 3-3.8 km | 12 % | 72 % | 25 % | 151 % |
+| 3.8-5 km | 70 % | 185 % | 89 % | 136 % |
+
+- **On the reef and in the lagoon, turbulence settles as fast as the flow.** Depth-integrated TKE in hours 12-24 is within 0.08 % of day 7 in both.
+- **Offshore, viscosity is the slowest thing measured.** Zone-mean `AKv` at 3.8-5 km is 86 % below its day 7 value on day 1 and still 10 % below at hours 108-120, reaching a largest tide mean of 0.56 m²/s. At 1150-2000 m it is 13 % low on day 1 and 1.4 % low at hours 132-144, while TKE there barely moves, so the turbulence length scale is what keeps growing.
+- This case is unstratified, so nothing limits how deep the jet's turbulence spreads. We'd expect stratification to change the offshore numbers (not tested). The stratified case needs its own check before any run length is applied to it.
+
 ## Results: numerics and restarts
 
 - **Courant numbers:** all 28 segments peak at Cu 0.018, Cv 0.179, Cw 0.16, Cw never above 1. Fastest current 0.75 m/s.
@@ -63,7 +82,7 @@ Offshore-going transport by distance from shore (tide means, m³/s; net transpor
 
 No default changed. **For the author to decide:** a 24 h member (analysed over hours 12-24) gets the reef and lagoon numbers of a 7-day one within 0.05 %, at $0.33 against $2.34. For 100 members that is about $33 against $234.
 
-That is measured on one member: uniform density 1, unstratified, steady waves, one tide. Not shown yet:
+That is measured on one member: uniform density 1, unstratified, steady waves, one tide. It holds for the reef and lagoon, including their turbulence; the jet's turbulence past the crest (about 1150 m on) keeps changing. Not shown yet:
 
 - A bare or sparse reef, or a patchy canopy, might take longer to settle. Check at the two ends of a canopy axis before relying on it.
 - The strat and therm cases: tracers and heat have their own, longer time scales.
