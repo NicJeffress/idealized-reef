@@ -1,7 +1,7 @@
 # Making A15 faster: Stokes drift updates, machines and process split
 
 - **Date:** 2026-11-05
-- **Status:** result; the Stokes option works and is off by default until the author decides. Offshore of 3 km the flow amplifies small differences, which tiny noise alone doesn't explain; 72 h twin running
+- **Status:** result; the Stokes option works and is off by default until the author decides. Offshore flow stops being repeatable from about hour 30 at 4-5 km and later closer in; on the reef that leaves a chance level of about 0.03 % of set-up
 - **Build:** coawst-cloud `ca5316d` (`a544f70f`, `def1104-check`); `ca5316d` plus `roms-stokes-interval` (`f0bfd5c`) with `+STOKES_INTERVAL` (`e01ef5a1`). `Reef_Ideal_A15_veg`, density 1, DT 2.5 s, N 15, 34 frequencies, 72 directions
 
 ## Question / why
@@ -87,7 +87,7 @@ Beyond 2 km, hourly snapshots differ from the every-step run by 7-30 % rms at al
 - **From 2-3 km there is no growth.** The differences peak at hours 6-10, then fall (`u` at hour 24: 2.1, 1.2, 0.8 %), about 6-16x the 1 mm noise.
 - **Noise size is not simply carried through:** 1000x more noise gives 10-17x more at hour 24. I'd guess that any change at all flips rounding in SWAN's single-precision fields, which would set a floor; not checked. Most of the 1 mm noise also leaves or is damped early: in the lagoon its difference falls about 100x by hour 8.
 
-**Reef and lagoon: no sign of chaos.** Every noise run is within 0.001 mm of set-up and 0.001 m³/s of transport, against -0.0008 mm and +0.002 m³/s for Stokes at 120 s, and Courant numbers don't change. So the small Stokes changes on the reef are real, not noise, and well below anything we would read. Lagoon `u` differs by about 0.02 % at both 120 s and 30 s, so it stops shrinking there; not explained, and too small to pursue.
+**Reef and lagoon: no sign of chaos in the first day.** Every noise run is within 0.001 mm of set-up and 0.001 m³/s of transport, against -0.0008 mm and +0.002 m³/s for Stokes at 120 s, and Courant numbers don't change. So the small Stokes changes on the reef are real, not noise, and well below anything we would read. Lagoon `u` differs by about 0.02 % at both 120 s and 30 s, so it stops shrinking there; not explained, and too small to pursue.
 
 **Tide means are much closer than snapshots** (hours 12-24, `vbar` rms in mm/s, then offshore-going transport against every step):
 
@@ -106,19 +106,66 @@ Beyond 2 km, hourly snapshots differ from the every-step run by 7-30 % rms at al
 
 So at 30 s the tide-mean transport stays within 0.13 % everywhere, while at 120 s it departs by about 1 % at 3.5-4 km and 4 % at 4.9 km, far more than the noise. That zone already depends on the boundary ([seven-day run](2026-11-05_seven-day-run.md)). Snapshots out there differ by tens of percent at any interval.
 
+## Results: how long the flow stays repeatable
+
+`twin72`: 1e-6 m of noise on the initial `zeta`, 72 h on 6 h segments, against the seven-day run. Its first 24 h is bit-identical to `twin24h` with the same seed, and `spinup7d` to the original 24 h run, so the difference is the noise and nothing else.
+
+![Noise against the run's own change over one tide](../figures/2026-11-05_twin-72h.png)
+
+`u` in hourly snapshots, rms over each window, % of the field's rms. The noise difference comes first, then the run's own change over one tide (the same run, 12 h later; in the first day that includes the flow still developing):
+
+| Hours | Lagoon | Crest front | 1.5-2 km | 2.5-3 km | 3-4 km | 4-5 km |
+|---|---|---|---|---|---|---|
+| 12-24 | 0.00006 / 0.023 | 0.001 / 0.69 | 0.002 / 9.2 | 0.002 / 24 | 0.008 / 61 | 0.24 / 102 |
+| 24-36 | 0.004 / 0.027 | 0.15 / 0.68 | 0.80 / 4.7 | 0.49 / 13 | 1.8 / 35 | 38 / 86 |
+| 36-48 | 0.024 / 0.023 | 0.38 / 0.60 | 2.6 / 3.8 | 1.1 / 8.4 | 4.0 / 23 | 60 / 68 |
+| 48-60 | 0.024 / 0.018 | 0.43 / 0.55 | 2.3 / 6.0 | 2.2 / 6.4 | 11 / 23 | 66 / 59 |
+| 60-72 | 0.013 / 0.013 | 0.54 / 0.71 | 5.9 / 5.9 | 4.7 / 6.7 | 18 / 23 | 61 / 56 |
+
+- **The outer kilometre stops being repeatable first.** 4-5 km grows about 20-25x per 6 h through hour 30 (doubling every 1.3-1.4 h) and stops at about hour 34, at 60-70 %. That's as large as the run's own snapshots one tide apart, so past that hour a snapshot there tells you nothing about the same time in a twin.
+- **It then creeps shoreward.** 3-4 km reaches the run's own level at about hours 60-72, 2-3 km at about the same time, and 1.5-2 km at about hours 36-60. It levels off at those sizes: from hours 60-72 the two runs differ about as much as one run differs from itself a tide later, everywhere. So whatever still changes from tide to tide in a settled run is this unrepeatable part.
+- **A tiny seed gives these times.** A larger one gets there sooner: the Stokes runs are already at 39-53 % at 3-5 km by hour 24. Members with different canopies will be larger seeds still, so don't count on the hour 30 onset when comparing members.
+- **The reef and lagoon feel it, and very little.** Nothing shows until hours 26-30, when the difference jumps about 100x; it stops growing by about hour 48, at a size matching the run's own tide-to-tide change:
+
+| Hours | Set-up, 25.2 mm: mean difference, largest snapshot (mm) | Crest transport, 769 m³/s (m³/s) | Pass transport, 781 m³/s (m³/s) |
+|---|---|---|---|
+| 12-24 | under 0.00001, 0.00001 | under 0.0001, 0.0001 | under 0.0001, 0.0002 |
+| 24-36 | +0.0004, 0.005 | +0.004, 0.05 | -0.002, 0.05 |
+| 36-48 | +0.005, 0.020 | +0.05, 0.22 | -0.05, 0.24 |
+| 48-60 | +0.008, 0.026 | +0.09, 0.23 | -0.09, 0.21 |
+| 60-72 | -0.003, 0.013 | -0.03, 0.11 | +0.04, 0.12 |
+
+So the chance level on the reef is about **0.03 % of set-up and 0.01 % of transports** in tide means. A difference between members below that means nothing. These are from hourly snapshots, 12 per tide. Lagoon set-up measured against 2-3 km instead of beyond 3.8 km agrees, so this isn't an artefact of the noisy outer water. TKE and `AKv` on the reef and in the lagoon (to 1150 m) differ by at most 0.14 % rms, in any window.
+
+**Tide means offshore aren't repeatable either**, once it has saturated. Offshore-going transport, difference from the original run, tide means:
+
+| From shore | Hours 12-24 | 24-36 | 36-48 | 48-60 | 60-72 |
+|---|---|---|---|---|---|
+| 1.5 km, 944 m³/s | 0.00 % | 0.00 % | +0.02 % | +0.03 % | +0.01 % |
+| 2 km, 1400 m³/s | 0.00 % | 0.00 % | 0.00 % | +0.04 % | +0.13 % |
+| 3 km, 2800-2970 m³/s | 0.00 % | +0.03 % | -0.08 % | +0.27 % | +0.56 % |
+| 4 km, 3820-5160 m³/s | 0.00 % | +0.63 % | -1.0 % | +0.94 % | +2.6 % |
+| 4.5 km, 3180-5130 m³/s | 0.00 % | +2.7 % | -4.6 % | +1.8 % | +13 % |
+| 4.9 km, 915-1880 m³/s | +0.13 % | -6.3 % | -13 % | +14 % | -5.1 % |
+
+**This weakens the far-field case for 30 s.** At 120 s the departures in hours 12-24 were +0.30 % at 3 km, +0.92 % at 4 km and -4.4 % at 4.9 km. They are larger than the noise in those hours, but no larger than what a 1e-6 m seed reaches by itself within the next two days. 30 s stays closer to the every-step run in the first day, but it only delays differences that nothing can prevent.
+
+The lagoon `u` floor at Stokes 120 s and 30 s (about 0.02 %) is the same size as the noise's plateau here, but it's already there at hour 12, when the far field has barely diverged, so it isn't the same thing. Still not explained, still too small to pursue.
+
+Covers one seed and one size, on density 1, unstratified. Bare and patchy have faster jets and were unsteadier past the crest, so they may behave differently.
+
 ## Decision / outcome
 
-No default changed. **For the author to decide:** adopt `STOKES_NCPL` in the A15 cases. I'd now use **20 (30 s)** rather than 5 (120 s): the reef and lagoon are the same at both, 30 s costs about 13 % more per run (144 against 127 s per simulated hour, single runs, about $0.02 per member-day), and it keeps the tide-mean offshore flow far closer to every step. 5 is still fine if nothing past 3 km will be read. Then 10 + 6 on `c2d-standard-16`, or 5 + 3 on `c2d-standard-8` for ensembles: smaller machines are cheaper per member and get through more members under the 100 vCPU limit per region. Don't read single snapshots offshore of 3 km as repeatable beyond the first day, with or without the option.
+No default changed. **For the author to decide:** adopt `STOKES_NCPL` in the A15 cases. I'd use **5 (120 s)**. I briefly preferred 20 (30 s) because it keeps the first day's tide-mean offshore flow closer to every step, but `twin72` shows that difference is no larger than what the flow does by chance within two days. The reef and lagoon are the same at both. 30 s costs about 13 % more per run (144 against 127 s per simulated hour, single runs, about $0.02 per member-day), so it's a cheap choice if first-day offshore tide means will be compared to every step. Then 10 + 6 on `c2d-standard-16`, or 5 + 3 on `c2d-standard-8` for ensembles: smaller machines are cheaper per member and get through more members under the 100 vCPU limit per region. Don't read snapshots past 4 km as repeatable after the first day, or past 2 km after the third, with or without the option; nor tide-mean transport past 4 km after the first day. Read differences between members on the reef only if they exceed about 0.03 % of set-up, 0.01 % of transports.
 
 ## Open questions
 
 - Tested on one case. Before using it on a bigger tide or shallower water: repeat the accuracy test, since the layers change more between updates. On bare and patchy reefs, too.
 - The split was tested with `STOKES_NCPL` 5 on the 2 h benchmark only; 30 s has run at 10 + 6 only.
-- When does the offshore flow stop being repeatable, and does that ever reach the reef? `twin72` (1e-6 m, 72 h, against the seven-day run) is running.
 - Whether the seed of the far-field differences is the hold itself or something specific to deep water wasn't traced.
 
 ## Details and links
 
 - Patch: coawst-cloud `3-experimental/roms-stokes-interval`
 - Specs: `batch/ensemble/bench/a15def-*`, `a15stk-*`, `batch/ensemble/tests/stokes-int`, `stokes-ctl`, `stokes-rst`, `twin24h`, `twinbig`, `twin72`
-- Cost: `a15def` about $0.60, `a15stk` about $0.30, Stokes tests about $0.60, `twin24h` $0.99, `twinbig` $0.65
+- Cost: `a15def` about $0.60, `a15stk` about $0.30, Stokes tests about $0.60, `twin24h` $0.99, `twinbig` $0.65, `twin72` $1.00
