@@ -25,7 +25,7 @@ The [seven-day run](2026-11-05_seven-day-run.md) and the [bare and patchy runs](
 
 - **Transports settle within the first tide, as without stratification.**
 - **Set-up takes about three days.** It steps up between hours 60-72 and 72-84, then stays within about 0.2 % of the last tide, wandering more than the unstratified run does. Against water at 1.4-1.6 km, not the deep water, it goes 24.69 to 24.90 mm (+0.84 %), so this isn't a change in the far-field level.
-- **Budget, hours 12-24 against 156-168:** every term above 0.01 out to 1150 m changes by at most 0.6 % (lagoon pressure and canopy; at the crest front 0.11 %). On the slope, 1150-1500 m, small terms move a lot (pressure 0.0084 to 0.0124, advection -0.0010 to -0.0062). Residuals are as in the unstratified run.
+- **Budget, hours 12-24 against 156-168:** every term above 0.02 out to 1150 m changes by at most 0.6 % (lagoon pressure and canopy; at the crest front 0.11 %). On the slope, 1150-1500 m, small terms move a lot (pressure 0.0084 to 0.0124, advection -0.0010 to -0.0062). Residuals are as in the unstratified run.
 - **Stratification itself changes little here.** Hours 156-168 against unstratified: set-up -1.3 %, crest transport about -0.15 %.
 - **Courant numbers:** peak Cu 0.018, Cv 0.185, Cw 0.16 across all segments, no step above 1. Fastest current 0.75 m/s. Same as unstratified.
 
@@ -44,7 +44,7 @@ Tide means, point by point rms, then the zone mean in brackets:
 | 3-3.8 km | 72 % (-25 %) | 88 % (+1.8 %) | 80 % (-35 %) | 80 % (-23 %) | -99.6 % (3-5 km) |
 
 - **TKE on the reef and in the lagoon settles about as it does unstratified:** 1.6 % rms at most on day 1.
-- **`AKv` doesn't, at low TKE:** lagoon 22 % rms on day 1 and still 20 % on day 3, crest front 14 % and 9.7 %. It's unstratified's under 1 %. The likely reason, not tested directly: stratification in the lagoon keeps fading (top-to-bottom temperature 0.05 °C at hours 12-24, 0.02 at 60-72, 0.007 at 156-168), and `AKv` where TKE is small responds to very weak stratification. The flow doesn't feel it: lagoon budget terms hold within 0.6 %.
+- **`AKv` doesn't, at low TKE:** lagoon 22 % rms on day 1 and still 20 % on day 3, crest front 14 % and 9.7 %. Unstratified, it's under 1 %. The likely reason, not tested directly: stratification in the lagoon keeps fading (top-to-bottom temperature 0.05 °C at hours 12-24, 0.02 at 60-72, 0.007 at 156-168), and `AKv` where TKE is small responds to very weak stratification. The flow doesn't feel it: lagoon budget terms hold within 0.6 %.
 - **Deep water mixes far less than unstratified.** `AKv` at 3-5 km is 0.4 % of the unstratified value. So the far-field turbulence of the [seven-day run](2026-11-05_seven-day-run.md) was a result of having no stratification.
 
 ## Results: past the crest
@@ -61,7 +61,7 @@ Offshore-going transport, tide means, m³/s:
 | 4.5 km | 1009 | 1218 | 1312 | 5382 |
 
 - **Out to 1.2 km it holds.** Every tide is within 1.4 % of the last.
-- **At 1.5-2 km the flow changes around hours 48-72.** At 2 km it jumps from 1420 to 2510 m³/s in two tides, then swings between 2220 and 2615. At 1.5 km it swings between 1331 and 1643 from hour 60 on, while the unstratified run stays at 944-945. The set-up's step comes right after, but I didn't trace whether they are linked.
+- **At 1.5-2 km the flow changes around hours 48-72.** At 2 km it jumps from 1420 to 2510 m³/s in two tides, then swings between 2220 and 2615. At 1.5 km it swings between 1331 and 1643 from hour 72 on, while the unstratified run stays at 944-945. The set-up's step comes right after, but I didn't trace whether they are linked.
 - **I can't say how much of this repeats.** The noise twins were unstratified, and that flow's chance level at 1.5-2 km (0.13 % at most) clearly doesn't apply to these swings.
 
 ## Results: temperature
