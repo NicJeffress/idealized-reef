@@ -407,6 +407,7 @@ Every A15 case shares these; each line names the test that set it.
 | vertical levels | 15 (`Vstretching` 4) | N 10 was 7-12 % off in the set-up; N 20 needs DT 3 s ([vertical](notebook/2026-11-03_vertical-resolution.md)) |
 | time step | **DT 2.5 s, `NDTFAST` 10 (since 2026-11-04)**, AB3-AM4 barotropic kernel (`STEP2D_FB_AB3_AM4`) | every Courant number stays below 1: with streaming at 15 levels, DT 6 s had the vertical Courant number above 1 on 90-96 % of steps on density 1, and the bare reef blows up at DT 6 and 4 s; AB3-AM4 within the noise and 19 % faster ([entry](notebook/2026-11-02_options-triads-on.md)) |
 | waves on currents | `WEC_VF`, spectral Stokes drift, `UV_KIRBY`, `WDISS_WAVEMOD` | COAWST v3.9's vortex force; Banihashemi within 0.5 % |
+| Stokes drift update | every 120 s (`STOKES_INTERVAL`, `STOKES_NCPL` 5, since 2026-11-06) | 2.2x faster; on density 1 set-up within 0.003 %, transports within 0.002 % ([entry](notebook/2026-11-06_stokes-120s-and-a15-state.md)) |
 | wave streaming | `BOTTOM_STREAMING`, and `VEG_STREAMING` in the canopy cases | set-up +95 %, transports +30 % ([entry](notebook/2026-11-03_wave-streaming.md)) |
 | roller | `ROLLER_RENIERS`, `WEC_ALPHA` 0.5 | moves the breaking force onto the crest; linear in `WEC_ALPHA` ([entry](notebook/2026-11-03_roller-checks.md)) |
 | breaking turbulence | `TKE_WAVEDISS` + `ZOS_HSIG` (`SZ_ALPHA` 0.25, `ZOS_HSIG_ALPHA` 0.5) | fore-reef flow less surface-intensified, as expected ([entry](notebook/2026-11-03_density1-canopy-tests.md)) |

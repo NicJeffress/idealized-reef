@@ -385,6 +385,7 @@ LtracerSponge == F F                            ! temperature, salinity, inert
  ZOS_HSIG_ALPHA == 0.5d0                        ! roughness from wave amplitude
        SZ_ALPHA == 0.25d0                       ! roughness from wave dissipation
       CRGBAN_CW == 100.0d0                      ! Craig and Banner wave breaking
+    STOKES_NCPL == 5                            ! Stokes updates per wave exchange: 120 s at 600 s coupling (0: every step); A15 default since 2026-11-06
       WEC_ALPHA == 0.5d0                        ! roller share of the breaking dissipation (A15 default since 2026-11-03)
                                                 ! 1: all wave dissip goes to roller and none to breaking.
 

@@ -125,7 +125,11 @@ Seven days of the default canopy case (density 1, unstratified, steady waves): *
 
 ## Speed (2026-11-05)
 
-ROMS spent 59 % of its time in the WEC kernel, nearly all re-summing the spectral Stokes drift every step on an unchanged spectrum. `roms-stokes-interval` (off by default) updates it `STOKES_NCPL` times per wave exchange: at 120 s, 2.2x faster, set-up within 0.003 %, transports within 0.002 %, budget unchanged, restarts exact. **The offshore flow isn't repeatable past the first day or so:** 1e-6 m of noise at the start, run 72 h, makes 4-5 km snapshots as different as the run's own one tide apart (60-70 %) by about hour 34, and 2-4 km by about hours 60-72. Tide-mean transport then differs by chance by up to 14 % at 4.5-4.9 km, 2.6 % at 4 km, 0.6 % at 3 km, 0.13 % at 2 km. It reaches the reef from hours 26-30 and levels off by about hour 48, at a **chance level of about 0.03 % of set-up and 0.01 % of transports** in tide means. A tiny seed gives these times; larger ones are quicker. At 120 s the first day's tide-mean transport departs by 1 % at 3.5-4 km and 4 % at 4.9 km, against under 0.13 % at 30 s, but that's no larger than chance reaches within two more days, so 120 s (`STOKES_NCPL` 5) is enough; 30 s is about 13 % slower. With it on, 10 + 6 stays the best split on `c2d-standard-16`; `c2d-standard-8` with 5 + 3 is cheapest per member ($0.14 per simulated day). [Entry](../notebook/2026-11-05_speed-stokes-and-machines.md).
+ROMS spent 59 % of its time in the WEC kernel, nearly all re-summing the spectral Stokes drift every step on an unchanged spectrum. `roms-stokes-interval` (A15 default since 2026-11-06, off elsewhere) updates it `STOKES_NCPL` times per wave exchange: at 120 s, 2.2x faster, set-up within 0.003 %, transports within 0.002 %, budget unchanged, restarts exact. **The offshore flow isn't repeatable past the first day or so:** 1e-6 m of noise at the start, run 72 h, makes 4-5 km snapshots as different as the run's own one tide apart (60-70 %) by about hour 34, and 2-4 km by about hours 60-72. Tide-mean transport then differs by chance by up to 14 % at 4.5-4.9 km, 2.6 % at 4 km, 0.6 % at 3 km, 0.13 % at 2 km. It reaches the reef from hours 26-30 and levels off by about hour 48, at a **chance level of about 0.03 % of set-up and 0.01 % of transports** in tide means. A tiny seed gives these times; larger ones are quicker. At 120 s the first day's tide-mean transport departs by 1 % at 3.5-4 km and 4 % at 4.9 km, against under 0.13 % at 30 s, but that's no larger than chance reaches within two more days, so 120 s (`STOKES_NCPL` 5) is enough; 30 s is about 13 % slower. With it on, 10 + 6 stays the best split on `c2d-standard-16`; `c2d-standard-8` with 5 + 3 is cheapest per member ($0.14 per simulated day). [Entry](../notebook/2026-11-05_speed-stokes-and-machines.md).
+
+## Changes adopted on 2026-11-06 (author's decision)
+
+- **Spectral Stokes drift updated every 120 s, not every step** (`STOKES_INTERVAL`, `STOKES_NCPL` 5), in `Reef_Ideal_A15`, `_veg`, `_veg_strat` and `_veg_therm`, from the next image. 2.2x faster on density 1, where set-up stays within 0.003 % and transports within 0.002 %. Not yet run on bare, patchy, stratified or thermal. [Entry](../notebook/2026-11-06_stokes-120s-and-a15-state.md).
 
 ## Changes adopted on 2026-11-04 (author's decisions)
 
@@ -190,6 +194,8 @@ cheaper** (65-75 instead of 81-84 s of wall time per simulated hour).
 
 ## Still open
 
+- **Run length and machine for ensemble members:** the author's call. Recommended: 24 h averaged over hours 12-24, on `c2d-standard-8` with 5 + 3. [State of the default](../notebook/2026-11-06_stokes-120s-and-a15-state.md).
+- `STOKES_NCPL` 5 on the bare reef, patchy canopy, stratified and thermal cases: not run yet.
 - **Is the size of the streaming force right?** It is 53 % of the wave force on density 1 and now the main unverified piece: the total
   follows Luhar et al. 2010 and Beudin et al. 2017, its vertical shape is our choice, and Beudin says it is unverified. At density 1, A/S is below
   Luhar's limit of 1 everywhere on the reef.

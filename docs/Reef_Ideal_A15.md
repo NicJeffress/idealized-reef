@@ -79,6 +79,7 @@ and the [results summary](../results/README.md).
 | pressure gradient | `DJ_GRADPS` | |
 | tracers | `SALINITY`, `TS_FIXED` (T 18 C, S 35), MPDATA advection | the strat and thermal variants let T and S evolve; with `TS_FIXED` restarts need coawst-cloud `roms-ts-fixed-density` |
 | barotropic kernel | AB3-AM4 (`STEP2D_FB_AB3_AM4`, coawst-cloud `roms-step2d-fb`) since 2026-11-02 | within the noise floor of LF-AM3 (ROMS's default) and 19 % faster; before: LF-AM3 |
+| Stokes drift update | every 120 s (`STOKES_INTERVAL`, `STOKES_NCPL` 5, coawst-cloud `roms-stokes-interval`) since 2026-11-06 | 2.2x faster; on density 1 set-up within 0.003 %, transports within 0.002 %; not yet run on other canopies or the stratified and thermal cases; before: every step |
 | vegetation | `#undef VEGETATION` | vegetation input files are present but unused; see `_veg` |
 | restarts | `PERFECT_RESTART` | |
 | output | `AVERAGES`, `DIAGNOSTICS_UV` | |

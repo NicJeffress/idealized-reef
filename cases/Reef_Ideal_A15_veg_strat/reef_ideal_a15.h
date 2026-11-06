@@ -58,6 +58,7 @@
 #define SOLVE3D
 #undef  WEC_MELLOR
 #define WEC_VF
+#define STOKES_INTERVAL /* spectral Stokes drift updated STOKES_NCPL times per wave exchange (coawst-cloud roms-stokes-interval); A15 default since 2026-11-06 */
 #define WDISS_WAVEMOD
 #define ROLLER_RENIERS  /* Reniers surface roller, WEC_ALPHA 0.5 in ocean.in; A15 default since 2026-11-03
                          (user); needs coawst-cloud roms-roller-substeps (DT 6 s) and roms-restart-roller

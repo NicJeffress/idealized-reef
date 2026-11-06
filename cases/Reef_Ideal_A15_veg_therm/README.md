@@ -12,6 +12,9 @@
 > 2026-11-03: 15 vertical levels (was 10), `GLS_Kmin` 1e-8, SWAN `BKD` breaking and wave
 > streaming (`BOTTOM_STREAMING`; `VEG_STREAMING` with the canopy). **DT 2.5 s, `NDTFAST` 10
 > since 2026-11-04** (to stay below the CFL limits at every canopy density and bed roughness; with streaming at 15 levels DT 6 s was unsafe, and DT 3 s reached a vertical Courant number of 1.39 on a smooth bare reef).
+>
+> **Spectral Stokes drift updated every 120 s since 2026-11-06** (`STOKES_INTERVAL`, `STOKES_NCPL` 5, coawst-cloud
+> `roms-stokes-interval`; 2.2x faster, tested on density 1; needs an image built after this date to take effect).
 
 
 Same as `cases/Reef_Ideal_A15_veg_strat` (constant canopy, periodic ROMS
