@@ -1,7 +1,7 @@
 # Settling time on a bare and a patchy reef
 
 - **Date:** 2026-11-05
-- **Status:** result; no default changed. Run length stays the author's call, with the stratified case still to come
+- **Status:** result; no default changed. Run length stays the author's call; the stratified case is in [its own entry](2026-11-06_seven-day-stratified.md)
 - **Build:** coawst-cloud `ca5316d` (`a544f70f`), `Reef_Ideal_A15_veg` with all defaults, DT 2.5 s, `NDTFAST` 10, N 15. `c2d-standard-16` Spot, 10 ROMS + 6 SWAN, 6 h segments
 
 ## Question / why

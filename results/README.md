@@ -7,9 +7,10 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-05.
+**Last updated:** 2026-11-06.
 
-Entries: [making A15 faster](../notebook/2026-11-05_speed-stokes-and-machines.md),
+Entries: [seven-day stratified run](../notebook/2026-11-06_seven-day-stratified.md),
+[making A15 faster](../notebook/2026-11-05_speed-stokes-and-machines.md),
 [seven-day run](../notebook/2026-11-05_seven-day-run.md),
 [default check](../notebook/2026-11-04_default-check.md),
 [all defaults](../notebook/2026-11-04_all-defaults.md),
@@ -119,6 +120,8 @@ Entries: [making A15 faster](../notebook/2026-11-05_speed-stokes-and-machines.md
 Seven days of the default canopy case (density 1, unstratified, steady waves): **the reef and lagoon settle within the first tide.** Hours 12-24 against hours 156-168: set-up +0.05 %, crest and pass transport +0.04 and +0.03 %, Hs crest +0.01 %, and every budget term within 0.1 % of the largest. TKE and `AKv` on the reef and in the lagoon settle just as fast (rms under 0.15 % in every layer); past the crest `AKv` doesn't (1150-2000 m 13 % low on day 1, 3.8-5 km 86 % low). Offshore of about 2.5 km the slow recirculation keeps growing all week (offshore-going transport at 4 km +50 %), and the jet spreads along the 5 km boundary, so the outer 1.5 km depends on that boundary; none of it reaches the reef. Restarted segments are bit-identical to an uninterrupted run; only the first hourly diagnostic record after a restart is off (`*_accel` mainly). Not yet shown for stratified or heated cases, or for residence time. [Entry](../notebook/2026-11-05_seven-day-run.md).
 
 **Bare and patchy reefs settle the same way.** Hours 12-24 against 60-72: set-up +0.02 and +0.07 %, transports within 0.05 %, budget within 0.12 %, and TKE and `AKv` under 1 % rms on the reef and in the lagoon. Peak Cw 0.44 and 0.67. Offshore-going transport agrees to about 2 km and not past 2.5 km. Past the crest the faster reefs are unsteady (bare TKE 35 % rms at 1.5-2 km), and that doesn't fade with time. So 24 h members, averaged over hours 12-24, hold for the reef and lagoon across this range; hours 0-12 are about 5-6 % low. [Entry](../notebook/2026-11-05_settling-bare-patchy.md).
+
+**Stratified, seven days ([entry](../notebook/2026-11-06_seven-day-stratified.md)):** reef and lagoon flow settle much as without stratification. Hours 12-24 against 156-168: transports +0.04 %, budget terms above 0.01 out to 1150 m within 0.6 %, TKE within 1.6 % rms, peak Cw 0.16. Set-up is 0.8 % low on day 1 and settled to about 0.2 % by about hour 72, so 24 h members still hold, and about 3.5 days removes that offset. What doesn't settle in a week: `AKv` in the lagoon (22 % rms on day 1, still 20 % on day 3) and at the crest front, the flow past 1.2 km (offshore-going transport at 2 km doubles around hours 48-72, then swings by about 10 %), and temperature. With no surface fluxes, the lagoon cools 0.18 °C from day 1 to day 7, and the domain warms 0.027 °C per day because Stokes drift brings in warm surface water and the return flow takes out cooler water. Deep-water `AKv` is 0.4 % of the unstratified value.
 
 ## Speed (2026-11-05)
 
