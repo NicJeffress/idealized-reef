@@ -117,13 +117,13 @@ differs in output-only fields (`w`, `zetaw`, `qsp`, `bernoulli_head`, `*_wec_str
 `tools/merge_segments.py` keeps the earlier copy; `ru`, `rv` differ only in the periodic ghost columns of the restart
 file.
 
-**Is the freeze itself a problem?** It happens at 50 min on A15. A 24 h run with the index never frozen is
+**Is the freeze itself a problem?** It happens at 50 min on A15. A 24 h run with the index never frozen ([`swan-bkd-gamma-live.patch`](patches/swan-bkd-gamma-live.patch)) is
 within 2e-6 mm of set-up and 1e-3 m³/s of transport. Where kD is below about 1, the index depends only on the bed slope,
 so it does not change anyway. To recheck on a domain with steep waves over deeper slopes.
 
 ## Results: streaming roughness
 
-`ks` in the streaming thickness, 0.03 m (hard-coded) against 0.3 m (debug patch): flow within 1.2 %.
+`ks` in the streaming thickness, 0.03 m (hard-coded) against 0.3 m (debug patch [`streaming-ks03.patch`](patches/streaming-ks03.patch)): flow within 1.2 %.
 `KWD` is at its cap of 20 on this reef, which sets the shape ([force shapes](2026-11-04_force-shapes-and-budget.md)).
 
 ## Figures

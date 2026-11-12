@@ -2,7 +2,8 @@
 
 - **Date:** 2026-11-03
 - **Status:** traced and fixed (coawst-cloud `roms-ts-fixed-density`, `423a20f`); restarts bit-identical
-- **Builds:** coawst-cloud series of `3227cce` plus a debug patch (checksums); the A15
+- **Builds:** coawst-cloud series of `3227cce` plus a debug patch (checksums,
+  [`rst-trace.patch`](patches/rst-trace.patch)); the A15
   canopy case of 2026-11-02/03 (20 m grid, `TS_FIXED`)
 
 ## Question / why
