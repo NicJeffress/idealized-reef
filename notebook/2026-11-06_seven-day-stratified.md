@@ -6,7 +6,7 @@
 
 ## Question / why
 
-The [seven-day run](2026-11-05_seven-day-run.md) and the [bare and patchy runs](2026-11-05_settling-bare-patchy.md) settle within the first tide, but all without stratification. The author: "do a 7day stratified run", and for spin-up, "are you looking at tke to determine spin up duration?"
+The [seven-day run](2026-11-05_seven-day-run.md) and the [bare and patchy runs](2026-11-05_settling-bare-patchy.md) settle within the first tide, but all without stratification. The author: "do a 7-day stratified run", and for spin-up, "are you looking at tke to determine spin up duration?"
 
 ## What was run
 

@@ -121,7 +121,7 @@ by up to 2 cm/s (`tests/veg_compare.py`).
 diameter at each point from ROMS (above). Patterns are written into a
 copy of `init_reef.nc` by `tools/vegetation/make_veg_init.py`; tests in
 `tests/veg_spatial_tests.sh` / `tests/veg_spatial_check.py`, results and
-figure in `docs/case_design.md` ("Spatially varying vegetation"). In
+figure in [`docs/Reef_Ideal_A15_veg.md`](../../docs/Reef_Ideal_A15_veg.md) ("Spatial canopy patterns"). In
 short: constant canopy, bare reef and the zones pattern run cleanly at
 DT 6 s (zones also 24 h on Batch); the patchy pattern blows up at DT 6 s
 after 42 min because ROMS's vegetation drag is explicit, and runs at

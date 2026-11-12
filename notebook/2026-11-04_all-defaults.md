@@ -10,8 +10,8 @@
 ## Question / why
 
 The defaults had been adopted one at a time. Do they work together, is every Courant number below
-1 (the author: "i think we need to stay below CFL criteria"), and does a run still restart exactly?
-The stress test was asked for by the author: "try a run with zob=0.001, kn=0.030 and no veg. Lets
+1 (the author: "I think we need to stay below CFL criteria"), and does a run still restart exactly?
+The stress test was asked for by the author: "try a run with zob=0.001, kn=0.030 and no veg. Let's
 make sure that run is stable".
 
 ## What was run
@@ -139,7 +139,7 @@ The same, smooth bare reef (KN 0.03) against bare (KN 0.3), both at DT 3 s.
 
 ## Decision / outcome
 
-> "i think we need to stay below CFL criteria"; DT 3 s first, then for DT 2.5 s, `NDTFAST` 10: "Yes, adopt".
+> "I think we need to stay below CFL criteria"; DT 3 s first, then for DT 2.5 s, `NDTFAST` 10: "Yes, adopt".
 
 DT 2.5 s, `NDTFAST` 10, `NTIMES` 34560 in all A15 cases. The fast step stays 0.25 s; `NDTFAST` 10 is the lower
 limit for the barotropic averaging. It is 1.22x the cost of DT 3 s on this case. Images from coawst-cloud `3930b2a` on for

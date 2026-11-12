@@ -52,7 +52,7 @@ request and choices, 2026-10-23):
     value unchanged while a signal travels into the domain, and the
     boundary row does not receive the surface heat flux itself. With
     the waves this lets heat pile up in the domain (+0.35 C domain mean
-    in 3 days, `docs/case_design.md`).
+    in 3 days, [`docs/Reef_Ideal_A15_veg_therm.md`](../../docs/Reef_Ideal_A15_veg_therm.md)).
 
   **Every run with the default needs the far-field files**, made for
   that run's `ocean.in` (forcing, `TCOEF`, `USER`, run length from

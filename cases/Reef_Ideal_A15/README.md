@@ -20,7 +20,7 @@
 The user's idealized reef case, ported from COAWST v3.7 (originals in
 `reference/Reef_Ideal_A15_v3.7/`, uploaded to
 `gs://coawst-runs-nj/incoming/Reef_Ideal_A15/`). Domain and physics are
-summarized in `docs/case_design.md`.
+summarized in [`docs/Reef_Ideal_A15.md`](../../docs/Reef_Ideal_A15.md).
 
 Build: `docker build --build-arg COAWST_APPLICATION=REEF_IDEAL_A15
 --build-arg CASE_DIR=Projects/Reef_Ideal_A15 -t coawst:reef_a15 .`

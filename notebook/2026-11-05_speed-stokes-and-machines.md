@@ -6,7 +6,7 @@
 
 ## Question / why
 
-The author: "can we do anything to speed these runs up? How do they scale onto bigger machienes?" and, on Stokes drift: tie the update "to the coupline interval (or some multiple shorter than the coupling interval)?"
+The author: "can we do anything to speed these runs up? How do they scale onto bigger machines?" and, on Stokes drift: tie the update "to the coupling interval (or some multiple shorter than the coupling interval)?"
 
 ## Where the time goes
 
