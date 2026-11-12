@@ -7,7 +7,7 @@
 ## Question / why
 
 The author is asking for a cheaper grid that keeps the reef's physics: "how far does the jet tend to go offshore?", "what is limiting us to 10m resolution? Is it breaking or the crest dynamics? Would thickening the crest still require 10m resolution?"
-The author also ruled out one saving: "we cant assume canopies will be uniform alongshore".
+The author also ruled out one saving: "we can't assume canopies will be uniform alongshore".
 
 ## Results: the jet
 
@@ -55,7 +55,7 @@ Bathymetry: back slope 1:57, crest top (h < 0.6 m) 935-1005 m, front slope 1:39 
 
 ## Decision / outcome
 
-> "we cant assume canopies will be uniform alongshore"
+> "we can't assume canopies will be uniform alongshore"
 
 No alongshore stretching in a cheaper grid. Spacing stays at 20-40 m at most; patches need several cells, so at least about 100-200 m.
 

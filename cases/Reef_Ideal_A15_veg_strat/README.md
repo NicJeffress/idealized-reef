@@ -73,7 +73,7 @@ Build: `docker build --build-arg COAWST_APPLICATION=REEF_IDEAL_A15
 coawst:reef_a15_veg_strat .`
 
 Limits to keep in mind (details and test results in
-`docs/case_design.md`, "Constant stratification"):
+[`docs/Reef_Ideal_A15_veg_strat.md`](../../docs/Reef_Ideal_A15_veg_strat.md), "Known results"):
 
 - **The internal-wave Courant number limits DT.** The baroclinic step is
   explicit; the first-mode speed is about N H / pi, largest where the
