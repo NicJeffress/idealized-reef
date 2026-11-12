@@ -1,0 +1,3 @@
+# The .h files are ROMS case headers and analytical routines (ana_*.h): Fortran
+# included by ROMS's preprocessor, not C. Tells GitHub's language statistics so.
+*.h linguist-language=Fortran
