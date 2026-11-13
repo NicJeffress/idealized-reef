@@ -190,6 +190,8 @@ Both 40°S figures and GIFs are made. The README one is the stratified run in a 
 
 ## Open questions
 
+- **Answered 2026-11-13 ([20 km domain](2026-11-13_20km-domain.md)):** with the boundary at 19.9 km no stratified jet reaches the band in a week, and the 40°S stratified jet turns left instead of drifting right; near the reef it also ran slower (16-19 against 28-30 cm/s at 2.5 km). The README figure here is therefore a boundary-affected jet.
+
 - The stratified eddies and return flow pass through the nudging band (table above). A longer domain offshore would show whether they look the same without it, at roughly the cost of a new grid and one more 7-day run.
 - 40°S is more than twice the rotation at 17.5°S. There the jet bends too little for the 5 km domain, so the bend at a tropical latitude can't be shown without a longer domain.
 - Particles are passive and neutral, with a constant 0.001 m²/s horizontal diffusivity; ROMSPath's open-boundary escape is not active, so tracks are cut 100 m inside the north edge (none reached it here).
