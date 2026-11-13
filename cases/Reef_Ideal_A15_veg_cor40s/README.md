@@ -1,7 +1,7 @@
 # Reef_Ideal_A15_veg_cor40s: A15 canopy case with exaggerated rotation (40 S)
 
 `Reef_Ideal_A15_veg` (density 1 m-2 canopy everywhere, all A15 defaults as of
-2026-11-12) with a uniform Coriolis parameter at 40 deg S, more than twice Moorea's (a test of how rotation bends the pass jet; no reef sits this far south):
+2026-11-12) with a uniform Coriolis parameter at 40 deg S, more than twice that of a tropical reef at 17.5 deg S (a test of how rotation bends the pass jet; no reef sits this far south):
 
     f = 2 x 7.2921e-5 x sin(-40 deg) = -9.3745e-5 s-1   (inertial period 18.6 h)
 

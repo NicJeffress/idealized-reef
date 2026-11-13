@@ -2,8 +2,8 @@
 """Seed particles on a regular grid and track them with ROMSPath on this machine.
 
 Usage: ~/venv/bin/python -I tools/reef/track_particles.py HIS.nc OUT_DIR --template ROMSPath.data
-           [--seeding lagoon|domain] [--days 1] [--dt 900] [--idt 10] [--iprint 900]
-           [--chunks 4] [--image coawst-romspath:latest] [--set KEY=VALUE ...]
+           [--seeding lagoon|backreef|domain] [--days 1] [--dt 900] [--idt 10] [--iprint 900]
+           [--chunks 4] [--image coawst-romspath:latest] [--set KEY=VALUE ...] [--grid GRID.nc]
 
 HIS.nc: ROMS history file(s) merged into one (tools/merge_segments.py; pass --grid
 to repair its grid fields), with u, v,
@@ -59,7 +59,7 @@ def periodic_x(x, pm_row):
 
 
 def set_keys(s, pairs):
-    """Replace each key=value in the namelist text s (as moorea-runs make_romspath_data.py)."""
+    """Replace each key=value in the namelist text s (each key must occur exactly once)."""
     s = s.replace("\r", "")
     for p in pairs:
         k, v = p.split("=", 1)

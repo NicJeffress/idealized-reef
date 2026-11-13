@@ -2,7 +2,8 @@
 """Hero figure (and optional GIF) for the README: where lagoon water goes.
 
 Usage: ~/venv/bin/python -I figures/make_profile_figure.py TRACK_DIR HIS.nc OUT_STEM
-           [--lat -17.5] [--every 2] [--xlim 4.5] [--gif] [--title ...] [--subtitle ...]
+           [--lat -17.5] [--every 2] [--xlim 4.5] [--images] [--gif] [--fps 10] [--step 1]
+           [--gif-every N] [--intro TEXT] [--title ...] [--subtitle ...]
 
 TRACK_DIR: output of tools/reef/track_particles.py (chunk_*/out/track.nc, run.json).
 HIS.nc:    any history file of the run (grid and bathymetry only).
@@ -129,6 +130,11 @@ def main():
                     help="GIF: text shown over the release positions before the particles move "
                          "(default from the seeding; '' for none)")
     ap.add_argument("--intro-s", type=float, default=2.0, help="GIF: seconds the intro is held")
+    ap.add_argument("--step", type=int, default=1, help="GIF: one frame every STEP records (long runs)")
+    ap.add_argument("--tail", type=int, default=8, help="GIF: frames in each particle's fading tail")
+    ap.add_argument("--colors", type=int, default=128, help="GIF: palette size")
+    ap.add_argument("--gif-every", type=int, default=None,
+                    help="GIF: draw every N-th particle (default --every); larger N, smaller file")
     ap.add_argument("--images", action="store_true",
                     help="also draw each track's periodic copies at +-1 period (for edge-to-edge seeding)")
     ap.add_argument("--title", default="Where lagoon water goes: a wave-driven jet bent by Earth's rotation")
@@ -143,11 +149,13 @@ def main():
     period = float(x[L + 1] - x[1])
     ymax = float(g["y_rho"][-2, 0] / 1e3)
     hours, X, Y = load_tracks(a.tracks, ymax, period)
+    pid = np.arange(X.shape[1])                        # particle number, the same in every copy
     if a.images:                                       # the model is one period of an endless reef
         X = np.hstack([X - period, X, X + period])
         Y = np.hstack([Y, Y, Y])
+        pid = np.hstack([pid, pid, pid])
         keep = np.nanmin(np.abs(X), axis=0) < a.xlim + 0.5
-        X, Y = X[:, keep], Y[:, keep]
+        X, Y, pid = X[:, keep], Y[:, keep], pid[keep]
     run = json.loads((a.tracks / "run.json").read_text()) if (a.tracks / "run.json").exists() else {}
     sub = a.subtitle or (f"Idealized coral reef, COAWST (ROMS + SWAN) with particle tracking (ROMSPath), "
                          f"1 m waves, {abs(a.lat):g}°{'S' if a.lat < 0 else 'N'}")
@@ -165,11 +173,13 @@ def main():
             continue
         segs.extend(np.stack([pts[:-1], pts[1:]], 1))
         cols.extend(0.5 * (hours[ok][:-1] + hours[ok][1:]))
-    lc = LineCollection(segs, cmap=TRACK, norm=norm, linewidths=0.45, alpha=0.8, zorder=3)
+    # tracks and dots are rasterized inside the SVG (at 200 dpi), text and axes stay vector:
+    # thousands of multi-day tracks as vector paths would make a 100 MB file
+    lc = LineCollection(segs, cmap=TRACK, norm=norm, linewidths=0.45, alpha=0.8, zorder=3, rasterized=True)
     lc.set_array(np.array(cols))
     ax.add_collection(lc)
     last = np.array([np.flatnonzero(np.isfinite(X[:, p]))[-1] for p in sel])
-    ax.scatter(X[last, sel], Y[last, sel], s=2.5, c=hours[last], cmap=TRACK, norm=norm, lw=0, zorder=4)
+    ax.scatter(X[last, sel], Y[last, sel], s=2.5, c=hours[last], cmap=TRACK, norm=norm, lw=0, zorder=4, rasterized=True)
     frame(ax, a.xlim, ymax)
     label(ax, -a.xlim + 0.15, 0.22, "lagoon")
     label(ax, -a.xlim + 0.15, 1.05, "reef crest", color="#8a5a1c")
@@ -188,19 +198,23 @@ def main():
     fig.text(0.08, 0.955, a.title, fontsize=17, fontweight="bold", color=INK, va="top")
     fig.text(0.08, 0.905, sub, fontsize=11.5, color=MUTED, va="top")
     fig.savefig(a.out + ".png", dpi=200)
-    fig.savefig(a.out + ".svg")
+    fig.savefig(a.out + ".svg", dpi=200)
     print(f"wrote {a.out}.png/.svg: {len(sel)} of {X.shape[1]} tracks, {hours[-1]:.1f} h, "
           f"{run.get('seeding', '?')} seeding")
 
     if a.gif:
-        from matplotlib.animation import FuncAnimation, PillowWriter
         fig2, ax2 = plt.subplots(figsize=(8.3, 5.2), dpi=100)
         fig2.subplots_adjust(left=0.08, right=0.98, top=0.86, bottom=0.12)
         background(ax2, g, a.xlim, period)
         frame(ax2, a.xlim, ymax)
         label(ax2, -a.xlim + 0.15, 0.22, "lagoon")
         label(ax2, -a.xlim + 0.15, 1.05, "reef crest", color="#8a5a1c")
-        tail = 8                                       # records in the fading tail (2 h at 15 min)
+        tail = a.tail * a.step                         # records in the fading tail (8 frames: 2 h at 15 min)
+        # a random subset (a regular every-N-th pick draws stripes in the release grid),
+        # chosen by particle so the periodic copies show the same particles
+        n = a.gif_every or a.every
+        chosen = np.random.default_rng(1).random(pid.max() + 1) < 1.0 / n
+        gsel = np.flatnonzero(chosen[pid])
         lc2 = LineCollection([], linewidths=0.6, zorder=3)
         ax2.add_collection(lc2)
         dots = ax2.scatter([], [], s=3, c="#3b0f70", lw=0, zorder=4)
@@ -224,26 +238,52 @@ def main():
             note.set_visible(f < 0 and bool(intro))
             k0 = max(0, k - tail)
             segs, alphas = [], []
-            for p in sel:
-                xs, ys = X[k0:k + 1, p], Y[k0:k + 1, p]
+            for p in gsel:
+                xs, ys = X[k0:k + 1:a.step, p], Y[k0:k + 1:a.step, p]
                 for m in range(len(xs) - 1):
                     if np.isfinite(xs[m:m + 2]).all():
                         segs.append([(xs[m], ys[m]), (xs[m + 1], ys[m + 1])])
-                        alphas.append((m + 1) / tail)
+                        alphas.append((m + 1) / (tail / a.step))
             lc2.set_segments(segs)
             c = np.tile(base, (len(segs), 1))
             c[:, 3] = np.clip(alphas, 0.05, 1) * 0.8
             lc2.set_color(c)
-            ok = np.isfinite(X[k, sel])
-            dots.set_offsets(np.c_[X[k, sel][ok], Y[k, sel][ok]])
-            clock.set_text(f"{hours[k]:4.1f} h after release")
+            ok = np.isfinite(X[k, gsel])
+            dots.set_offsets(np.c_[X[k, gsel][ok], Y[k, gsel][ok]])
+            hk = hours[k]
+            clock.set_text(f"{hk:4.1f} h after release" if hours[-1] <= 36 else
+                           f"{int(hk // 24)} d {hk % 24:02.0f} h after release")
             return lc2, dots, clock, note
 
-        # Pillow merges identical consecutive frames into one longer frame, so holds cost little
-        frames = ([-1] * round(a.intro_s * a.fps) if intro else []) + list(range(len(hours))) \
-            + [len(hours) - 1] * round(1.5 * a.fps)
-        anim = FuncAnimation(fig2, draw, frames=frames, blit=False)
-        anim.save(a.out + ".gif", writer=PillowWriter(fps=a.fps))
+        # one shared palette, no dithering: the background is then identical from frame to
+        # frame and the GIF stores little more than the moving particles
+        from PIL import Image
+        frames = [-1] if intro else []
+        frames += list(range(0, len(hours), a.step))
+        if frames[-1] != len(hours) - 1:
+            frames.append(len(hours) - 1)
+        rgb = []
+        for f in frames:
+            draw(f)
+            fig2.canvas.draw()
+            rgb.append(Image.fromarray(np.asarray(fig2.canvas.buffer_rgba())[..., :3].copy()))
+        w, hgt = rgb[0].size
+        # three sample frames plus solid swatches of the line colors, so thin lines such as
+        # the crest outline keep their own palette entries
+        keys = ["#c58b3a", "#8a5a1c", INK, MUTED, "#3b0f70", matplotlib.colors.to_hex(base)]
+        sheet = Image.new("RGB", (w, hgt * 4))
+        for i, im in enumerate((rgb[0], rgb[len(rgb) // 2], rgb[-1])):
+            sheet.paste(im, (0, i * hgt))
+        for i, c in enumerate(keys):
+            sheet.paste(Image.new("RGB", (w // len(keys) + 1, hgt), c), (i * (w // len(keys)), 3 * hgt))
+        pal = sheet.quantize(colors=a.colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+        out = [im.quantize(palette=pal, dither=Image.Dither.NONE) for im in rgb]
+        dur = [round(1000 / a.fps)] * len(out)
+        if intro:
+            dur[0] = round(1000 * a.intro_s)
+        dur[-1] = 1500
+        out[0].save(a.out + ".gif", save_all=True, append_images=out[1:], duration=dur, loop=0,
+                    optimize=False, disposal=1)
         print(f"wrote {a.out}.gif ({Path(a.out + '.gif').stat().st_size / 1e6:.1f} MB)")
 
 

@@ -12,7 +12,10 @@ cases. Run them from the repository root with `python3 -I`.
 | `fb_stability.py` | linear stability limit of the AB3-AM4 barotropic kernel (0.890) |
 | `reef/refine_a15_grid.py` | refines an A15 case folder by an integer factor (makes `Reef_Ideal_A15_veg_10m`) |
 | `reef/make_thin_crest.py` | adds the thin-crest grid variants to a copy of an A15 case |
+| `reef/set_coriolis.py` | copies a case folder and sets a uniform Coriolis parameter f = 2 Omega sin(lat) in its grid (`--lat -17.5`); makes the `*_cor*` cases |
+| `reef/jet_bend.py` | follows the pass jet record by record (connected depth-mean Lagrangian speed above a threshold): head position, bearing, north-boundary contact, periodic wrap |
+| `reef/track_particles.py` | seeds particles (lagoon, back reef edge to edge, or the whole domain) and runs ROMSPath (coawst-cloud image) on a merged history file, in parallel chunks |
 
 Circle_Island's generator lives in its case folder
 (`cases/Circle_Island/make_case.py`), as do the Swan_Periodic_Test input
-scripts. The figures are made by `figures/make_figures.py`.
+scripts. The figures are made by `figures/make_figures.py`; the README particle figure and GIF by `figures/make_profile_figure.py`.

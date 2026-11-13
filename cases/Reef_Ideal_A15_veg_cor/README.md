@@ -1,7 +1,7 @@
 # Reef_Ideal_A15_veg_cor: A15 canopy case with Earth's rotation
 
 `Reef_Ideal_A15_veg` (density 1 m-2 canopy everywhere, all A15 defaults as of
-2026-11-12) with a uniform Coriolis parameter at Moorea's latitude:
+2026-11-12) with a uniform Coriolis parameter at 17.5 deg S, a typical tropical South Pacific reef latitude:
 
     f = 2 x 7.2921e-5 x sin(-17.5 deg) = -4.3856e-5 s-1   (inertial period 39.8 h)
 

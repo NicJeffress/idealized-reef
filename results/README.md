@@ -7,9 +7,10 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-06.
+**Last updated:** 2026-11-12.
 
-Entries: [seven-day stratified run](../notebook/2026-11-06_seven-day-stratified.md),
+Entries: [Coriolis and particles](../notebook/2026-11-12_coriolis-and-particles.md),
+[seven-day stratified run](../notebook/2026-11-06_seven-day-stratified.md),
 [making A15 faster](../notebook/2026-11-05_speed-stokes-and-machines.md),
 [seven-day run](../notebook/2026-11-05_seven-day-run.md),
 [default check](../notebook/2026-11-04_default-check.md),
@@ -114,6 +115,10 @@ Entries: [seven-day stratified run](../notebook/2026-11-06_seven-day-stratified.
 | Implicit canopy drag (`VEG_DRAG_IMPLICIT`) | as accurate as explicit at DT 3 s, stable at DT 6 s; **now the default** | within 2.5 % (patchy canopy); 37 % faster | results p0-p2 |
 | `OMEGA_IMPLICIT` (implicit vertical advection) on a crest-jet blow-up | no help: the runaway is horizontal; a shorter DT is what saves the run | blows up 1.9 min sooner | OMEGA_IMPLICIT |
 | 10 m grid instead of 20 m | **not converged at 20 m**: the breaking zone (2-3 cells at 20 m) is under-resolved. **Refining only that zone across the shore** (10 m rows from 850 to 1150 m) recovers the uniform 10 m answer at +16 % cost (instead of 8x) | 20 m vs 10 m: set-up -16 %, crest transport -11 %; band grid = 10 m for set-up, pass transport and jets | grid-10m |
+
+## Rotation (2026-11-12)
+
+Every A15 grid had f = 0 until now. With uniform f at 17.5°S (tropical South Pacific) or 40°S, the reef and lagoon don't change: transports within 0.5 %, set-up within 0.2 %, waves the same; only the fore-reef shear grows (surface to depth-mean speed +21-25 %). Offshore everything changes: the pass jet turns left (southern hemisphere). At 17.5°S it bends about 13° and still runs most of the way across the 5 km domain; at 40°S it hooks 3.5 km out and feeds one clockwise eddy per pass, which never reaches the boundary. Particles released over the whole back reef at 40°S leave within about 2 days, and from day 4 a few percent come back over the crest from the eddy. With stratification (N² 1e-4) the jet stays a surface jet that runs straight offshore into the north boundary. [Entry](../notebook/2026-11-12_coriolis-and-particles.md).
 
 ## How long a run has to be (2026-11-05)
 
