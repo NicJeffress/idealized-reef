@@ -1,7 +1,7 @@
 # Rotation bends the pass jet: Coriolis variants and particle tracking
 
 - **Date:** 2026-11-12 (runs and analysis into the evening, US Pacific)
-- **Status:** done. The README figure and GIF are the stratified 40°S case in a figure window (the inner 3.9 km, below the nudging band; author's choice, 2026-11-13), with the unstratified 40°S figure and GIF as its companion
+- **Status:** done. The README figure and GIF were first the stratified 40°S case in a figure window (the inner 3.9 km, below the nudging band; author's choice, 2026-11-13); since the [20 km domain](2026-11-13_20km-domain.md) runs they are made from the 20 km version of the same case (author: "Yes, remake it"). The unstratified 40°S figure and GIF stay as the companion
 - **Build:** unstratified runs with the default `Reef_Ideal_A15_veg` image (coawst-cloud ca5316d plus `roms-stokes-interval`, digest `e01ef5a1`); the grid alone carries f, read at run time. Stratified run with an image built from `cases/Reef_Ideal_A15_veg_strat_cor40s` (coawst-cloud eee8646, digest `ef03f006`). `c2d-standard-32` Spot in us-west4, 20 ROMS (2 x 10 tiles) + 12 SWAN, 6 h restart segments
 
 ## Question / why
@@ -128,11 +128,10 @@ The window ends at 3.9 km from shore, just inside the nudging band: velocity the
 - Almost every particle goes through the band at some point (the first after 2.5 h), and two thirds of them come back into the window. **So the eddies and the return flow inside the window carry water that has passed through the nudged band**, and their exact paths depend on it. The window takes the boundary out of the picture, not out of the physics. The near field (the drainage of the back reef, the surface jet out to about 3.5 km, the depth it stays at) is not affected this way; the eddy pattern is a qualitative picture.
 - A 3.5 km window would not change that (98 % have crossed 3.5 km by day 2).
 
-![README figure: six days of back-reef water at 40°S, stratified, inner 3.9 km](../figures/reef_jet_40S_strat.png)
+**Replaced 2026-11-13:** the README figure and GIF are now made from the 20 km run ([20 km domain](2026-11-13_20km-domain.md)); this 3.9 km version is in the history of `figures/reef_jet_40S_strat.*` (commit 5b25908).
 
 `figures/make_profile_figure.py ... --lat -40 --images --every 2 --ytop 3.9 --jet-label 0.05 2.6 --title "Where lagoon water goes: a wave-driven jet and its eddies"` (the brief's title says "bent by Earth's rotation", which this jet isn't within the window; the subtitle names the rotation and the stratification). `--ytop` shows only the inner KM, fades the top 0.3 km to white, shortens the figure to keep the aspect equal, and says "inner 3.9 of 5.0 km shown" under the axes. The same 2,682 particles as the unstratified run; with their periodic copies 6,281 tracks come within the frame, and every second one is drawn. Tracks are still cut 100 m inside the north edge. Also `reef_jet_40S_strat.svg` and the GIF (`--gif --step 4 --tail 6 --gif-every 7 --fps 10`: a random seventh of the particles, 18 s, 4.6 MB; no fade in the GIF, where its gradient took palette colours and banded the background):
 
-![GIF: the stratified particles, one frame per hour](../figures/reef_jet_40S_strat.gif)
 
 ## Figures
 
@@ -186,7 +185,7 @@ Surface jet head (top-layer offshore velocity above 0.05 m/s, connected to the p
 
 > "Figure window" (author, 2026-11-13)
 
-Both 40°S figures and GIFs are made. The README one is the stratified run in a 3.9 km window; the unstratified one stays as its companion.
+Both 40°S figures and GIFs are made. The README one was the stratified run in a 3.9 km window, replaced on 2026-11-13 by the same case on the 20 km domain; the unstratified one stays as its companion.
 
 ## Open questions
 

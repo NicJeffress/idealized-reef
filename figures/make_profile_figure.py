@@ -16,11 +16,12 @@ What is drawn:
   to each side and each particle's alongshore position is unwrapped, so a
   particle that leaves one side keeps going into the copy next to it, instead
   of jumping. The neighbouring copies are marked faintly.
-- --images draws every track also shifted by one period each way, so the copies
+- --images draws every track also shifted by whole periods (as many as the window needs), so the copies
   of the domain show the same flow (needed when particles fill the whole
   alongshore period: otherwise the copies would be empty).
 - Tracks: thin lines colored by hours since release (plasma, a perceptually
-  uniform map), every --every-th particle, end positions as small dots.
+  uniform map), a random 1 in --every particles (the same ones in every copy), drawn in
+  random order, end positions as small dots.
   A track stops for good at its first position within 100 m of the open
   north boundary (ROMSPath's open-boundary escape is not active, so particles
   there would otherwise collect along the edge).
@@ -167,15 +168,20 @@ def main():
     hours, X, Y = load_tracks(a.tracks, ymax, period)
     pid = np.arange(X.shape[1])                        # particle number, the same in every copy
     if a.images:                                       # the model is one period of an endless reef
-        X = np.hstack([X - period, X, X + period])
-        Y = np.hstack([Y, Y, Y])
-        pid = np.hstack([pid, pid, pid])
+        K = int(np.ceil(a.xlim / period)) + 1          # enough copies to fill the window
+        X = np.hstack([X + k * period for k in range(-K, K + 1)])
+        Y = np.hstack([Y] * (2 * K + 1))
+        pid = np.hstack([pid] * (2 * K + 1))
         keep = np.nanmin(np.abs(X), axis=0) < a.xlim + 0.5
         X, Y, pid = X[:, keep], Y[:, keep], pid[keep]
     run = json.loads((a.tracks / "run.json").read_text()) if (a.tracks / "run.json").exists() else {}
     sub = a.subtitle or (f"Idealized coral reef, COAWST (ROMS + SWAN) with particle tracking (ROMSPath), "
                          f"1 m waves, {abs(a.lat):g}°{'S' if a.lat < 0 else 'N'}")
-    sel = np.arange(0, X.shape[1], a.every)
+    # a random subset chosen by particle (so every periodic copy shows the same particles),
+    # drawn in random order (so no copy of the domain is drawn over the others)
+    rng = np.random.default_rng(0)
+    pick = rng.random(pid.max() + 1) < 1.0 / a.every
+    sel = rng.permutation(np.flatnonzero(pick[pid]))
     norm = Normalize(0, hours[-1])
     top = min(a.ytop, ymax) if a.ytop else ymax
 
@@ -219,7 +225,7 @@ def main():
                     fontsize=9, va="top", ha="center", zorder=6, linespacing=1.1,
                     bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.75) if a.ytop else None)
     if a.ytop:
-        ax.text(1.0, -0.115, f"inner {top:g} of {ymax:.1f} km shown", transform=ax.transAxes, ha="right",
+        ax.text(1.0, -0.5 / (H - 1.55), f"inner {top:g} of {ymax:.1f} km shown", transform=ax.transAxes, ha="right",
                 va="top", fontsize=9.5, color=MUTED)
     cax = fig.add_axes([0.915, 0.68 / H + 0.15 * (1 - 1.55 / H), 0.015, 0.7 * (1 - 1.55 / H)] if a.ytop
                        else [0.915, 0.2, 0.015, 0.55])
@@ -240,7 +246,7 @@ def main():
         background(ax2, g, a.xlim, period)
         frame(ax2, a.xlim, top)
         if a.ytop:                                     # no fade here: its gradient takes palette colours
-            ax2.text(1.0, -0.115, f"inner {top:g} of {ymax:.1f} km shown", transform=ax2.transAxes,
+            ax2.text(1.0, -0.45 / (H2 - 1.35), f"inner {top:g} of {ymax:.1f} km shown", transform=ax2.transAxes,
                      ha="right", va="top", fontsize=8.5, color=MUTED)
         label(ax2, -a.xlim + 0.15, 0.22, "lagoon")
         label(ax2, -a.xlim + 0.15, 1.05, "reef crest", color="#8a5a1c")
