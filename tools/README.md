@@ -18,4 +18,4 @@ cases. Run them from the repository root with `python3 -I`.
 
 Circle_Island's generator lives in its case folder
 (`cases/Circle_Island/make_case.py`), as do the Swan_Periodic_Test input
-scripts. The figures are made by `figures/make_figures.py`; the README particle figure and GIF by `figures/make_profile_figure.py`.
+scripts. The figures are made by `figures/make_figures.py`; the README particle figure and GIF by `figures/make_profile_figure.py`, and the 40°S jet comparison by `figures/jet_compare.py`.

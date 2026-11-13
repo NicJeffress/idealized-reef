@@ -3,7 +3,7 @@
 
 Usage: ~/venv/bin/python -I figures/make_profile_figure.py TRACK_DIR HIS.nc OUT_STEM
            [--lat -17.5] [--every 2] [--xlim 4.5] [--images] [--gif] [--fps 10] [--step 1]
-           [--gif-every N] [--intro TEXT] [--title ...] [--subtitle ...]
+           [--gif-every N] [--intro TEXT] [--title ...] [--subtitle ...] [--ytop KM]
 
 TRACK_DIR: output of tools/reef/track_particles.py (chunk_*/out/track.nc, run.json).
 HIS.nc:    any history file of the run (grid and bathymetry only).
@@ -24,6 +24,11 @@ What is drawn:
   A track stops for good at its first position within 100 m of the open
   north boundary (ROMSPath's open-boundary escape is not active, so particles
   there would otherwise collect along the edge).
+- --ytop KM shows only the inner KM from shore (a figure window, for runs whose
+  jet reaches the open boundary or its nudging band): tracks leave the frame at
+  the top and may come back into it, the top edge fades out (PNG and SVG only),
+  a note under the axes says how much is shown, and the figure is shortened to
+  keep the axes' aspect equal.
 """
 import argparse
 import glob
@@ -106,6 +111,15 @@ def label(ax, x, y, text, **kw):
             bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.75), **kw)
 
 
+def fade_top(ax, xlim, ytop, depth=0.3):
+    """A white fade over the top `depth` km: the window cuts the domain here."""
+    a = np.linspace(0, 0.95, 64)[:, None] ** 1.5
+    rgba = np.ones((64, 1, 4))
+    rgba[..., 3] = a
+    ax.imshow(rgba, extent=(-xlim, xlim, ytop - depth, ytop), origin="lower", aspect="auto",
+              interpolation="bilinear", zorder=5)
+
+
 def frame(ax, xlim, ymax):
     ax.set_xlim(-xlim, xlim)
     ax.set_ylim(0, ymax)
@@ -141,6 +155,8 @@ def main():
     ap.add_argument("--subtitle", default=None)
     ap.add_argument("--jet-label", type=float, nargs=2, default=None, metavar=("X", "Y"),
                     help="where to put the 'jet' label (km); default: near the median track end")
+    ap.add_argument("--ytop", type=float, default=None,
+                    help="figure window: show only the inner YTOP km from shore (default: the whole domain)")
     a = ap.parse_args()
 
     g = netCDF4.Dataset(a.his)
@@ -161,9 +177,17 @@ def main():
                          f"1 m waves, {abs(a.lat):g}°{'S' if a.lat < 0 else 'N'}")
     sel = np.arange(0, X.shape[1], a.every)
     norm = Normalize(0, hours[-1])
+    top = min(a.ytop, ymax) if a.ytop else ymax
 
-    fig, ax = plt.subplots(figsize=(10, 6.2))
-    fig.subplots_adjust(left=0.08, right=0.9, top=0.86, bottom=0.11)
+    def sized(w, left, right, top_in, bottom_in):
+        """Figure height for equal axes aspect with the window: fixed inch margins."""
+        if not a.ytop:
+            return None
+        return (right - left) * w * top / (2 * a.xlim) + top_in + bottom_in
+
+    H = sized(10, 0.08, 0.9, 0.87, 0.68) or 6.2
+    fig, ax = plt.subplots(figsize=(10, H))
+    fig.subplots_adjust(left=0.08, right=0.9, top=1 - 0.87 / H, bottom=0.68 / H)
     background(ax, g, a.xlim, period)
     segs, cols = [], []
     for p in sel:
@@ -180,33 +204,44 @@ def main():
     ax.add_collection(lc)
     last = np.array([np.flatnonzero(np.isfinite(X[:, p]))[-1] for p in sel])
     ax.scatter(X[last, sel], Y[last, sel], s=2.5, c=hours[last], cmap=TRACK, norm=norm, lw=0, zorder=4, rasterized=True)
-    frame(ax, a.xlim, ymax)
+    if a.ytop:
+        fade_top(ax, a.xlim, top)
+    frame(ax, a.xlim, top)
     label(ax, -a.xlim + 0.15, 0.22, "lagoon")
     label(ax, -a.xlim + 0.15, 1.05, "reef crest", color="#8a5a1c")
     label(ax, 0.15, 0.62, "pass")
-    label(ax, -2.6, ymax - 0.4, "open ocean", color=MUTED)
+    label(ax, -2.6, top - 0.4, "open ocean", color=MUTED)
     jx, jy = a.jet_label or (float(np.nanmedian(X[last, sel])), float(np.nanmedian(Y[last, sel])))
-    label(ax, jx + 0.2, min(jy, ymax - 0.6), "jet", fontweight="bold")
+    label(ax, jx + 0.2, min(jy, top - 0.6), "jet", fontweight="bold")
     if a.xlim > period / 2:
         for sgn in (-1, 1):
-            ax.text(sgn * (period / 2 + a.xlim) / 2, ymax - 0.12, "model domain\nrepeats", color=MUTED,
-                    fontsize=9, va="top", ha="center", zorder=6, linespacing=1.1)
-    cax = fig.add_axes([0.915, 0.2, 0.015, 0.55])
+            ax.text(sgn * (period / 2 + a.xlim) / 2, top - 0.12, "model domain\nrepeats", color=MUTED,
+                    fontsize=9, va="top", ha="center", zorder=6, linespacing=1.1,
+                    bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.75) if a.ytop else None)
+    if a.ytop:
+        ax.text(1.0, -0.115, f"inner {top:g} of {ymax:.1f} km shown", transform=ax.transAxes, ha="right",
+                va="top", fontsize=9.5, color=MUTED)
+    cax = fig.add_axes([0.915, 0.68 / H + 0.15 * (1 - 1.55 / H), 0.015, 0.7 * (1 - 1.55 / H)] if a.ytop
+                       else [0.915, 0.2, 0.015, 0.55])
     cb = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm, cmap=TRACK), cax=cax)
     cb.set_label("hours since release", color=INK)
     cb.outline.set_visible(False)
-    fig.text(0.08, 0.955, a.title, fontsize=17, fontweight="bold", color=INK, va="top")
-    fig.text(0.08, 0.905, sub, fontsize=11.5, color=MUTED, va="top")
+    fig.text(0.08, 1 - 0.28 / H, a.title, fontsize=17, fontweight="bold", color=INK, va="top")
+    fig.text(0.08, 1 - 0.59 / H, sub, fontsize=11.5, color=MUTED, va="top")
     fig.savefig(a.out + ".png", dpi=200)
     fig.savefig(a.out + ".svg", dpi=200)
     print(f"wrote {a.out}.png/.svg: {len(sel)} of {X.shape[1]} tracks, {hours[-1]:.1f} h, "
           f"{run.get('seeding', '?')} seeding")
 
     if a.gif:
-        fig2, ax2 = plt.subplots(figsize=(8.3, 5.2), dpi=100)
-        fig2.subplots_adjust(left=0.08, right=0.98, top=0.86, bottom=0.12)
+        H2 = sized(8.3, 0.08, 0.98, 0.73, 0.62) or 5.2
+        fig2, ax2 = plt.subplots(figsize=(8.3, H2), dpi=100)
+        fig2.subplots_adjust(left=0.08, right=0.98, top=1 - 0.73 / H2, bottom=0.62 / H2)
         background(ax2, g, a.xlim, period)
-        frame(ax2, a.xlim, ymax)
+        frame(ax2, a.xlim, top)
+        if a.ytop:                                     # no fade here: its gradient takes palette colours
+            ax2.text(1.0, -0.115, f"inner {top:g} of {ymax:.1f} km shown", transform=ax2.transAxes,
+                     ha="right", va="top", fontsize=8.5, color=MUTED)
         label(ax2, -a.xlim + 0.15, 0.22, "lagoon")
         label(ax2, -a.xlim + 0.15, 1.05, "reef crest", color="#8a5a1c")
         tail = a.tail * a.step                         # records in the fading tail (8 frames: 2 h at 15 min)
@@ -220,8 +255,9 @@ def main():
         dots = ax2.scatter([], [], s=3, c="#3b0f70", lw=0, zorder=4)
         clock = ax2.text(0.98, 0.97, "", transform=ax2.transAxes, ha="right", va="top", fontsize=12, color=INK,
                          zorder=7, bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="none", alpha=0.8))
-        fig2.text(0.08, 0.955, "Where lagoon water goes", fontsize=15, fontweight="bold", color=INK, va="top")
-        fig2.text(0.08, 0.905, sub, fontsize=8.5, color=MUTED, va="top")
+        fig2.text(0.08, 1 - 0.234 / H2, "Where lagoon water goes", fontsize=15, fontweight="bold", color=INK,
+                  va="top")
+        fig2.text(0.08, 1 - 0.494 / H2, sub, fontsize=8.5, color=MUTED, va="top")
         base = TRACK(0.25)
 
         seeding = run.get("seeding", "")
@@ -276,14 +312,28 @@ def main():
             sheet.paste(im, (0, i * hgt))
         for i, c in enumerate(keys):
             sheet.paste(Image.new("RGB", (w // len(keys) + 1, hgt), c), (i * (w // len(keys)), 3 * hgt))
-        pal = sheet.quantize(colors=a.colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-        out = [im.quantize(palette=pal, dither=Image.Dither.NONE) for im in rgb]
+        # one entry is kept free for transparency: after the first frame, every pixel that is
+        # the same as in the frame before is written transparent (the earlier frame shows
+        # through, disposal 1), so each frame stores little more than the moving particles
+        pal = sheet.quantize(colors=a.colors - 1, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+        idx = [np.asarray(im.quantize(palette=pal, dither=Image.Dither.NONE)) for im in rgb]
+        T = a.colors - 1
+        pv = (pal.getpalette() or [])[:3 * T]
+        pv += [0] * (3 * T - len(pv)) + [255, 0, 255]
+        out = []
+        for k, arr in enumerate(idx):
+            arr = arr.copy()
+            if k:
+                arr[arr == idx[k - 1]] = T
+            im = Image.fromarray(arr, "P")
+            im.putpalette(pv)
+            out.append(im)
         dur = [round(1000 / a.fps)] * len(out)
         if intro:
             dur[0] = round(1000 * a.intro_s)
         dur[-1] = 1500
         out[0].save(a.out + ".gif", save_all=True, append_images=out[1:], duration=dur, loop=0,
-                    optimize=False, disposal=1)
+                    optimize=False, disposal=1, transparency=T)
         print(f"wrote {a.out}.gif ({Path(a.out + '.gif').stat().st_size / 1e6:.1f} MB)")
 
 

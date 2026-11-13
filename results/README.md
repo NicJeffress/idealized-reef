@@ -7,7 +7,7 @@ linked in each section, where the full tables, figures and run details are.
 Percentages are differences between 24 h runs, over hours 12-24 (the second
 tidal cycle), unless stated.
 
-**Last updated:** 2026-11-12.
+**Last updated:** 2026-11-13.
 
 Entries: [Coriolis and particles](../notebook/2026-11-12_coriolis-and-particles.md),
 [seven-day stratified run](../notebook/2026-11-06_seven-day-stratified.md),
@@ -118,7 +118,7 @@ Entries: [Coriolis and particles](../notebook/2026-11-12_coriolis-and-particles.
 
 ## Rotation (2026-11-12)
 
-Every A15 grid had f = 0 until now. With uniform f at 17.5°S (tropical South Pacific) or 40°S, the reef and lagoon don't change: transports within 0.5 %, set-up within 0.2 %, waves the same; only the fore-reef shear grows (surface to depth-mean speed +21-25 %). Offshore everything changes: the pass jet turns left (southern hemisphere). At 17.5°S it bends about 13° and still runs most of the way across the 5 km domain; at 40°S it hooks 3.5 km out and feeds one clockwise eddy per pass, which never reaches the boundary. Particles released over the whole back reef at 40°S leave within about 2 days, and from day 4 a few percent come back over the crest from the eddy. With stratification (N² 1e-4) the jet stays a surface jet that runs straight offshore into the north boundary. [Entry](../notebook/2026-11-12_coriolis-and-particles.md).
+Every A15 grid had f = 0 until now. With uniform f at 17.5°S (tropical South Pacific) or 40°S, the reef and lagoon don't change: transports within 0.5 %, set-up within 0.2 %, waves the same; only the fore-reef shear grows (surface to depth-mean speed +21-25 %). Offshore everything changes: the pass jet turns left (southern hemisphere). At 17.5°S it bends about 13° and still runs most of the way across the 5 km domain; at 40°S it hooks 3.5 km out and feeds one counterclockwise (anticyclonic) eddy per pass, which never reaches the boundary. Particles released over the whole back reef at 40°S leave within about 2 days, and from day 4 a few percent come back over the crest from the eddy. With stratification (N² 1e-4) the jet stays a surface jet that runs straight offshore into the north boundary: without stratification it mixes down to the bed (about 150 m deep at 2.5 km) and slows to 0.05 m/s by 3 km, so rotation turns it within about 0.5 km, while the stratified jet stays 10-18 m thick and three to five times faster (turning radius 1.5-3 km), held straight between two eddies; the exported water stays in the top 8-21 m (about 100 m without stratification) and starts coming back over the crest on day 2. Its particle figure ([`reef_jet_40S_strat.png`](../figures/reef_jet_40S_strat.png), the README figure) shows the inner 3.9 km, below the 1 km nudging band; almost every particle passes through that band at some point, so the eddy pattern there is qualitative. [Entry](../notebook/2026-11-12_coriolis-and-particles.md).
 
 ## How long a run has to be (2026-11-05)
 
