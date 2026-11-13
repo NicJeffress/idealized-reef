@@ -15,6 +15,8 @@ cases. Run them from the repository root with `python3 -I`.
 | `reef/extract_jet_fields.py` | streams a segmented run's history files from the bucket and keeps top-layer and depth-mean fields at every record plus full-depth sections at 2.5, 5, 10 and 15 km (0.8 GB instead of 19 GB) |
 | `reef/jet_head.py` | surface jet head against time: farthest point above 0.05 / 0.02 m/s connected to the pass (periodic), and the nudging band it is measured against |
 | `reef/jet_core_path.py` | time-mean path and speed of the surface jet core by distance from shore, for extracted or full history files |
+| `reef/particle_fates.py` | where tracked particles went: reach, band entry, depth off the reef, return over the crest, time near the crest and the chance of crossing back within 6 h; one Markdown table row per run |
+| `reef/crest_inflow_profile.py` | time-mean cross-shore Lagrangian velocity against depth offshore of the crest, away from the pass, and the share of the inflow in the top 5 m and the top 30 % of the column |
 | `reef/make_thin_crest.py` | adds the thin-crest grid variants to a copy of an A15 case |
 | `reef/set_coriolis.py` | copies a case folder and sets a uniform Coriolis parameter f = 2 Omega sin(lat) in its grid (`--lat -17.5`); makes the `*_cor*` cases |
 | `reef/jet_bend.py` | follows the pass jet record by record (connected depth-mean Lagrangian speed above a threshold): head position, bearing, north-boundary contact, periodic wrap |
