@@ -11,6 +11,7 @@ cases. Run them from the repository root with `python3 -I`.
 | `cfl_check.py` | barotropic and internal-wave Courant numbers of a case before a run (and the advective ones from run logs) |
 | `fb_stability.py` | linear stability limit of the AB3-AM4 barotropic kernel (0.890) |
 | `reef/refine_a15_grid.py` | refines an A15 case folder by an integer factor (makes `Reef_Ideal_A15_veg_10m`) |
+| `reef/extend_a15_grid.py` | extends an A15 case offshore: rows added beyond the north boundary with gentle stretching, bottom flat at `--depth` (400 m); makes the `*_20km` cases |
 | `reef/make_thin_crest.py` | adds the thin-crest grid variants to a copy of an A15 case |
 | `reef/set_coriolis.py` | copies a case folder and sets a uniform Coriolis parameter f = 2 Omega sin(lat) in its grid (`--lat -17.5`); makes the `*_cor*` cases |
 | `reef/jet_bend.py` | follows the pass jet record by record (connected depth-mean Lagrangian speed above a threshold): head position, bearing, north-boundary contact, periodic wrap |
