@@ -156,6 +156,30 @@ Depth-mean Lagrangian speed, mean of hours 18-24, three periods wide: straight t
 
 Lagrangian speed (u + u_stokes) in the top, middle (level 8 of 15) and bottom layers, mean of hours 144-156, both 40°S runs.
 
+### Dashboard movie of the stratified run (2026-11-13)
+
+[`tools/reef/make_dashboard_movie.py`](../tools/reef/make_dashboard_movie.py) on the merged 15 min history (new `--run-hours`: time labelled from the run start, since the file starts at hour 24), every second record: run hours 24-168, 289 frames, 36 s at 8 fps, 6012 x 4124 px, 104 MB, 5.7 min to render. Panels: Hs, depth-averaged current, transport (Eulerian + Stokes, blue with arrows), sea level minus offshore, surface current, vorticity; time series of tide, set-up and crest and pass transport. Kept with the author's movies, not in this repository.
+
+### How far out the boundary would have to be (estimate, 2026-11-13)
+
+> "how much further out my domain would need to be so the stratified run doesnt hit the north boundary? How far would my domain need to be so a f=0 run with stratification doesnt hit the boundary" (author)
+
+Surface jet head (top-layer offshore velocity above 0.05 m/s, connected to the pass) over day 1, from the hourly history of the f = 0 stratified week (`strat7d`, [entry](2026-11-06_seven-day-stratified.md)) and the 40°S one:
+
+| Run hour | f = 0, stratified | 40°S, stratified |
+|---|---|---|
+| 2 | 2.08 km | 2.08 km |
+| 4 | 2.94 km | 2.94 km |
+| 6 | 3.56 km | 3.09 km |
+| 8 | 3.80 km | 3.32 km |
+| 12 | 4.36 km | 4.12 km |
+| 18 | 4.68 km | 4.76 km |
+
+- Both advance at about 0.1 m/s for the first 6 h; rotation holds the 40°S head back only for a few hours, and both are in the nudging band by about hour 10-12. So this domain can't show where rotation would stop a stratified jet.
+- 40°S: from the days 4-5 mean (e-folding of the core speed about 2.6 km), the jet would slow to the 0.05 m/s at which the unstratified one turned at about 6-7 km, and its eddies would need about 1.5 km more: a boundary at 9-10 km or beyond, low confidence (a surface jet with an eddy each side may carry on offshore as a pair).
+- f = 0: nothing stops the jet but friction and mixing, so no domain holds it for a week. Extrapolating the decelerating head (distance past the crest growing as t^0.5 to t^0.7 after hour 6), it reaches the band of a 10 km domain in about 1.3-2.5 days and of a 20 km domain in about 4-12 days.
+- Cost, scaled by row count from `a15scor40s168` ($1.75, 126 rows, 7 days): flat 400 m bottom beyond 5 km (deeper would push the barotropic Courant number past its limit with the 20 m alongshore cells), rows growing 3-4 % per row from 80 m: 10 km about 38 rows more (about $2.3 a week), 20 km about 90 more (fine rows to 10 km, then up to 400 m; about $3.0 a week). Not built; the author's decision.
+
 ## Decision / outcome
 
 > "I am good with going with the 40deg S option" (author)
