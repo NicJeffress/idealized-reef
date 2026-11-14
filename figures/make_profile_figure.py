@@ -3,7 +3,7 @@
 
 Usage: ~/venv/bin/python -I figures/make_profile_figure.py TRACK_DIR HIS.nc OUT_STEM
            [--lat -17.5] [--every 2] [--xlim 4.5] [--images] [--gif] [--fps 10] [--step 1]
-           [--gif-every N] [--intro TEXT] [--title ...] [--subtitle ...] [--ytop KM]
+           [--gif-every N] [--intro TEXT] [--title ...] [--subtitle ...] [--ytop KM] [--gif-depth DMAX]
 
 TRACK_DIR: output of tools/reef/track_particles.py (chunk_*/out/track.nc, run.json).
 HIS.nc:    any history file of the run (grid and bathymetry only).
@@ -66,19 +66,24 @@ TRACK = matplotlib.colormaps["plasma"].resampled(256)
 TRACK = LinearSegmentedColormap.from_list("plasma_cut", TRACK(np.linspace(0.0, 0.88, 256)))
 
 
-def load_tracks(track_dir, ymax, period):
-    X, Y, S = [], [], []
+def load_tracks(track_dir, ymax, period, with_z=False):
+    X, Y, S, Z = [], [], [], []
     for f in sorted(glob.glob(str(Path(track_dir) / "chunk_*" / "out" / "track.nc"))):
         d = netCDF4.Dataset(f)
         t = np.array(d["model_time"][:], float)
         X.append(np.ma.filled(d["lon"][:], np.nan))
         Y.append(np.ma.filled(d["lat"][:], np.nan))
         S.append(np.ma.filled(d["status"][:], 0))
+        if with_z:
+            Z.append(-np.ma.filled(d["zp"][:], np.nan))       # depth below mean sea level, m
     X, Y, S = (np.hstack(a).astype(float) for a in (X, Y, S))
+    Z = np.hstack(Z).astype(float) if with_z else None
     hours = (t - t[0]) / 3600
     X, Y = X / 1e3, Y / 1e3
     bad = S[0] == 9                                   # outside the grid at release
     X, Y = X[:, ~bad], Y[:, ~bad]
+    if with_z:
+        Z = Z[:, ~bad]
     # unwrap alongshore: undo each jump of more than half a period
     dx = np.diff(X, axis=0)
     X = X - np.vstack([np.zeros((1, X.shape[1])), np.cumsum(np.round(dx / period) * period, axis=0)])
@@ -88,7 +93,7 @@ def load_tracks(track_dir, ymax, period):
     for p in range(X.shape[1]):
         X[first[p] + 1:, p] = np.nan
         Y[first[p] + 1:, p] = np.nan
-    return hours, X, Y
+    return (hours, X, Y, Z) if with_z else (hours, X, Y)
 
 
 def background(ax, g, xlim, period):
@@ -156,6 +161,9 @@ def main():
     ap.add_argument("--subtitle", default=None)
     ap.add_argument("--jet-label", type=float, nargs=2, default=None, metavar=("X", "Y"),
                     help="where to put the 'jet' label (km); default: near the median track end")
+    ap.add_argument("--gif-depth", type=float, default=None, metavar="DMAX",
+                    help="GIF: colour particles and tails by depth below mean sea level, 0 to DMAX m, with a "
+                         "colour bar (the same colours as figures/make_compare_gif.py --depth)")
     ap.add_argument("--ytop", type=float, default=None,
                     help="figure window: show only the inner YTOP km from shore (default: the whole domain)")
     a = ap.parse_args()
@@ -165,15 +173,16 @@ def main():
     L = len(x) - 2
     period = float(x[L + 1] - x[1])
     ymax = float(g["y_rho"][-2, 0] / 1e3)
-    hours, X, Y = load_tracks(a.tracks, ymax, period)
+    hours, X, Y, Z = load_tracks(a.tracks, ymax, period, with_z=True)
     pid = np.arange(X.shape[1])                        # particle number, the same in every copy
     if a.images:                                       # the model is one period of an endless reef
         K = int(np.ceil(a.xlim / period)) + 1          # enough copies to fill the window
         X = np.hstack([X + k * period for k in range(-K, K + 1)])
         Y = np.hstack([Y] * (2 * K + 1))
+        Z = np.hstack([Z] * (2 * K + 1))
         pid = np.hstack([pid] * (2 * K + 1))
         keep = np.nanmin(np.abs(X), axis=0) < a.xlim + 0.5
-        X, Y, pid = X[:, keep], Y[:, keep], pid[keep]
+        X, Y, Z, pid = X[:, keep], Y[:, keep], Z[:, keep], pid[keep]
     run = json.loads((a.tracks / "run.json").read_text()) if (a.tracks / "run.json").exists() else {}
     sub = a.subtitle or (f"Idealized coral reef, COAWST (ROMS + SWAN) with particle tracking (ROMSPath), "
                          f"1 m waves, {abs(a.lat):g}°{'S' if a.lat < 0 else 'N'}")
@@ -240,9 +249,17 @@ def main():
           f"{run.get('seeding', '?')} seeding")
 
     if a.gif:
-        H2 = sized(8.3, 0.08, 0.98, 0.73, 0.62) or 5.2
+        r2 = 0.885 if a.gif_depth else 0.98            # room for the depth colour bar
+        H2 = sized(8.3, 0.08, r2, 0.73, 0.62) or 5.2
         fig2, ax2 = plt.subplots(figsize=(8.3, H2), dpi=100)
-        fig2.subplots_adjust(left=0.08, right=0.98, top=1 - 0.73 / H2, bottom=0.62 / H2)
+        fig2.subplots_adjust(left=0.08, right=r2, top=1 - 0.73 / H2, bottom=0.62 / H2)
+        if a.gif_depth:
+            DEPTH = LinearSegmentedColormap.from_list("depth", matplotlib.colormaps["plasma"](np.linspace(0.95, 0.0, 256)))
+            dnorm = Normalize(0, a.gif_depth)
+            cax2 = fig2.add_axes([0.905, 0.62 / H2 + 0.15 * (1 - 1.35 / H2), 0.015, 0.7 * (1 - 1.35 / H2)])
+            cb2 = fig2.colorbar(matplotlib.cm.ScalarMappable(norm=dnorm, cmap=DEPTH), cax=cax2, extend="max")
+            cb2.ax.invert_yaxis(); cb2.set_label("particle depth (m)", color=INK, fontsize=9)
+            cb2.ax.tick_params(labelsize=8); cb2.outline.set_visible(False)
         background(ax2, g, a.xlim, period)
         frame(ax2, a.xlim, top)
         if a.ytop:                                     # no fade here: its gradient takes palette colours
@@ -259,6 +276,8 @@ def main():
         lc2 = LineCollection([], linewidths=0.6, zorder=3)
         ax2.add_collection(lc2)
         dots = ax2.scatter([], [], s=3, c="#3b0f70", lw=0, zorder=4)
+        if a.gif_depth:
+            dots.set_cmap(DEPTH); dots.set_norm(dnorm)
         clock = ax2.text(0.98, 0.97, "", transform=ax2.transAxes, ha="right", va="top", fontsize=12, color=INK,
                          zorder=7, bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="none", alpha=0.8))
         fig2.text(0.08, 1 - 0.234 / H2, "Where lagoon water goes", fontsize=15, fontweight="bold", color=INK,
@@ -279,19 +298,22 @@ def main():
             k = max(f, 0)                             # f = -1: the intro (release positions, text shown)
             note.set_visible(f < 0 and bool(intro))
             k0 = max(0, k - tail)
-            segs, alphas = [], []
+            segs, alphas, zs = [], [], []
             for p in gsel:
-                xs, ys = X[k0:k + 1:a.step, p], Y[k0:k + 1:a.step, p]
+                xs, ys, zz = X[k0:k + 1:a.step, p], Y[k0:k + 1:a.step, p], Z[k0:k + 1:a.step, p]
                 for m in range(len(xs) - 1):
                     if np.isfinite(xs[m:m + 2]).all():
                         segs.append([(xs[m], ys[m]), (xs[m + 1], ys[m + 1])])
                         alphas.append((m + 1) / (tail / a.step))
+                        zs.append(0.5 * (zz[m] + zz[m + 1]))
             lc2.set_segments(segs)
-            c = np.tile(base, (len(segs), 1))
+            c = DEPTH(dnorm(np.array(zs))) if a.gif_depth else np.tile(base, (len(segs), 1))
             c[:, 3] = np.clip(alphas, 0.05, 1) * 0.8
             lc2.set_color(c)
             ok = np.isfinite(X[k, gsel])
             dots.set_offsets(np.c_[X[k, gsel][ok], Y[k, gsel][ok]])
+            if a.gif_depth:
+                dots.set_array(Z[k, gsel][ok])
             hk = hours[k]
             clock.set_text(f"{hk:4.1f} h after release" if hours[-1] <= 36 else
                            f"{int(hk // 24)} d {hk % 24:02.0f} h after release")
@@ -313,6 +335,8 @@ def main():
         # three sample frames plus solid swatches of the line colors, so thin lines such as
         # the crest outline keep their own palette entries
         keys = ["#c58b3a", "#8a5a1c", INK, MUTED, "#3b0f70", matplotlib.colors.to_hex(base)]
+        if a.gif_depth:
+            keys += [matplotlib.colors.to_hex(DEPTH(v)) for v in np.linspace(0, 1, 12)]
         sheet = Image.new("RGB", (w, hgt * 4))
         for i, im in enumerate((rgb[0], rgb[len(rgb) // 2], rgb[-1])):
             sheet.paste(im, (0, i * hgt))
