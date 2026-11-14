@@ -8,6 +8,7 @@ marker, then six maps.
 Usage:
   ~/venv/bin/python -I make_dashboard_movie.py FILE.nc OUT.mp4 [--title NAME] [--info TEXT]
       [--ymax M] [--panel-px N] [--stride K] [--frames N] [--fps 8] [--csv FILE] [--max-frame 8192x4320]
+      [--run-hours]
 
 FILE.nc: a quicksave or history file with zeta, ubar, vbar, Hwave; ubar_stokes, vbar_stokes for
 Lagrangian velocity and transport; u_sur, v_sur (or 3-D u, v) for the surface current. Joined
@@ -52,6 +53,8 @@ def main():
     ap.add_argument("--stride", type=int, default=1, help="use every K-th record")
     ap.add_argument("--frames", type=int, help="only the first N frames (tests)")
     ap.add_argument("--csv", help="write the time series here")
+    ap.add_argument("--run-hours", action="store_true",
+                    help="label time as hours since the run started (ocean_time), not since the file's first record")
     a = ap.parse_args()
 
     d = netCDF4.Dataset(a.file)
@@ -62,7 +65,7 @@ def main():
     h = d["h"][:, cols]
     y1, x1 = y[:, 0], x[0, :]
     tabs = d["ocean_time"][:].astype(float)
-    th = (tabs - tabs[0]) / 3600.0
+    th = (tabs - (0.0 if a.run_hours else tabs[0])) / 3600.0
     stokes = "ubar_stokes" in d.variables
     has_sur = "u_sur" in d.variables
 
